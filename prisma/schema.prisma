@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Enum for Role
+enum Role {
+  ADMIN
+  USER
+  SUPER_ADMIN
+  PARTNER
+  AGENCY
+}
+
+
+model Auth {
+  id                          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email                       String   @unique
+  password                    String
+  role                        Role     @default(USER)
+  phone                       String
+  isPhoneVerified             Boolean  @default(false)
+  isEmailVerified             Boolean  @default(false)
+  phoneVerificationCode       String?
+  emailVerificationCode       String?
+  phoneVerificationCodeExpiry DateTime?
+  emailVerificationCodeExpiry DateTime?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  // @@map("auth") // Optional: Map this model to a table named `auth`
+}
+
