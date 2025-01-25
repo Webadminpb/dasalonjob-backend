@@ -22,6 +22,25 @@ enum Role {
   AGENCY
 }
 
+enum Gender {
+  Male
+  Female
+  NonBinary
+}
+
+enum MartialStatus {
+  Single
+  MArried
+}
+
+enum JoiningAvailability {
+  OneWeek
+  TwoWeek
+  ThreeWeek
+  FourWeek
+}
+
+
 
 model Auth {
   id                          String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -35,9 +54,62 @@ model Auth {
   emailVerificationCode       String?
   phoneVerificationCodeExpiry DateTime?
   emailVerificationCodeExpiry DateTime?
+
+  basicDetails BasicDetails? 
+  contactDetails ContactDetails?
+  skills Skills?
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
 
   // @@map("auth") // Optional: Map this model to a table named `auth`
+}
+
+model BasicDetails {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  fullName  String
+  gender    Gender 
+  dob       DateTime
+
+  userId    String @unique @db.ObjectId
+  user      Auth   @relation(fields: [userId], references: [id])
+  mariatalStatus MartialStatus
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+}
+
+model ContactDetails {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  phoneCode   String
+  phoneNumber String
+  zipCode     String
+  state       String
+  city        String
+  streetAddress String
+
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Skills {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  skills String[] 
+
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobPreference {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  joiningAvailability JoiningAvailability
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
