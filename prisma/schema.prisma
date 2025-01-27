@@ -30,7 +30,7 @@ enum Gender {
 
 enum MartialStatus {
   Single
-  MArried
+  Married
 }
 
 enum JoiningAvailability {
@@ -38,6 +38,18 @@ enum JoiningAvailability {
   TwoWeek
   ThreeWeek
   FourWeek
+}
+
+enum JobProfile {
+  Barber
+  Stylist
+  Technician
+}
+
+enum HighestEducation {
+  Degree
+  Diploma
+  Certificate
 }
 
 
@@ -57,7 +69,13 @@ model Auth {
 
   basicDetails BasicDetails? 
   contactDetails ContactDetails?
+  jobPreference JobPreference?
   skills Skills?
+  PastWork PastWork?
+  experiences Experience[]
+  educations Education[]
+  pastExperiences PastExperience[]
+
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
 
@@ -106,8 +124,81 @@ model Skills {
 model JobPreference {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+
   joiningAvailability JoiningAvailability
 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Experience {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  profile JobProfile
+  location String
+  startDate DateTime
+  endDate DateTime
+  description String?
+
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PastWork {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+
+  videoLink String[] 
+  // file
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model Education {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  school String
+  attended DateTime
+  graduated DateTime
+
+  userId      String @db.ObjectId
+  user       Auth   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PastExperience {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId      String @db.ObjectId
+  user       Auth   @relation(fields: [userId], references: [id])
+
+  certificateName String
+  certificateId String
+  instituteName String
+  description String?
+
+  // files
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model File {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  url String
+  key String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

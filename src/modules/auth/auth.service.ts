@@ -1,26 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import { generateJwtToken } from 'src/common/auth/auth-common';
+import { generateSixDigitOTP } from 'src/common/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(private readonly prismaService: PrismaService) {}
+  async signup(body: CreateAuthDto) {
+    const phoneVerificationCode = await generateSixDigitOTP();
+    const phoneVerificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    const emailVerificationCode = await generateSixDigitOTP();
+    const emailVerificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    const user = await this.prismaService.auth.create({
+      data: {
+        email: body.email,
+        password: body.password,
+        role: body.role,
+        phone: body.phone,
+        isPhoneVerified: body.isPhoneVerified,
+        isEmailVerified: body.isEmailVerified,
+        phoneVerificationCode: body.phoneVerificationCode,
+        emailVerificationCode: body.emailVerificationCode,
+        phoneVerificationCodeExpiry: body.phoneVerificationCodeExpiry,
+        emailVerificationCodeExpiry: body.emailVerificationCodeExpiry,
+      },
+    });
+    const updateUser = await this.prismaService.auth.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        phoneVerificationCode,
+        emailVerificationCode,
+        phoneVerificationCodeExpiry,
+        emailVerificationCodeExpiry,
+      },
+    });
+    return new ApiSuccessResponse(
+      true,
+      'User created successfully',
+      updateUser,
+    );
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async login(body: LoginAuthDto) {
+    const user = await this.prismaService.auth.findUnique({
+      where: { email: body.email },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (user.password !== body.password) {
+      throw new BadRequestException('Invalid password');
+    }
+    const token = await generateJwtToken(user);
+    return new ApiSuccessResponse(true, 'User logged in successfully', {
+      user,
+      token,
+    });
   }
 }
