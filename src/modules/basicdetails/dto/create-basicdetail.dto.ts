@@ -1,1 +1,15 @@
-export class CreateBasicdetailDto {}
+import { Gender, MartialStatus } from '@prisma/client';
+import { createZodDto } from 'nestjs-zod';
+import { zDateOptional } from 'src/common/validation';
+import { z } from 'zod';
+
+export const createBasicDetailsSchema = z.object({
+  fullName: z.string().min(1, { message: 'Full name is required' }),
+  gender: z.nativeEnum(Gender),
+  dob: zDateOptional,
+  maritalStatus: z.nativeEnum(MartialStatus),
+});
+
+export class CreateBasicdetailDto extends createZodDto(
+  createBasicDetailsSchema,
+) {}

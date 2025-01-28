@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBasicdetailDto } from './create-basicdetail.dto';
+import { createBasicDetailsSchema } from './create-basicdetail.dto';
 
-export class UpdateBasicdetailDto extends PartialType(CreateBasicdetailDto) {}
+import { createZodDto } from 'nestjs-zod';
+
+export class UpdateBasicdetailDto extends createZodDto(
+  createBasicDetailsSchema.partial(),
+) {}

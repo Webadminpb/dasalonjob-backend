@@ -52,6 +52,21 @@ enum HighestEducation {
   Certificate
 }
 
+enum Langauge {
+  Hindi
+  English
+  Japanese
+}
+
+enum Proficiency {
+  Native
+  Conversational
+  Fluent
+  Proficient
+  Basic
+  None
+}
+
 
 
 model Auth {
@@ -75,6 +90,7 @@ model Auth {
   experiences Experience[]
   educations Education[]
   pastExperiences PastExperience[]
+  langauges Langauges[]
 
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
@@ -90,7 +106,7 @@ model BasicDetails {
 
   userId    String @unique @db.ObjectId
   user      Auth   @relation(fields: [userId], references: [id])
-  mariatalStatus MartialStatus
+  maritalStatus MartialStatus
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
 }
@@ -107,6 +123,19 @@ model ContactDetails {
 
   userId      String @unique @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Langauges {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  langauge    Langauge
+  proficiency Proficiency
+
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
