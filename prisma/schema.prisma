@@ -156,7 +156,9 @@ model JobPreference {
   userId      String @unique @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
 
-  joiningAvailability JoiningAvailability
+  locations String[]
+  joining JoiningAvailability
+  salary String
 
 
   createdAt DateTime @default(now())
@@ -195,6 +197,7 @@ model PastWork {
 model Education {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  education HighestEducation
   school String
   attended DateTime
   graduated DateTime

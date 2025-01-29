@@ -43,11 +43,42 @@ export class SkillsService {
     return new ApiSuccessResponse(true, 'skills data', skills);
   }
 
-  update(id: number, updateSkillDto: UpdateSkillDto) {
-    return `This action updates a #${id} skill`;
+  async update(id: string, body: UpdateSkillDto, user: Auth) {
+    const existingSkills = await this.prismaService.skills.findUnique({
+      where: {
+        userId: user.id,
+        id,
+      },
+    });
+    if (!existingSkills) {
+      throw new NotFoundException('skills not found');
+    }
+    const updatedSkills = await this.prismaService.skills.update({
+      where: {
+        id: existingSkills.id,
+      },
+      data: {
+        ...body,
+      },
+    });
+    return new ApiSuccessResponse(true, 'skill updated', updatedSkills);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} skill`;
+  async remove(id: string, user: Auth) {
+    const existingSkills = await this.prismaService.skills.findUnique({
+      where: {
+        userId: user.id,
+        id,
+      },
+    });
+    if (!existingSkills) {
+      throw new NotFoundException('skills not found');
+    }
+    await this.prismaService.skills.delete({
+      where: {
+        id: existingSkills.id,
+      },
+    });
+    return new ApiSuccessResponse(true, 'skill updated', null);
   }
 }

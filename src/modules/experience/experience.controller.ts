@@ -9,34 +9,35 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { SkillsService } from './skills.service';
-import { CreateSkillDto } from './dto/create-skill.dto';
-import { UpdateSkillDto } from './dto/update-skill.dto';
+import { ExperienceService } from './experience.service';
+import { CreateExperienceDto } from './dto/create-experience.dto';
+import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 
-@Controller('skills')
-export class SkillsController {
-  constructor(private readonly skillsService: SkillsService) {}
+@Controller('experience')
+export class ExperienceController {
+  constructor(private readonly experienceService: ExperienceService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('USER')
-  create(@Body() body: CreateSkillDto, @GetUser() user: Auth) {
-    return this.skillsService.create(body, user);
+  create(@Body() body: CreateExperienceDto, @GetUser() user: Auth) {
+    return this.experienceService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  findMySkills(@GetUser() user: Auth) {
-    return this.skillsService.findMySkills(user);
+  findAll(@GetUser() user: Auth) {
+    return this.experienceService.findAll(user);
   }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   findOne(@Param('id') id: string) {
-    return this.skillsService.findOne(id);
+    return this.experienceService.findOne(id);
   }
 
   @Patch(':id')
@@ -44,16 +45,16 @@ export class SkillsController {
   @AllowAuthenticated('USER')
   update(
     @Param('id') id: string,
-    @Body() body: UpdateSkillDto,
+    @Body() body: UpdateExperienceDto,
     @GetUser() user: Auth,
   ) {
-    return this.skillsService.update(id, body, user);
+    return this.experienceService.update(id, body, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
-    return this.skillsService.remove(id, user);
+    return this.experienceService.remove(id, user);
   }
 }
