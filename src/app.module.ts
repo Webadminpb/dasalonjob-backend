@@ -10,9 +10,21 @@ import { JobpreferenceModule } from './modules/jobpreference/jobpreference.modul
 import { ExperienceModule } from './modules/experience/experience.module';
 import { PastworkModule } from './modules/pastwork/pastwork.module';
 import { EducationModule } from './modules/education/education.module';
+import { CertificateModule } from './modules/certificate/certificate.module';
 
 @Module({
-  imports: [AuthModule, BasicdetailsModule, ContactdetailsModule, LangaugesModule, SkillsModule, JobpreferenceModule, ExperienceModule, PastworkModule, EducationModule],
+  imports: [
+    AuthModule,
+    BasicdetailsModule,
+    ContactdetailsModule,
+    LangaugesModule,
+    SkillsModule,
+    JobpreferenceModule,
+    ExperienceModule,
+    PastworkModule,
+    EducationModule,
+    CertificateModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -82,6 +82,8 @@ model Auth {
   phoneVerificationCodeExpiry DateTime?
   emailVerificationCodeExpiry DateTime?
 
+
+
   basicDetails BasicDetails? 
   contactDetails ContactDetails?
   jobPreference JobPreference?
@@ -91,6 +93,7 @@ model Auth {
   educations Education[]
   pastExperiences PastExperience[]
   langauges Langauges[]
+  certificates Certificate[]
 
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
@@ -174,6 +177,9 @@ model Experience {
   endDate DateTime
   description String?
 
+  isExperience   Boolean?
+
+
   userId      String @unique @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
 
@@ -202,6 +208,9 @@ model Education {
   attended DateTime
   graduated DateTime
 
+  isEducation    Boolean?
+
+
   userId      String @db.ObjectId
   user       Auth   @relation(fields: [userId], references: [id])
 
@@ -224,6 +233,25 @@ model PastExperience {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Certificate {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  certificateName String
+  certificateId String
+  instituationName String
+  description String?
+
+  isProfessional Boolean?
+
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
 }
 
 model File {

@@ -18,6 +18,7 @@ export class EducationService {
         school: body.school,
         attended: body.attended,
         graduated: body.graduated,
+        isEducation: body.isEducation,
         userId: user.id,
       },
     });

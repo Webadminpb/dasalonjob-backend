@@ -9,6 +9,7 @@ export const createExperienceSchema = z.object({
   startDate: zDateOptional,
   endDate: zDateOptional,
   description: z.string().optional(),
+  isExperience: z.boolean().optional(),
 });
 
 export class CreateExperienceDto extends createZodDto(createExperienceSchema) {}

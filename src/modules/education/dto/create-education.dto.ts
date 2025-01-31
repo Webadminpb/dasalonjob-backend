@@ -8,6 +8,7 @@ export const createEducationSchema = z.object({
   attended: zDateOptional,
   graduated: zDateOptional,
   education: z.nativeEnum(HighestEducation),
+  isEducation: z.boolean().optional(),
 });
 
 export class CreateEducationDto extends createZodDto(createEducationSchema) {}
