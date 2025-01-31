@@ -8,6 +8,7 @@ export const createBasicDetailsSchema = z.object({
   gender: z.nativeEnum(Gender),
   dob: zDateOptional,
   martialStatus: z.nativeEnum(MartialStatus),
+  fileId: z.string().optional(),
 });
 
 export class CreateBasicdetailDto extends createZodDto(

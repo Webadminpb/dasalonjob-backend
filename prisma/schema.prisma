@@ -67,8 +67,86 @@ enum Proficiency {
   None
 }
 
+enum BusinessType {
+  HairSalon
+  NailSalon
+  AesthethicAndMedicalClinic
+  BodyTreatmentSPA
+  SPAService
+  TattoStudio
+  FacialAndSkinCareCenter
+  WaxingAndHairRemoval
+  MakeUpStudio
+  MessageParlor
+  EyeleshAndEyebrowStudio
+}
+
+enum AdditionalServices {
+  AdultsOnly
+  EcoFriendlyPractices
+  GiftCard
+  Hygiene
+  KidFriendly
+  KidsOnly
+  LoyaltyProgram
+  MagazinesReadingMaterial
+  NearBusStop
+  NearCityCenter
+  NearMetro
+  NearShoppingMall
+  Parking
+  PaymentFlexibleOptions
+  PetFriendly
+  PrivateTreatmentRooms
+  ProductNatural
+  ProductVegan
+  ProductOrganic
+  RefreshmentFree
+  Sauna
+  Toilet
+  RelaxationRooms
+  WaitingArea
+  Restaurant
+  Wifi
+  SteamRooms
+  WheelchairAccessible
+  Recycle
+  AirConditioning
+  AirPurifier
+  ChangingRooms
+}
+
+enum JobType {
+  FullTime
+  PartTime
+}
+
+enum JobBenefits {
+  HealthInsurance
+  PaidTimeOff
+  FlexibleSchedule
+  EmployeeDiscount
+  Accomodation
+  ProfessionalDev
+}
+
+type Days {
+  monday Boolean @default(false)
+  tuesday Boolean @default(false)
+  wednesday Boolean @default(false)
+  thursday Boolean @default(false)
+  friday  Boolean @default(false)
+  Saturday  Boolean @default(false)
+  Sunday  Boolean @default(false)
+}
+
+type SalaryRange {
+  start Int @default(0)
+  end Int @default(0)
+}
 
 
+// for User Partner
 model Auth {
   id                          String   @id @default(auto()) @map("_id") @db.ObjectId
   email                       String   @unique
@@ -94,6 +172,11 @@ model Auth {
   pastExperiences PastExperience[]
   languages Languages[]
   certificates Certificate[]
+  files File[]
+
+  venueDetails VenueDetails?
+  jobOpenings JobOpening?
+  venueMainBusiness VenueMainBusinesses?
 
   
   isEducation    Boolean?
@@ -107,6 +190,7 @@ model Auth {
   // @@map("auth") // Optional: Map this model to a table named `auth`
 }
 
+// for User
 model BasicDetails {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   fullName  String
@@ -115,11 +199,16 @@ model BasicDetails {
 
   userId    String @unique @db.ObjectId
   user      Auth   @relation(fields: [userId], references: [id])
+
+  fileId String? @unique @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
   martialStatus MartialStatus
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
 }
 
+// for User
 model ContactDetails {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -136,6 +225,7 @@ model ContactDetails {
   updatedAt   DateTime @updatedAt
 }
 
+// for User Partner
 model Languages {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -149,6 +239,7 @@ model Languages {
   updatedAt   DateTime @updatedAt
 }
 
+// for User Partner
 model Skills {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   skills String[] 
@@ -159,6 +250,7 @@ model Skills {
   updatedAt DateTime @updatedAt
 }
 
+// for User 
 model JobPreference {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -174,6 +266,7 @@ model JobPreference {
   updatedAt DateTime @updatedAt
 }
 
+// for User
 model Experience {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -192,6 +285,7 @@ model Experience {
   updatedAt DateTime @updatedAt
 }
 
+// for User
 model PastWork {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -199,12 +293,14 @@ model PastWork {
   user        Auth   @relation(fields: [userId], references: [id])
 
   videoLink String[] 
-  // file
+  fileIds String[] @db.ObjectId
+  files File[] @relation(fields: [fileIds], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
 }
 
+// for User
 model Education {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -222,6 +318,7 @@ model Education {
   updatedAt DateTime @updatedAt
 }
 
+// for User
 model PastExperience {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -233,12 +330,11 @@ model PastExperience {
   instituteName String
   description String?
 
-  // files
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+// for User
 model Certificate {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -257,13 +353,107 @@ model Certificate {
 
 }
 
+// for User Partner
 model File {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  url String
-  key String
+  publicId  String
+  url       String
+  format    String
+  folder    String
+
+  userId    String @db.ObjectId
+  user      Auth @relation(fields: [userId], references: [id])
+
+  pastWorkIds String[] @db.ObjectId
+  pastWorks PastWork[] @relation(fields: [pastWorkIds], references: [id])
+
+  venueDetailIds String[] @db.ObjectId
+  venueDetails VenueDetails[] @relation(fields: [venueDetailIds], references: [id])
+
+  basicDetails BasicDetails?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// for Partner
+model SalonDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  businessName String
+  ownerName String
+  email String
+
+  phoneCode String
+  phoneNumber String 
+
+  isDasalonAccount Boolean?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// for Partner
+model VenueDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+  email String
+  phoneCode String
+  phoneNumber String
+  zipCode String
+  city String
+  streetAddress String
+  gender Gender
+
+  fileIds String[] @db.ObjectId
+  files File[] @relation(fields: [fileIds], references: [id])
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VenueMainBusinesses {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  businessType BusinessType
+  days Days
+  additionalService AdditionalServices[]
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobOpening {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title String
+  profile String
+  jobType JobType
+  gender Gender
+
+  salaryRange SalaryRange
+  description String
+
+  education HighestEducation
+  minExperience Boolean
+  certification Boolean
+  isProfessional Boolean
+
+  benefits JobBenefits
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  deadline DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 

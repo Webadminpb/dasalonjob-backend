@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Auth } from '@prisma/client';
+import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateEducationDto } from './dto/create-education.dto';
 import { UpdateEducationDto } from './dto/update-education.dto';
-import { Auth } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
-import { z } from 'zod';
-import { zDateOptional } from 'src/common/validation';
-import { ApiErrorResponse } from 'src/common/api-response/api-error';
-import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 
 @Injectable()
 export class EducationService {

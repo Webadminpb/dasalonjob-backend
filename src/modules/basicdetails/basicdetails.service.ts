@@ -32,6 +32,7 @@ export class BasicdetailsService {
         gender: body.gender,
         dob: body.dob,
         martialStatus: body.martialStatus,
+        fileId: body.fileId,
       },
     });
     return new ApiSuccessResponse(true, 'basic details added', basicDetails);
@@ -41,6 +42,10 @@ export class BasicdetailsService {
     const basicDetails = await this.prismaService.basicDetails.findUnique({
       where: {
         userId: user.id,
+      },
+      include: {
+        file: true,
+        user: true,
       },
     });
     if (!basicDetails) {
@@ -75,11 +80,10 @@ export class BasicdetailsService {
     );
   }
 
-  async remove(id: string, user: Auth) {
+  async remove(user: Auth) {
     const existingBasicDetails =
       await this.prismaService.basicDetails.findUnique({
         where: {
-          id: id,
           userId: user.id,
         },
       });
@@ -89,7 +93,7 @@ export class BasicdetailsService {
 
     await this.prismaService.basicDetails.delete({
       where: {
-        id: id,
+        id: existingBasicDetails.id,
       },
     });
     return new ApiSuccessResponse(true, 'Basic details deleted', null);

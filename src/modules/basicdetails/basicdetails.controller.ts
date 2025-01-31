@@ -40,10 +40,10 @@ export class BasicdetailsController {
     return this.basicdetailsService.update(body, user);
   }
 
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  remove(@Param('id') id: string, @GetUser() user: Auth) {
-    return this.basicdetailsService.remove(id, user);
+  remove(@GetUser() user: Auth) {
+    return this.basicdetailsService.remove(user);
   }
 }

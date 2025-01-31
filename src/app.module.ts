@@ -11,6 +11,7 @@ import { ExperienceModule } from './modules/experience/experience.module';
 import { PastworkModule } from './modules/pastwork/pastwork.module';
 import { EducationModule } from './modules/education/education.module';
 import { CertificateModule } from './modules/certificate/certificate.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CertificateModule } from './modules/certificate/certificate.module';
     PastworkModule,
     EducationModule,
     CertificateModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

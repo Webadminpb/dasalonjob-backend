@@ -15,6 +15,7 @@ export class PastworkService {
       data: {
         userId: user.id,
         videoLink: body.videoLink,
+        fileIds: body.fileIds,
       },
     });
     return new ApiSuccessResponse(true, 'past work added ', pastWork);
@@ -24,6 +25,9 @@ export class PastworkService {
     const pastWork = await this.prismaService.pastWork.findUnique({
       where: {
         userId: user.id,
+      },
+      include: {
+        files: true,
       },
     });
     if (!pastWork) {
