@@ -33,21 +33,17 @@ export class JobpreferenceController {
     return this.jobpreferenceService.findMyJobPreference(user);
   }
 
-  @Patch(':id')
+  @Patch()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  update(
-    @Param('id') id: string,
-    @Body() body: UpdateJobpreferenceDto,
-    @GetUser() user: Auth,
-  ) {
-    return this.jobpreferenceService.update(id, body, user);
+  update(@Body() body: UpdateJobpreferenceDto, @GetUser() user: Auth) {
+    return this.jobpreferenceService.update(body, user);
   }
 
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  remove(@Param('id') id: string, @GetUser() user: Auth) {
-    return this.jobpreferenceService.remove(id, user);
+  remove(@GetUser() user: Auth) {
+    return this.jobpreferenceService.remove(user);
   }
 }

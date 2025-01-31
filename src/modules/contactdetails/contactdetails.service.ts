@@ -15,13 +15,12 @@ export class ContactdetailsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateContactDetailsDto, user: Auth) {
-    const existingContactDetails = this.prismaService.contactDetails.findUnique(
-      {
+    const existingContactDetails =
+      await this.prismaService.contactDetails.findUnique({
         where: {
           userId: user.id,
         },
-      },
-    );
+      });
     if (existingContactDetails) {
       throw new BadRequestException('Contact Details already added');
     }
@@ -43,7 +42,7 @@ export class ContactdetailsService {
     );
   }
 
-  async findOne(user: Auth) {
+  async findMyContactDetails(user: Auth) {
     const contactDetails = await this.prismaService.contactDetails.findUnique({
       where: {
         userId: user.id,

@@ -17,7 +17,6 @@ export class ExperienceService {
         startDate: body.startDate,
         endDate: body.endDate,
         description: body.description,
-        isExperience: body.isExperience,
       },
     });
 

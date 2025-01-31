@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { BasicdetailsModule } from './modules/basicdetails/basicdetails.module';
 import { ContactdetailsModule } from './modules/contactdetails/contactdetails.module';
-import { LangaugesModule } from './modules/langauges/langauges.module';
+import { LangaugesModule } from './modules/languages/languages.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { JobpreferenceModule } from './modules/jobpreference/jobpreference.module';
 import { ExperienceModule } from './modules/experience/experience.module';

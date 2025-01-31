@@ -52,7 +52,7 @@ enum HighestEducation {
   Certificate
 }
 
-enum Langauge {
+enum Language {
   Hindi
   English
   Japanese
@@ -92,8 +92,14 @@ model Auth {
   experiences Experience[]
   educations Education[]
   pastExperiences PastExperience[]
-  langauges Langauges[]
+  languages Languages[]
   certificates Certificate[]
+
+  
+  isEducation    Boolean?
+  isProfessional Boolean?
+  isExperience   Boolean?
+
 
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
@@ -109,7 +115,7 @@ model BasicDetails {
 
   userId    String @unique @db.ObjectId
   user      Auth   @relation(fields: [userId], references: [id])
-  maritalStatus MartialStatus
+  martialStatus MartialStatus
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
 }
@@ -130,13 +136,13 @@ model ContactDetails {
   updatedAt   DateTime @updatedAt
 }
 
-model Langauges {
+model Languages {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
 
-  langauge    Langauge
+  language    Language
   proficiency Proficiency
 
-  userId      String @unique @db.ObjectId
+  userId      String @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
 
   createdAt   DateTime @default(now())
@@ -177,10 +183,9 @@ model Experience {
   endDate DateTime
   description String?
 
-  isExperience   Boolean?
 
 
-  userId      String @unique @db.ObjectId
+  userId      String  @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
@@ -208,7 +213,6 @@ model Education {
   attended DateTime
   graduated DateTime
 
-  isEducation    Boolean?
 
 
   userId      String @db.ObjectId
@@ -243,7 +247,6 @@ model Certificate {
   instituationName String
   description String?
 
-  isProfessional Boolean?
 
 
   userId String @db.ObjectId

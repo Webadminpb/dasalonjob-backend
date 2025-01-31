@@ -33,15 +33,11 @@ export class PastworkController {
     return this.pastworkService.findMyPastWork(user);
   }
 
-  @Patch(':id')
+  @Patch()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  update(
-    @Param('id') id: string,
-    @Body() body: UpdatePastworkDto,
-    @GetUser() user: Auth,
-  ) {
-    return this.pastworkService.update(id, body, user);
+  update(@Body() body: UpdatePastworkDto, @GetUser() user: Auth) {
+    return this.pastworkService.update(body, user);
   }
 
   @Delete(':id')

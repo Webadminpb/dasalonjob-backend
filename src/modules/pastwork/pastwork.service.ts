@@ -32,11 +32,10 @@ export class PastworkService {
     return new ApiSuccessResponse(true, 'past work data', pastWork);
   }
 
-  async update(id: string, body: UpdatePastworkDto, user: Auth) {
+  async update(body: UpdatePastworkDto, user: Auth) {
     const existingPastWork = await this.prismaService.pastWork.findUnique({
       where: {
         userId: user.id,
-        id,
       },
     });
     if (!existingPastWork) {

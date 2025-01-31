@@ -30,7 +30,7 @@ export class ContactdetailsController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   findMyContactDetails(@GetUser() user: Auth) {
-    return this.contactdetailsService.findOne(user);
+    return this.contactdetailsService.findMyContactDetails(user);
   }
 
   @Patch(':id')

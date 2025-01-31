@@ -10,55 +10,57 @@ export class LangaugesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateLangaugeDto, user: Auth) {
-    const langauge = await this.prismaService.langauges.create({
+    const language = await this.prismaService.languages.create({
       data: {
         userId: user.id,
-        langauge: body.langauge,
+        language: body.language,
         proficiency: body.proficiency,
       },
     });
     return new ApiSuccessResponse(
       true,
       'new langauge addedd successfully',
-      langauge,
+      language,
     );
   }
 
-  async findAllUserLangauges(user: Auth) {
-    const langauges = this.prismaService.langauges.findMany({
+  async findMyAllLangauges(user: Auth) {
+    console.log('user ', user);
+    const languages = await this.prismaService.languages.findMany({
       where: {
         userId: user.id,
       },
     });
-    if (!langauges) {
+    console.log('languages ', languages);
+    if (!languages) {
       throw new NotFoundException('Lanagauge not found');
     }
-    return new ApiSuccessResponse(true, 'langauages', { langauges });
+    return new ApiSuccessResponse(true, 'languages', { languages });
   }
 
   async findOne(id: string) {
-    const langauage = await this.prismaService.langauges.findUnique({
+    const language = await this.prismaService.languages.findUnique({
       where: {
         id,
       },
     });
-    if (!langauage) {
+    if (!language) {
       throw new NotFoundException('langauage not found');
     }
-    return new ApiSuccessResponse(true, 'Langauage data ', langauage);
+    return new ApiSuccessResponse(true, 'Langauage data ', language);
   }
 
   async update(id: string, body: UpdateLangaugeDto, user: Auth) {
-    const existingLangauage = await this.prismaService.langauges.findUnique({
+    const existingLanguage = await this.prismaService.languages.findUnique({
       where: {
         id,
         userId: user.id,
       },
     });
-    if (!existingLangauage) {
+    if (!existingLanguage) {
       throw new NotFoundException('langauage not found');
     }
-    const langauge = await this.prismaService.langauges.update({
+    const langauge = await this.prismaService.languages.update({
       where: { id },
       data: {
         ...body,
@@ -68,7 +70,7 @@ export class LangaugesService {
   }
 
   async remove(id: string, user: Auth) {
-    const existingLangauage = await this.prismaService.langauges.findUnique({
+    const existingLangauage = await this.prismaService.languages.findUnique({
       where: {
         id,
         userId: user.id,
@@ -77,7 +79,7 @@ export class LangaugesService {
     if (!existingLangauage) {
       throw new NotFoundException('langauage not found');
     }
-    await this.prismaService.langauges.delete({
+    await this.prismaService.languages.delete({
       where: { id },
     });
     return new ApiSuccessResponse(true, 'Langauage deleted', null);

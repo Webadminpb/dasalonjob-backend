@@ -14,11 +14,14 @@ export class BasicdetailsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateBasicdetailDto, user: Auth) {
-    const existingBasicDetails = this.prismaService.basicDetails.findUnique({
-      where: {
-        userId: user.id,
-      },
-    });
+    console.log('body ', body);
+    const existingBasicDetails =
+      await this.prismaService.basicDetails.findUnique({
+        where: {
+          userId: user.id,
+        },
+      });
+    console.log(existingBasicDetails);
     if (existingBasicDetails) {
       throw new BadRequestException('Basic Details already added');
     }
@@ -28,13 +31,13 @@ export class BasicdetailsService {
         fullName: body.fullName,
         gender: body.gender,
         dob: body.dob,
-        maritalStatus: body.maritalStatus,
+        martialStatus: body.martialStatus,
       },
     });
     return new ApiSuccessResponse(true, 'basic details added', basicDetails);
   }
 
-  async findOne(user: Auth) {
+  async findMyBasicDetails(user: Auth) {
     const basicDetails = await this.prismaService.basicDetails.findUnique({
       where: {
         userId: user.id,
@@ -46,11 +49,10 @@ export class BasicdetailsService {
     return new ApiSuccessResponse(true, 'Basic details fetched', basicDetails);
   }
 
-  async update(id: string, body: UpdateBasicdetailDto, user: Auth) {
+  async update(body: UpdateBasicdetailDto, user: Auth) {
     const existingBasicDetails =
       await this.prismaService.basicDetails.findUnique({
         where: {
-          id: id,
           userId: user.id,
         },
       });
@@ -60,7 +62,7 @@ export class BasicdetailsService {
 
     const updatedBasicDetails = await this.prismaService.basicDetails.update({
       where: {
-        id: id,
+        id: existingBasicDetails.id,
       },
       data: {
         ...body,

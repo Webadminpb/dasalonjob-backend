@@ -5,7 +5,6 @@ export const CertificateSchema = z.object({
   certificateId: z.string(),
   instituationName: z.string(),
   description: z.string().optional(),
-  isProfessional: z.boolean().optional(),
 });
 
 export class CreateCertificateDto extends createZodDto(CertificateSchema) {}

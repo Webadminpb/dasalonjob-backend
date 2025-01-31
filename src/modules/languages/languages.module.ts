@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { LangaugesService } from './langauges.service';
-import { LangaugesController } from './langauges.controller';
+import { LangaugesService } from './languages.service';
+import { LangaugesController } from './languages.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 

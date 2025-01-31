@@ -33,12 +33,11 @@ export class JobpreferenceService {
     return new ApiSuccessResponse(true, 'job preference data ', jobPreference);
   }
 
-  async update(id: string, body: UpdateJobpreferenceDto, user: Auth) {
+  async update(body: UpdateJobpreferenceDto, user: Auth) {
     const existingJobPreference =
       await this.prismaService.jobPreference.findUnique({
         where: {
           userId: user.id,
-          id,
         },
       });
     if (!existingJobPreference) {
@@ -59,12 +58,11 @@ export class JobpreferenceService {
     );
   }
 
-  async remove(id: string, user: Auth) {
+  async remove(user: Auth) {
     const existingJobPreference =
       await this.prismaService.jobPreference.findUnique({
         where: {
           userId: user.id,
-          id,
         },
       });
     if (!existingJobPreference) {

@@ -17,7 +17,6 @@ export class CertificateService {
         certificateName: body.certificateName,
         certificateId: body.certificateId,
         instituationName: body.instituationName,
-        isProfessional: body.isProfessional,
       },
     });
     return new ApiSuccessResponse(true, 'certificate added ', certificate);

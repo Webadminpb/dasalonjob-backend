@@ -9,13 +9,13 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { LangaugesService } from './langauges.service';
+import { LangaugesService } from './languages.service';
 import { CreateLangaugeDto } from './dto/create-langauge.dto';
 import { UpdateLangaugeDto } from './dto/update-langauge.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 
-@Controller('langauges')
+@Controller('languages')
 export class LangaugesController {
   constructor(private readonly langaugesService: LangaugesService) {}
 
@@ -30,7 +30,7 @@ export class LangaugesController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   findAll(@GetUser() user: Auth) {
-    return this.langaugesService.findAllUserLangauges(user);
+    return this.langaugesService.findMyAllLangauges(user);
   }
 
   @Get(':id')

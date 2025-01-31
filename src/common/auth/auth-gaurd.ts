@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@prisma/client';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
+import * as dotenv from 'dotenv';
 
 @Injectable()
 export class AuthGaurd implements CanActivate {
@@ -33,7 +34,9 @@ export class AuthGaurd implements CanActivate {
     }
 
     try {
-      const user = await this.jwtService.verify(token);
+      const user = await this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
       req.user = user;
     } catch (error) {
       console.error('Token validation error: ', error);

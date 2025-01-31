@@ -30,18 +30,14 @@ export class BasicdetailsController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   findMyBasicDetails(@GetUser() user: Auth) {
-    return this.basicdetailsService.findOne(user);
+    return this.basicdetailsService.findMyBasicDetails(user);
   }
 
-  @Patch(':id')
+  @Patch()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  update(
-    @Param('id') id: string,
-    @Body() body: UpdateBasicdetailDto,
-    @GetUser() user: Auth,
-  ) {
-    return this.basicdetailsService.update(id, body, user);
+  update(@Body() body: UpdateBasicdetailDto, @GetUser() user: Auth) {
+    return this.basicdetailsService.update(body, user);
   }
 
   @Delete(':id')
