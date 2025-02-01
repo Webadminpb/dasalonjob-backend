@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { BasicdetailsService } from './basicdetails.service';
 import { CreateBasicdetailDto } from './dto/create-basicdetail.dto';
@@ -33,7 +34,7 @@ export class BasicdetailsController {
     return this.basicdetailsService.findMyBasicDetails(user);
   }
 
-  @Patch()
+  @Put()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   update(@Body() body: UpdateBasicdetailDto, @GetUser() user: Auth) {

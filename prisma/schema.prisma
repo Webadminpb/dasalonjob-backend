@@ -121,7 +121,7 @@ enum JobType {
   PartTime
 }
 
-enum JobBenefits {
+enum Incentive {
   HealthInsurance
   PaidTimeOff
   FlexibleSchedule
@@ -130,14 +130,21 @@ enum JobBenefits {
   ProfessionalDev
 }
 
+enum TotalOpening {
+  One
+  Two
+  Three 
+  Four
+}
+
 type Days {
   monday Boolean @default(false)
   tuesday Boolean @default(false)
   wednesday Boolean @default(false)
   thursday Boolean @default(false)
   friday  Boolean @default(false)
-  Saturday  Boolean @default(false)
-  Sunday  Boolean @default(false)
+  saturday  Boolean @default(false)
+  sunday  Boolean @default(false)
 }
 
 type SalaryRange {
@@ -175,8 +182,14 @@ model Auth {
   files File[]
 
   venueDetails VenueDetails?
-  jobOpenings JobOpening?
-  venueMainBusiness VenueMainBusinesses?
+  salonDetails SalonDetails?
+  jobBasicInfo JobBasicInfo?
+  jobDescription JobDescription?
+  venueMainBusinessType VenueMainBusinessType?
+  venueMainBusinessDays VenueMainBusinessDays?
+  venueMainBusinessServices VenueMainBusinessServices?
+  jobQualification JobQualification?
+  jobBenefits JobBenefits?
 
   
   isEducation    Boolean?
@@ -389,6 +402,9 @@ model SalonDetails {
 
   isDasalonAccount Boolean?
 
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -416,12 +432,10 @@ model VenueDetails {
   updatedAt DateTime @updatedAt
 }
 
-model VenueMainBusinesses {
+model VenueMainBusinessType {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   businessType BusinessType
-  days Days
-  additionalService AdditionalServices[]
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
@@ -429,31 +443,87 @@ model VenueMainBusinesses {
   updatedAt DateTime @updatedAt
 }
 
-model JobOpening {
+model VenueMainBusinessDays {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  days Days
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VenueMainBusinessServices {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  services AdditionalServices[]
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobBasicInfo {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   title String
   profile String
   jobType JobType
+  totalOpening TotalOpening
   gender Gender
 
   salaryRange SalaryRange
+  deadline DateTime
+
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobDescription {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
   description String
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobQualification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   education HighestEducation
   minExperience Boolean
   certification Boolean
   isProfessional Boolean
 
-  benefits JobBenefits
   
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  deadline DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+
+model JobBenefits {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  benefits Incentive[]
+
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 
 
 

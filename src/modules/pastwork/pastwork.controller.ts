@@ -8,6 +8,7 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  Put,
 } from '@nestjs/common';
 import { PastworkService } from './pastwork.service';
 import { CreatePastworkDto } from './dto/create-pastwork.dto';
@@ -33,7 +34,7 @@ export class PastworkController {
     return this.pastworkService.findMyPastWork(user);
   }
 
-  @Patch()
+  @Put()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   update(@Body() body: UpdatePastworkDto, @GetUser() user: Auth) {

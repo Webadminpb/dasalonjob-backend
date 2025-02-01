@@ -8,6 +8,7 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
+  Put,
 } from '@nestjs/common';
 import { JobpreferenceService } from './jobpreference.service';
 import { CreateJobpreferenceDto } from './dto/create-jobpreference.dto';
@@ -33,7 +34,7 @@ export class JobpreferenceController {
     return this.jobpreferenceService.findMyJobPreference(user);
   }
 
-  @Patch()
+  @Put()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
   update(@Body() body: UpdateJobpreferenceDto, @GetUser() user: Auth) {

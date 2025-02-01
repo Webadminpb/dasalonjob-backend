@@ -9,6 +9,8 @@ import { generateSixDigitOTP } from 'src/common/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { CreateApplicantDto } from './dto/applicant.profile';
+import { Auth } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -65,5 +67,25 @@ export class AuthService {
       user,
       token,
     });
+  }
+
+  async updateApplicantProfile(body: CreateApplicantDto, user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        ...body,
+      },
+    });
+    return new ApiSuccessResponse(true, 'user updated', updatedUser);
   }
 }

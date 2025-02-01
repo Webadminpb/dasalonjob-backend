@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { SkillsService } from './skills.service';
 import { CreateSkillDto } from './dto/create-skill.dto';
@@ -21,34 +22,34 @@ export class SkillsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'PARTNER')
   create(@Body() body: CreateSkillDto, @GetUser() user: Auth) {
     return this.skillsService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'PARTNER')
   findMySkills(@GetUser() user: Auth) {
     return this.skillsService.findMySkills(user);
   }
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'PARTNER')
   findOne(@Param('id') id: string) {
     return this.skillsService.findOne(id);
   }
 
-  @Patch()
+  @Put()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'PARTNER')
   update(@Body() body: UpdateSkillDto, @GetUser() user: Auth) {
     return this.skillsService.update(body, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'PARTNER')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.skillsService.remove(id, user);
   }
