@@ -191,10 +191,18 @@ model Auth {
   jobQualification JobQualification?
   jobBenefits JobBenefits?
 
+  agencyDetails AgencyDetails?
+  agencyJobBasicInfo AgencyJobBasicInfo?
+  agencyVenueDetails AgencyVenueDetails[]
+  agencyPartnerSalons AgencyPartnerSalons[]
+
+
+
   
   isEducation    Boolean?
   isProfessional Boolean?
   isExperience   Boolean?
+  isPartner      Boolean?
 
 
   createdAt                   DateTime @default(now())
@@ -384,6 +392,8 @@ model File {
   venueDetails VenueDetails[] @relation(fields: [venueDetailIds], references: [id])
 
   basicDetails BasicDetails?
+  agencyDetails AgencyDetails?
+  agencyVenueDetails AgencyVenueDetails?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -427,6 +437,9 @@ model VenueDetails {
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  agencyPartnerSalonIds String[] @db.ObjectId
+  agencyPartnerSalons AgencyPartnerSalons[] @relation(fields: [agencyPartnerSalonIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -523,6 +536,87 @@ model JobBenefits {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+
+// Business
+
+model AgencyDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  businessName String
+  ownerName String
+  email String
+
+  phoneCode String
+  phoneNumber String
+
+  fileId String? @unique @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyVenueDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  firstName String
+  lastName String
+  phoneCode String
+  phoneNumber String
+  email String
+  gender Gender
+  jobRole Role
+
+  fileId String? @unique @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  userId String  @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyPartnerSalons {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  salonIds String[] @db.ObjectId
+  salons VenueDetails[] @relation(fields: [salonIds], references: [id])
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyJobBasicInfo {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title String
+  profile String
+  jobType JobType
+  totalOpening TotalOpening
+  gender Gender
+
+  salaryRange SalaryRange
+  deadline DateTime
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  // partnerIds String[] @db.ObjectId
+  // salons VenueDetails[] @relation(fields: [salonIds], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 
 
 

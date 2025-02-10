@@ -1,10 +1,8 @@
-// venue-details.controller.ts
 import {
   Controller,
   Get,
   Post,
   Body,
-  Patch,
   Delete,
   HttpStatus,
   HttpCode,

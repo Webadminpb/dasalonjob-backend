@@ -21,6 +21,8 @@ import { JobbasicinfoModule } from './modules/jobbasicinfo/jobbasicinfo.module';
 import { JobdescriptionModule } from './modules/jobdescription/jobdescription.module';
 import { JobqualificationModule } from './modules/jobqualification/jobqualification.module';
 import { JobbenefitsModule } from './modules/jobbenefits/jobbenefits.module';
+import { AgencyDetailsModule } from './modules/agency-details/agency-details.module';
+import { AgencyVenueDetailsModule } from './modules/agency-venue-details/agency-venue-details.module';
 
 @Module({
   imports: [
@@ -44,6 +46,8 @@ import { JobbenefitsModule } from './modules/jobbenefits/jobbenefits.module';
     JobdescriptionModule,
     JobqualificationModule,
     JobbenefitsModule,
+    AgencyDetailsModule,
+    AgencyVenueDetailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
