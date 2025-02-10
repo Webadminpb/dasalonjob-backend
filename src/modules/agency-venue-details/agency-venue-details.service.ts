@@ -71,6 +71,7 @@ export class AgencyVenueDetailsService {
       await this.prismaService.agencyVenueDetails.findUnique({
         where: { userId: user.id, id },
       });
+
     if (!existingDetails) {
       throw new NotFoundException('Agency venue details not found');
     }

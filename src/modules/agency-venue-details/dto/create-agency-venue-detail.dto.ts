@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
-import { Gender, Role } from '@prisma/client';
+import { Gender, JobProfile, Role } from '@prisma/client';
 
 export const AgencyVenueDetailsSchema = z.object({
   firstName: z.string(),
@@ -9,7 +9,7 @@ export const AgencyVenueDetailsSchema = z.object({
   phoneNumber: z.string(),
   email: z.string().email(),
   gender: z.nativeEnum(Gender),
-  jobRole: z.nativeEnum(Role),
+  jobRole: z.nativeEnum(JobProfile),
   fileId: z.string().optional(),
 });
 

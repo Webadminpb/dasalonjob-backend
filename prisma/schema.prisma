@@ -121,6 +121,7 @@ enum JobType {
   PartTime
 }
 
+// Benefits
 enum Incentive {
   HealthInsurance
   PaidTimeOff
@@ -135,6 +136,12 @@ enum TotalOpening {
   Two
   Three 
   Four
+}
+
+enum Plan {
+  ONE_MONTH
+  SIX_MONTH
+  YEARLY
 }
 
 type Days {
@@ -193,6 +200,10 @@ model Auth {
 
   agencyDetails AgencyDetails?
   agencyJobBasicInfo AgencyJobBasicInfo?
+  agencyJobDescription AgencyJobDescription?
+  agencyJobQualification AgencyJobQualification?
+  agencyJobBenefits AgencyJobBenefits?
+  agencyPlan AgencyPlan?
   agencyVenueDetails AgencyVenueDetails[]
   agencyPartnerSalons AgencyPartnerSalons[]
 
@@ -569,7 +580,7 @@ model AgencyVenueDetails {
   phoneNumber String
   email String
   gender Gender
-  jobRole Role
+  jobRole JobProfile
 
   fileId String? @unique @db.ObjectId
   file File? @relation(fields: [fileId], references: [id])
@@ -615,6 +626,61 @@ model AgencyJobBasicInfo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model AgencyJobDescription {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  description String
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyJobQualification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  education HighestEducation
+  minExperience Boolean
+  certification Boolean
+  isProfessional Boolean
+
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyJobBenefits {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  benefits Incentive[]
+
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyPlan {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  plan Plan
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 
 
 

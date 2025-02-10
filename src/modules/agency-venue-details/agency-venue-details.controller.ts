@@ -46,7 +46,7 @@ export class AgencyVenueDetailsController {
     return this.agencyVenueDetailsService.update(user, id, body);
   }
 
-  @Delete('id')
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('AGENCY')
   remove(@GetUser() user: Auth, @Param('id') id: string) {

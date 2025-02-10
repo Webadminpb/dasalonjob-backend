@@ -23,6 +23,10 @@ import { JobqualificationModule } from './modules/jobqualification/jobqualificat
 import { JobbenefitsModule } from './modules/jobbenefits/jobbenefits.module';
 import { AgencyDetailsModule } from './modules/agency-details/agency-details.module';
 import { AgencyVenueDetailsModule } from './modules/agency-venue-details/agency-venue-details.module';
+import { AgencyJobDescriptionModule } from './modules/agency-job-description/agency-job-description.module';
+import { AgencyJobQualificationModule } from './modules/agency-job-qualification/agency-job-qualification.module';
+import { AgencyJobBenefitsModule } from './modules/agency-job-benefits/agency-job-benefits.module';
+import { AgencyPlanModule } from './modules/agency-plan/agency-plan.module';
 
 @Module({
   imports: [
@@ -48,6 +52,10 @@ import { AgencyVenueDetailsModule } from './modules/agency-venue-details/agency-
     JobbenefitsModule,
     AgencyDetailsModule,
     AgencyVenueDetailsModule,
+    AgencyJobDescriptionModule,
+    AgencyJobQualificationModule,
+    AgencyJobBenefitsModule,
+    AgencyPlanModule,
   ],
   controllers: [AppController],
   providers: [AppService],
