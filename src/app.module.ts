@@ -27,6 +27,8 @@ import { AgencyJobDescriptionModule } from './modules/agency-job-description/age
 import { AgencyJobQualificationModule } from './modules/agency-job-qualification/agency-job-qualification.module';
 import { AgencyJobBenefitsModule } from './modules/agency-job-benefits/agency-job-benefits.module';
 import { AgencyPlanModule } from './modules/agency-plan/agency-plan.module';
+import { AgencyJobBasicInfoModule } from './modules/agency-job-basic-info/agency-job-basic-info.module';
+import { AgencyPartnerSalonsModule } from './modules/agency-partner-salons/agency-partner-salons.module';
 
 @Module({
   imports: [
@@ -55,7 +57,9 @@ import { AgencyPlanModule } from './modules/agency-plan/agency-plan.module';
     AgencyJobDescriptionModule,
     AgencyJobQualificationModule,
     AgencyJobBenefitsModule,
+    AgencyJobBasicInfoModule,
     AgencyPlanModule,
+    AgencyPartnerSalonsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

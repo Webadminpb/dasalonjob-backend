@@ -31,7 +31,7 @@ export class AgencyJobQualificationService {
   // Find all job qualifications for the current user
   async findMyAgencyJobQualifications(user: Auth) {
     const agencyJobQualifications =
-      await this.prismaService.agencyJobQualification.findMany({
+      await this.prismaService.agencyJobQualification.findUnique({
         where: { userId: user.id },
       });
     if (!agencyJobQualifications) {
@@ -45,10 +45,10 @@ export class AgencyJobQualificationService {
   }
 
   // Update a job qualification by ID
-  async update(user: Auth, id: string, body: UpdateAgencyJobQualificationDto) {
+  async update(user: Auth, body: UpdateAgencyJobQualificationDto) {
     const existingQualification =
       await this.prismaService.agencyJobQualification.findUnique({
-        where: { userId: user.id, id },
+        where: { userId: user.id },
       });
     if (!existingQualification) {
       throw new NotFoundException('Agency job qualification not found');
@@ -66,10 +66,10 @@ export class AgencyJobQualificationService {
   }
 
   // Delete a job qualification by ID
-  async remove(user: Auth, id: string) {
+  async remove(user: Auth) {
     const existingQualification =
       await this.prismaService.agencyJobQualification.findUnique({
-        where: { userId: user.id, id },
+        where: { userId: user.id },
       });
     if (!existingQualification) {
       throw new NotFoundException('Agency job qualification not found');

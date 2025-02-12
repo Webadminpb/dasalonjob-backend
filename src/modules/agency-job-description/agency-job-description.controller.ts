@@ -42,10 +42,10 @@ export class AgencyJobDescriptionController {
     return this.agencyJobDescriptionService.update(user, body);
   }
 
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('AGENCY')
-  remove(@GetUser() user: Auth, @Param('id') id: string) {
+  remove(@GetUser() user: Auth) {
     return this.agencyJobDescriptionService.remove(user);
   }
 }

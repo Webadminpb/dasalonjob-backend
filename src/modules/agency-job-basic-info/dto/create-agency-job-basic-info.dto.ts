@@ -15,6 +15,7 @@ export const AgencyJobBasicInfoSchema = z.object({
   gender: z.nativeEnum(Gender),
   salaryRange: SalaryRangeSchema,
   deadline: z.date(),
+  partnerIds: z.array(z.string()).optional(),
 });
 
 export class CreateAgencyJobBasicInfoDto extends createZodDto(

@@ -40,7 +40,7 @@ export class AgencyJobQualificationController {
   }
 
   // Update a job qualification by ID
-  @Put(':id')
+  @Put()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('AGENCY')
   update(
@@ -48,14 +48,14 @@ export class AgencyJobQualificationController {
     @Param('id') id: string,
     @GetUser() user: Auth,
   ) {
-    return this.agencyJobQualificationService.update(user, id, body);
+    return this.agencyJobQualificationService.update(user, body);
   }
 
   // Delete a job qualification by ID
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('AGENCY')
-  remove(@GetUser() user: Auth, @Param('id') id: string) {
-    return this.agencyJobQualificationService.remove(user, id);
+  remove(@GetUser() user: Auth) {
+    return this.agencyJobQualificationService.remove(user);
   }
 }

@@ -26,7 +26,7 @@ export class AgencyJobDescriptionService {
 
   async findMyAgencyJobDescriptions(user: Auth) {
     const agencyJobDescriptions =
-      await this.prismaService.agencyJobDescription.findMany({
+      await this.prismaService.agencyJobDescription.findUnique({
         where: { userId: user.id },
       });
     if (!agencyJobDescriptions) {

@@ -200,12 +200,16 @@ model Auth {
 
   agencyDetails AgencyDetails?
   agencyJobBasicInfo AgencyJobBasicInfo?
+  
+
   agencyJobDescription AgencyJobDescription?
   agencyJobQualification AgencyJobQualification?
   agencyJobBenefits AgencyJobBenefits?
   agencyPlan AgencyPlan?
+  agencySalonRelation AgencySalonRelation[]
   agencyVenueDetails AgencyVenueDetails[]
   agencyPartnerSalons AgencyPartnerSalons[]
+  agencyJobs AgencyJobPartner[]
 
 
 
@@ -449,9 +453,6 @@ model VenueDetails {
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  agencyPartnerSalonIds String[] @db.ObjectId
-  agencyPartnerSalons AgencyPartnerSalons[] @relation(fields: [agencyPartnerSalonIds], references: [id])
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -595,14 +596,25 @@ model AgencyVenueDetails {
 model AgencyPartnerSalons {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  salonIds String[] @db.ObjectId
-  salons VenueDetails[] @relation(fields: [salonIds], references: [id])
-
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  partners    AgencySalonRelation[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AgencySalonRelation {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  agencyId  String   @db.ObjectId
+  agency    AgencyPartnerSalons @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  userId   String   @db.ObjectId
+  user     Auth @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }
 
 model AgencyJobBasicInfo {
@@ -620,11 +632,25 @@ model AgencyJobBasicInfo {
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  // partnerIds String[] @db.ObjectId
-  // salons VenueDetails[] @relation(fields: [salonIds], references: [id])
+  partners AgencyJobPartner[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AgencyJobPartner {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  agencyJobId String @db.ObjectId
+  partnerId String @db.ObjectId
+
+  agencyJob AgencyJobBasicInfo @relation(fields: [agencyJobId], references: [id])
+  partner Auth @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([agencyJobId, partnerId]) // Prevent duplicate entries
 }
 
 model AgencyJobDescription {
