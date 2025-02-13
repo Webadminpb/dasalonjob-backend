@@ -1,0 +1,1 @@
+web: npm i -g @nestjs/cli && npm install --include=optional sharp && npm run start:prod
