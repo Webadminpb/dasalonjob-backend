@@ -14,7 +14,9 @@ import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('applicant')
 @Controller('experience')
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}

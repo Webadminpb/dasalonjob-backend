@@ -14,7 +14,9 @@ import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { AgencyPlanService } from './agency-plan.service';
 import { CreateAgencyPlanDto } from './dto/create-agency-plan.dto';
 import { UpdateAgencyPlanDto } from './dto/update-agency-plan.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('agency')
 @Controller('agency-plans')
 export class AgencyPlanController {
   constructor(private readonly agencyPlanService: AgencyPlanService) {}

@@ -15,7 +15,9 @@ import { CreateBasicdetailDto } from './dto/create-basicdetail.dto';
 import { UpdateBasicdetailDto } from './dto/update-basicdetail.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('applicant')
 @Controller('basicdetails')
 export class BasicdetailsController {
   constructor(private readonly basicdetailsService: BasicdetailsService) {}

@@ -14,7 +14,9 @@ import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { AgencyJobBasicInfoService } from './agency-job-basic-info.service';
 import { CreateAgencyJobBasicInfoDto } from './dto/create-agency-job-basic-info.dto';
 import { UpdateAgencyJobBasicInfoDto } from './dto/update-agency-job-basic-info.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('agency')
 @Controller('agency-job-basic-info')
 export class AgencyJobBasicInfoController {
   constructor(

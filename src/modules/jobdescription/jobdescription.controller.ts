@@ -14,7 +14,9 @@ import { JobDescriptionService } from './jobdescription.service';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CreateJobDescriptionDto } from './dto/create-jobdescription.dto';
 import { UpdateJobDescriptionDto } from './dto/update-jobdescription.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('job-description')
 export class JobDescriptionController {
   constructor(private readonly jobDescriptionService: JobDescriptionService) {}

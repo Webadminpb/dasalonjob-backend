@@ -14,7 +14,9 @@ import { JobQualificationService } from './jobqualification.service';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CreateJobQualificationDto } from './dto/create-jobqualification.dto';
 import { UpdateJobQualificationDto } from './dto/update-jobqualification.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('job-qualification')
 export class JobQualificationController {
   constructor(

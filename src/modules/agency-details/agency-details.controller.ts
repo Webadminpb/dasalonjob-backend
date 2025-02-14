@@ -13,7 +13,9 @@ import { AgencyDetailsService } from './agency-details.service';
 import { CreateAgencyDetailsDto } from './dto/create-agency-details.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { UpdateAgencyDetailsDto } from './dto/update-agency-details.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('agency')
 @Controller('agency-details')
 export class AgencyDetailsController {
   constructor(private readonly agencyDetailsService: AgencyDetailsService) {}

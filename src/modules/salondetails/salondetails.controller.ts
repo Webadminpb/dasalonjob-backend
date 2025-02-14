@@ -14,7 +14,9 @@ import { CreateSalonDetailsDto } from './dto/create-salondetail.dto';
 import { UpdateSalonDetailDto } from './dto/update-salondetail.dto';
 import { Auth } from '@prisma/client';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('salon-details')
 export class SalondetailsController {
   constructor(private readonly salondetailsService: SalondetailsService) {}

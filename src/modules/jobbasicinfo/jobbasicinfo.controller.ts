@@ -14,7 +14,9 @@ import { JobBasicInfoService } from './jobbasicinfo.service';
 import { CreateJobBasicInfoDto } from './dto/create-jobbasicinfo.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { UpdateJobBasicInfoDto } from './dto/update-jobbasicinfo.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('job-basic-info')
 export class JobBasicInfoController {
   constructor(private readonly jobBasicInfoService: JobBasicInfoService) {}

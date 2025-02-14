@@ -15,7 +15,9 @@ import { VenueMainBusinessDaysService } from './venuebusinessdays.service';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CreateVenueMainBusinessDaysDto } from './dto/create-venuebusinessday.dto';
 import { UpdateVenueMainBusinessDaysDto } from './dto/update-venuebusinessday.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('venue-main-business-days')
 export class VenueMainBusinessDaysController {
   constructor(

@@ -14,7 +14,9 @@ import { UpdateContactdetailDto } from './dto/update-contactdetail.dto';
 import { CreateContactDetailsDto } from './dto/create-contactdetail.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('applicant')
 @Controller('contactdetails')
 export class ContactdetailsController {
   constructor(private readonly contactdetailsService: ContactdetailsService) {}

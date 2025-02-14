@@ -13,7 +13,9 @@ import { VenueDetailsService } from './venuedetails.service';
 import { CreateVenueDetailsDto } from './dto/create-venuedetail.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { UpdateVenueDetailsDto } from './dto/update-venuedetail.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('venue-details')
 export class VenueDetailsController {
   constructor(private readonly venueDetailsService: VenueDetailsService) {}

@@ -4,7 +4,9 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 import { CreateApplicantDto } from './dto/applicant.profile';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

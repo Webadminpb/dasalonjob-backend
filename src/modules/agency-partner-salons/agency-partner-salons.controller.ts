@@ -14,7 +14,9 @@ import { CreateAgencyPartnerSalonDto } from './dto/create-agency-partner-salon.d
 import { UpdateAgencyPartnerSalonDto } from './dto/update-agency-partner-salon.dto';
 import { AllowAuthenticated } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('agency')
 @Controller('agency-partner-salons')
 export class AgencyPartnerSalonsController {
   constructor(

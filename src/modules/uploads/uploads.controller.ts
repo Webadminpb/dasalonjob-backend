@@ -15,7 +15,9 @@ import { Auth } from '@prisma/client';
 import { memoryStorage } from 'multer';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { UploadsService } from './uploads.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('File Upload')
 @Controller('uploads')
 export class UploadsController {
   constructor(private readonly uploadsService: UploadsService) {}

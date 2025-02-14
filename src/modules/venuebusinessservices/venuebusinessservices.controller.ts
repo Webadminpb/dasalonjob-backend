@@ -14,7 +14,9 @@ import { VenueMainBusinessServicesService } from './venuebusinessservices.servic
 import { CreateVenueMainBusinessServicesDto } from './dto/create-venuebusinessservice.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { UpdateVenueMainBusinessServicesDto } from './dto/update-venuebusinessservice.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('venue-main-business-services')
 export class VenueMainBusinessServicesController {
   constructor(

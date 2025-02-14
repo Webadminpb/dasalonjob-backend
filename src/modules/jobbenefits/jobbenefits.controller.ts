@@ -14,7 +14,9 @@ import { JobBenefitsService } from './jobbenefits.service';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CreateJobBenefitsDto } from './dto/create-jobbenefit.dto';
 import { UpdateJobBenefitsDto } from './dto/update-jobbenefit.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('job-benefits')
 export class JobBenefitsController {
   constructor(private readonly jobBenefitsService: JobBenefitsService) {}

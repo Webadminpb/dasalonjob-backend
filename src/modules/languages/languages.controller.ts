@@ -14,7 +14,9 @@ import { CreateLangaugeDto } from './dto/create-langauge.dto';
 import { UpdateLangaugeDto } from './dto/update-langauge.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user partner agency')
 @Controller('languages')
 export class LangaugesController {
   constructor(private readonly langaugesService: LangaugesService) {}

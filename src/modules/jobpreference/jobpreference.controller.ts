@@ -15,7 +15,9 @@ import { CreateJobpreferenceDto } from './dto/create-jobpreference.dto';
 import { UpdateJobpreferenceDto } from './dto/update-jobpreference.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('partner')
 @Controller('jobpreference')
 export class JobpreferenceController {
   constructor(private readonly jobpreferenceService: JobpreferenceService) {}
