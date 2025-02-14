@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { JobDescriptionService } from './jobdescription.service';
@@ -25,6 +26,7 @@ export class JobDescriptionController {
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
   create(@Body() body: CreateJobDescriptionDto, @GetUser() user: Auth) {
+    console.log('body ', body);
     return this.jobDescriptionService.create(body, user);
   }
 
@@ -35,17 +37,21 @@ export class JobDescriptionController {
     return this.jobDescriptionService.findMyJobDescription(user);
   }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  update(@Body() body: UpdateJobDescriptionDto, @GetUser() user: Auth) {
-    return this.jobDescriptionService.update(user, body);
+  update(
+    @Body() body: UpdateJobDescriptionDto,
+    @GetUser() user: Auth,
+    @Param('id') id: string,
+  ) {
+    return this.jobDescriptionService.update(id, user, body);
   }
 
   @Delete()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  remove(@GetUser() user: Auth) {
-    return this.jobDescriptionService.remove(user);
+  remove(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.jobDescriptionService.remove(id, user);
   }
 }

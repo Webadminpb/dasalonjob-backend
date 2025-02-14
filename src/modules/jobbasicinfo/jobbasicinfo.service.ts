@@ -26,19 +26,21 @@ export class JobBasicInfoService {
   }
 
   async findMyJobBasicInfo(user: Auth) {
-    const jobBasicInfo = await this.prismaService.jobBasicInfo.findUnique({
+    const jobBasicInfo = await this.prismaService.jobBasicInfo.findMany({
       where: { userId: user.id },
     });
     if (!jobBasicInfo) {
       throw new NotFoundException('Job basic info not found');
     }
-    return new ApiSuccessResponse(true, 'Job basic info found', jobBasicInfo);
+    return new ApiSuccessResponse(true, 'Job basic info found', {
+      jobBasicInfo,
+    });
   }
 
-  async update(user: Auth, body: UpdateJobBasicInfoDto) {
+  async update(id: string, user: Auth, body: UpdateJobBasicInfoDto) {
     const existingJobBasicInfo =
       await this.prismaService.jobBasicInfo.findUnique({
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       });
     if (!existingJobBasicInfo) {
       throw new NotFoundException('Job basic info not found');
@@ -56,10 +58,10 @@ export class JobBasicInfoService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingJobBasicInfo =
       await this.prismaService.jobBasicInfo.findUnique({
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       });
     if (!existingJobBasicInfo) {
       throw new NotFoundException('Job basic info not found');

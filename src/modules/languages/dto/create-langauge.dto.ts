@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const createLanagaugeSchema = z.object({
   language: z.nativeEnum(Language),
-  proficiency: z.nativeEnum(Proficiency),
+  proficiency: z.nativeEnum(Proficiency).optional(),
 });
 
 export class CreateLangaugeDto extends createZodDto(createLanagaugeSchema) {}

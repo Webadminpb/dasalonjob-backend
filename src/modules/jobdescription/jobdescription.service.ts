@@ -24,23 +24,21 @@ export class JobDescriptionService {
   }
 
   async findMyJobDescription(user: Auth) {
-    const jobDescription = await this.prismaService.jobDescription.findUnique({
+    const jobDescription = await this.prismaService.jobDescription.findMany({
       where: { userId: user.id },
     });
     if (!jobDescription) {
       throw new NotFoundException('Job description not found');
     }
-    return new ApiSuccessResponse(
-      true,
-      'Job description found',
+    return new ApiSuccessResponse(true, 'Job description found', {
       jobDescription,
-    );
+    });
   }
 
-  async update(user: Auth, body: UpdateJobDescriptionDto) {
+  async update(id: string, user: Auth, body: UpdateJobDescriptionDto) {
     const existingJobDescription =
       await this.prismaService.jobDescription.findUnique({
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       });
     if (!existingJobDescription) {
       throw new NotFoundException('Job description not found');
@@ -59,10 +57,10 @@ export class JobDescriptionService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingJobDescription =
       await this.prismaService.jobDescription.findUnique({
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       });
     if (!existingJobDescription) {
       throw new NotFoundException('Job description not found');

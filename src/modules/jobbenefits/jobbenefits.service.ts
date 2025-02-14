@@ -20,19 +20,19 @@ export class JobBenefitsService {
   }
 
   async findMyJobBenefits(user: Auth) {
-    const jobBenefits = await this.prismaService.jobBenefits.findUnique({
+    const jobBenefits = await this.prismaService.jobBenefits.findMany({
       where: { userId: user.id },
     });
     if (!jobBenefits) {
       throw new NotFoundException('Job benefits not found');
     }
-    return new ApiSuccessResponse(true, 'Job benefits found', jobBenefits);
+    return new ApiSuccessResponse(true, 'Job benefits found', { jobBenefits });
   }
 
-  async update(user: Auth, body: UpdateJobBenefitsDto) {
+  async update(id: string, user: Auth, body: UpdateJobBenefitsDto) {
     const existingJobBenefits = await this.prismaService.jobBenefits.findUnique(
       {
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       },
     );
     if (!existingJobBenefits) {
@@ -51,10 +51,10 @@ export class JobBenefitsService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingJobBenefits = await this.prismaService.jobBenefits.findUnique(
       {
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       },
     );
     if (!existingJobBenefits) {

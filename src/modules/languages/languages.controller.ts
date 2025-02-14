@@ -23,28 +23,28 @@ export class LangaugesController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER', 'AGENCY')
+  @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
   create(@Body() body: CreateLangaugeDto, @GetUser() user: Auth) {
     return this.langaugesService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'AGENCY')
+  @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
   findAll(@GetUser() user: Auth) {
     return this.langaugesService.findMyAllLangauges(user);
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'AGENCY')
+  @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
   findOne(@Param('id') id: string) {
     return this.langaugesService.findOne(id);
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'AGENCY')
+  @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
   update(
     @Param('id') id: string,
     @Body() body: UpdateLangaugeDto,
@@ -55,7 +55,7 @@ export class LangaugesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'AGENCY')
+  @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.langaugesService.remove(id, user);
   }

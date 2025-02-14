@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { JobBenefitsService } from './jobbenefits.service';
@@ -35,17 +36,21 @@ export class JobBenefitsController {
     return this.jobBenefitsService.findMyJobBenefits(user);
   }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  update(@Body() body: UpdateJobBenefitsDto, @GetUser() user: Auth) {
-    return this.jobBenefitsService.update(user, body);
+  update(
+    @Body() body: UpdateJobBenefitsDto,
+    @GetUser() user: Auth,
+    @Param('id') id: string,
+  ) {
+    return this.jobBenefitsService.update(id, user, body);
   }
 
-  @Delete()
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  remove(@GetUser() user: Auth) {
-    return this.jobBenefitsService.remove(user);
+  remove(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.jobBenefitsService.remove(id, user);
   }
 }

@@ -27,24 +27,23 @@ export class JobQualificationService {
   }
 
   async findMyJobQualification(user: Auth) {
-    const jobQualification =
-      await this.prismaService.jobQualification.findUnique({
+    const jobQualification = await this.prismaService.jobQualification.findMany(
+      {
         where: { userId: user.id },
-      });
+      },
+    );
     if (!jobQualification) {
       throw new NotFoundException('Job qualification not found');
     }
-    return new ApiSuccessResponse(
-      true,
-      'Job qualification found',
+    return new ApiSuccessResponse(true, 'Job qualification found', {
       jobQualification,
-    );
+    });
   }
 
-  async update(user: Auth, body: UpdateJobQualificationDto) {
+  async update(id: string, user: Auth, body: UpdateJobQualificationDto) {
     const existingJobQualification =
       await this.prismaService.jobQualification.findUnique({
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       });
     if (!existingJobQualification) {
       throw new NotFoundException('Job qualification not found');
@@ -63,10 +62,10 @@ export class JobQualificationService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingJobQualification =
       await this.prismaService.jobQualification.findUnique({
-        where: { userId: user.id },
+        where: { userId: user.id, id },
       });
     if (!existingJobQualification) {
       throw new NotFoundException('Job qualification not found');

@@ -29,6 +29,7 @@ import { AgencyJobBenefitsModule } from './modules/agency-job-benefits/agency-jo
 import { AgencyPlanModule } from './modules/agency-plan/agency-plan.module';
 import { AgencyJobBasicInfoModule } from './modules/agency-job-basic-info/agency-job-basic-info.module';
 import { AgencyPartnerSalonsModule } from './modules/agency-partner-salons/agency-partner-salons.module';
+import { JobPostModule } from './modules/job-post/job-post.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { AgencyPartnerSalonsModule } from './modules/agency-partner-salons/agenc
     AgencyJobBasicInfoModule,
     AgencyPlanModule,
     AgencyPartnerSalonsModule,
+    JobPostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

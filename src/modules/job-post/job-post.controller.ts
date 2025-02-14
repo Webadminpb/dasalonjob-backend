@@ -12,44 +12,44 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
-import { CreateJobBasicInfoDto } from './dto/create-jobbasicinfo.dto';
-import { UpdateJobBasicInfoDto } from './dto/update-jobbasicinfo.dto';
-import { JobBasicInfoService } from './jobbasicinfo.service';
+import { JobPostService } from './job-post.service';
+import { CreateJobPostDto } from './dto/create-job-post.dto';
+import { UpdateJobPostDto } from './dto/update-job-post.dto';
 
 @ApiTags('partner')
-@Controller('job-basic-info')
-export class JobBasicInfoController {
-  constructor(private readonly jobBasicInfoService: JobBasicInfoService) {}
+@Controller('job-post')
+export class JobPostController {
+  constructor(private readonly jobPostService: JobPostService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
-  create(@Body() body: CreateJobBasicInfoDto, @GetUser() user: Auth) {
-    return this.jobBasicInfoService.create(body, user);
+  create(@Body() body: CreateJobPostDto, @GetUser() user: Auth) {
+    return this.jobPostService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  findMyJobBasicInfo(@GetUser() user: Auth) {
-    return this.jobBasicInfoService.findMyJobBasicInfo(user);
+  findMyJobPost(@GetUser() user: Auth) {
+    return this.jobPostService.findAll(user);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   update(
-    @Body() body: UpdateJobBasicInfoDto,
+    @Body() body: UpdateJobPostDto,
     @GetUser() user: Auth,
     @Param('id') id: string,
   ) {
-    return this.jobBasicInfoService.update(id, user, body);
+    return this.jobPostService.update(id, user, body);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   remove(@GetUser() user: Auth, @Param('id') id: string) {
-    return this.jobBasicInfoService.remove(id, user);
+    return this.jobPostService.remove(id, user);
   }
 }
