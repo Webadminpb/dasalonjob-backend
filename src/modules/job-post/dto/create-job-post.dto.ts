@@ -1,3 +1,4 @@
+import { JobPostStatus } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -8,6 +9,8 @@ export const JobPostSchema = z.object({
   skillId: z.string().optional(),
   jobDescriptionId: z.string().optional(),
   languageIds: z.array(z.string()).optional(),
+  status: z.nativeEnum(JobPostStatus).optional(),
+  isOpen: z.boolean().optional(),
 });
 
 export class CreateJobPostDto extends createZodDto(JobPostSchema) {}
