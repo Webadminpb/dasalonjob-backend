@@ -40,6 +40,13 @@ enum JoiningAvailability {
   FourWeek
 }
 
+enum JobBasicInfoProfileType {
+  HairStyling
+  NailsSpecialist
+  Message
+  Medicure
+}
+
 enum JobProfile {
   Barber
   Stylist
@@ -144,6 +151,12 @@ enum Plan {
   YEARLY
 }
 
+enum JobPostStatus {
+  Approved
+  Canceled
+  Pending
+}
+
 type Days {
   monday Boolean @default(false)
   tuesday Boolean @default(false)
@@ -179,7 +192,7 @@ model Auth {
   basicDetails BasicDetails? 
   contactDetails ContactDetails?
   jobPreference JobPreference?
-  skills Skills?
+  skills Skills[]
   PastWork PastWork?
   experiences Experience[]
   educations Education[]
@@ -212,7 +225,7 @@ model Auth {
   agencyJobs AgencyJobPartner[]
 
 
-  jobPost JobPost?
+  jobPost JobPost[]
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -283,10 +296,10 @@ model Skills {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   skills String[] 
 
-  userId      String @unique @db.ObjectId
+  userId      String @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
 
-  jobPost JobPost?
+  jobPost JobPost[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -497,7 +510,7 @@ model JobBasicInfo {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   title String
-  profile String
+  profile JobBasicInfoProfileType 
   jobType JobType
   totalOpening Int @default(1)
   gender Gender
@@ -509,7 +522,7 @@ model JobBasicInfo {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  jobPost JobPost?
+  jobPost JobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -523,7 +536,7 @@ model JobDescription {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  jobPost JobPost?
+  jobPost JobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -541,7 +554,7 @@ model JobQualification {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  jobPost JobPost?
+  jobPost JobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -557,7 +570,7 @@ model JobBenefits {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  jobPost JobPost?
+  jobPost JobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -567,27 +580,29 @@ model JobBenefits {
 model JobPost {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  jobBasicInfoId String? @unique @db.ObjectId
+  jobBasicInfoId String? @db.ObjectId
   jobBasicInfo JobBasicInfo? @relation(fields: [jobBasicInfoId], references: [id])
 
-  jobBenefitsId String? @unique @db.ObjectId
+  jobBenefitsId String?  @db.ObjectId
   jobBenefits JobBenefits? @relation(fields: [jobBenefitsId], references: [id])
 
-  jobQualificationId String? @unique @db.ObjectId
+  jobQualificationId String? @db.ObjectId
   jobQualification JobQualification? @relation(fields: [jobQualificationId], references: [id])
 
-  jobDescriptionId String? @unique @db.ObjectId
+  jobDescriptionId String?  @db.ObjectId
   jobDescription JobDescription? @relation(fields: [jobDescriptionId], references: [id])
 
-  skillId String? @unique @db.ObjectId
+  skillId String? @db.ObjectId
   skills Skills? @relation(fields: [skillId], references: [id])
 
   languageIds String[] @db.ObjectId
   languages Languages[] @relation(fields: [languageIds], references: [id])
 
-  userId String @unique @db.ObjectId
+  userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  status JobPostStatus @default(Approved)
+  isOpen Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

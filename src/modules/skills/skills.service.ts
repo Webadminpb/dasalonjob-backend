@@ -43,10 +43,11 @@ export class SkillsService {
     return new ApiSuccessResponse(true, 'skills data', skills);
   }
 
-  async update(body: UpdateSkillDto, user: Auth) {
+  async update(id: string, body: UpdateSkillDto, user: Auth) {
     const existingSkills = await this.prismaService.skills.findUnique({
       where: {
         userId: user.id,
+        id,
       },
     });
     if (!existingSkills) {

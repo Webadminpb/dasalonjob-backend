@@ -42,11 +42,15 @@ export class SkillsController {
     return this.skillsService.findOne(id);
   }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER', 'PARTNER', 'AGENCY')
-  update(@Body() body: UpdateSkillDto, @GetUser() user: Auth) {
-    return this.skillsService.update(body, user);
+  update(
+    @Body() body: UpdateSkillDto,
+    @GetUser() user: Auth,
+    @Param('id') id: string,
+  ) {
+    return this.skillsService.update(id, body, user);
   }
 
   @Delete(':id')
