@@ -30,6 +30,7 @@ import { AgencyPlanModule } from './modules/agency-plan/agency-plan.module';
 import { AgencyJobBasicInfoModule } from './modules/agency-job-basic-info/agency-job-basic-info.module';
 import { AgencyPartnerSalonsModule } from './modules/agency-partner-salons/agency-partner-salons.module';
 import { JobPostModule } from './modules/job-post/job-post.module';
+import { JobApplicationsModule } from './modules/job-applications/job-applications.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { JobPostModule } from './modules/job-post/job-post.module';
     AgencyPlanModule,
     AgencyPartnerSalonsModule,
     JobPostModule,
+    JobApplicationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

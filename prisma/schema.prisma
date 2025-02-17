@@ -157,6 +157,14 @@ enum JobPostStatus {
   Pending
 }
 
+enum JobApplicationStatus {
+  Applied
+  Shortlisted
+  Accepted
+  Rejected
+}
+
+
 type Days {
   monday Boolean @default(false)
   tuesday Boolean @default(false)
@@ -226,6 +234,7 @@ model Auth {
 
 
   jobPost JobPost[]
+  jobApplications JobApplication[]
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -604,6 +613,8 @@ model JobPost {
   status JobPostStatus @default(Approved)
   isOpen Boolean @default(true)
 
+  jobApplications JobApplication[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -764,6 +775,24 @@ model AgencyPlan {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model JobApplication {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  jobPostId String @db.ObjectId
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+  status JobApplicationStatus @default(Applied)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, jobPostId]) 
+}
+
 
 
 
