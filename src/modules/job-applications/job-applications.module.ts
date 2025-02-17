@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { JobApplicationsService } from './job-applications.service';
-import { JobApplicationsController } from './job-applications.controller';
+import { PrismaService } from '../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { JobApplicationController } from './job-applications.controller';
+import { JobApplicationService } from './job-applications.service';
 
 @Module({
-  controllers: [JobApplicationsController],
-  providers: [JobApplicationsService],
+  controllers: [JobApplicationController],
+  providers: [JobApplicationService, PrismaService, JwtService],
 })
 export class JobApplicationsModule {}
