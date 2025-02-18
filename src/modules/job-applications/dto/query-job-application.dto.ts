@@ -19,6 +19,7 @@ export const QueryJobApplicationSchema = z.object({
   search: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
+  customDate: z.string().optional(), // New field for custom date filter
 });
 
 export class QueryJobApplicationDto extends createZodDto(

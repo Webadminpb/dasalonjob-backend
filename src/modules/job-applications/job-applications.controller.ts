@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 import { QueryJobApplicationDto } from './dto/query-job-application.dto';
 import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { JobApplicationService } from './job-applications.service';
+import { StatusJobApplicationDto } from './dto/status-job.dto';
 
 @ApiTags('Job Applications')
 @ApiBearerAuth()
@@ -35,8 +37,8 @@ export class JobApplicationController {
   @Get('/partner')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  findAll(@Query() query: QueryJobApplicationDto) {
-    return this.jobApplicationService.findAll(query);
+  findAll(@Query() query: QueryJobApplicationDto, @GetUser() user: Auth) {
+    return this.jobApplicationService.findAll(query, user);
   }
 
   @Get(':id')
@@ -45,7 +47,7 @@ export class JobApplicationController {
     return this.jobApplicationService.findOne(id);
   }
 
-  @Patch('/partner/:id')
+  @Put('/partner/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   update(
@@ -54,6 +56,17 @@ export class JobApplicationController {
     @GetUser() user: Auth,
   ) {
     return this.jobApplicationService.update(id, body, user);
+  }
+
+  @Patch('/partner/status/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() body: StatusJobApplicationDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationService.updateStatus(id, body, user);
   }
 
   @Delete('/partner/:id')
