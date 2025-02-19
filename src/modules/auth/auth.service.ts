@@ -88,4 +88,66 @@ export class AuthService {
     });
     return new ApiSuccessResponse(true, 'user updated', updatedUser);
   }
+
+  async myApplicantProfile(user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        basicDetails: true,
+        languages: true,
+        contactDetails: true,
+        skills: true,
+        jobPreference: true,
+        pastExperiences: true,
+        PastWork: true,
+        educations: true,
+        certificates: true,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    return new ApiSuccessResponse(true, 'User data', existingUser);
+  }
+
+  async getMyPartnerProfile(user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        salonDetails: true,
+        venueDetails: true,
+        venueMainBusinessDays: true,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    return new ApiSuccessResponse(true, 'User data', existingUser);
+  }
+  async getMyApplicantProfile(user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        basicDetails: true,
+        languages: true,
+        contactDetails: true,
+        skills: true,
+        jobPreference: true,
+        pastExperiences: true,
+        PastWork: true,
+        educations: true,
+        certificates: true,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    return new ApiSuccessResponse(true, 'User data', existingUser);
+  }
 }

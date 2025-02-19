@@ -235,6 +235,9 @@ model Auth {
 
   jobPost JobPost[]
   jobApplications JobApplication[]
+
+  applicantShortlistedMessages JobApplicationMessage[] @relation("ApplicantShortlistedMessages")
+  partnerShortlistedMessages JobApplicationMessage[] @relation("PartnerShortlistedMessages")
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -787,11 +790,36 @@ model JobApplication {
 
   status JobApplicationStatus @default(Applied)
 
+  message String?
+
+  shortlisted JobApplicationMessage[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, jobPostId]) 
 }
+
+model JobApplicationMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  applicantId String @db.ObjectId
+  applicant Auth @relation("ApplicantShortlistedMessages", fields: [applicantId], references: [id])
+
+  partnerId String @db.ObjectId
+  partner Auth @relation("PartnerShortlistedMessages", fields: [partnerId], references: [id])
+
+  jobApplicationId String @db.ObjectId
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id])
+
+
+  message String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 
 
 

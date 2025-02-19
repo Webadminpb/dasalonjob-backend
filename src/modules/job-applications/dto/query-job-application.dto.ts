@@ -4,6 +4,7 @@ import {
   Language,
 } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
+import { zDateOptional } from 'src/common/validation';
 import { Education } from 'src/modules/education/entities/education.entity';
 import { z } from 'zod';
 
@@ -19,7 +20,8 @@ export const QueryJobApplicationSchema = z.object({
   search: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
-  customDate: z.string().optional(), // New field for custom date filter
+  customDate: zDateOptional, // New field for custom date filter
+  customerYear: zDateOptional,
 });
 
 export class QueryJobApplicationDto extends createZodDto(

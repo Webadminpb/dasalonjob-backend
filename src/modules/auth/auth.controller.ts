@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
@@ -23,6 +23,12 @@ export class AuthController {
     return this.authService.login(body);
   }
 
+  @Get('partner/profile')
+  @HttpCode(200)
+  @AllowAuthenticated('USER', 'PARTNER')
+  getMyProfile(@GetUser() user: Auth) {
+    return this.authService.getMyPartnerProfile(user);
+  }
   @Put('applicant')
   @AllowAuthenticated('USER')
   updateApplicantProfile(

@@ -41,6 +41,13 @@ export class JobApplicationController {
     return this.jobApplicationService.findAll(query, user);
   }
 
+  @Get('/partner/total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  findTotalJobsAndApplicant(@GetUser() user: Auth) {
+    return this.jobApplicationService.findTotalJobsAndApplicant(user);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {

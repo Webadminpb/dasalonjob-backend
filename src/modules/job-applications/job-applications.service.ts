@@ -59,10 +59,9 @@ export class JobApplicationService {
   }
 
   async findAll(query: QueryJobApplicationDto, user?: Auth) {
-    console.log('query ', query);
     const where: any = {};
     if (user.id) {
-      where.jobPost = where.jobPost || {}; // Ensure jobPost exists
+      where.jobPost = where.jobPost || {};
 
       where.jobPost.userId = user.id;
     }
@@ -106,6 +105,7 @@ export class JobApplicationService {
         },
       };
     }
+
     if (query.education) {
       where.user = where.user || {};
       where.user.educations = {
@@ -114,10 +114,12 @@ export class JobApplicationService {
         },
       };
     }
+
     if (query.isTrained) {
       where.user = where.user || {};
       where.user.isProfessional = Boolean(query.isTrained);
     }
+
     if (query.search) {
       where.OR = [
         {
@@ -133,14 +135,28 @@ export class JobApplicationService {
       ];
     }
 
+    if (query.customDate) {
+      const date = new Date(query.customDate);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lt: new Date(date.setHours(23, 59, 59, 999)),
+      };
+    }
+
+    // **Custom Year Filtering**
+    if (query.customerYear) {
+      const year = new Date(query.customerYear).getFullYear();
+      where.createdAt = {
+        gte: new Date(year, 0, 1),
+        lt: new Date(year + 1, 0, 1),
+      };
+    }
+
     const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
     const sortBy = query.sort || 'createdAt';
 
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
-
-    console.log('skip ', skip);
-    console.log('limit ', take);
 
     const [jobApplications, total] = await Promise.all([
       this.prismaService.jobApplication.findMany({
@@ -176,6 +192,27 @@ export class JobApplicationService {
     });
   }
 
+  async findTotalJobsAndApplicant(user: Auth) {
+    const [totalJobs, totalApplicants] = await Promise.all([
+      this.prismaService.jobPost.count({
+        where: {
+          userId: user.id,
+        },
+      }),
+      await this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+        },
+      }),
+    ]);
+    return new ApiSuccessResponse(true, 'Total jobs and applicants', {
+      totalJobs,
+      totalApplicants,
+    });
+  }
+
   async update(id: string, body: UpdateJobApplicationDto, user: any) {
     const existingJobApplication =
       await this.prismaService.jobApplication.findUnique({
@@ -201,7 +238,10 @@ export class JobApplicationService {
   async updateStatus(id: string, body: StatusJobApplicationDto, user: any) {
     const existingJobApplication =
       await this.prismaService.jobApplication.findUnique({
-        where: { id, userId: user.id },
+        where: { id, jobPost: { userId: user.id } },
+        include: {
+          jobPost: true,
+        },
       });
     if (!existingJobApplication) {
       throw new NotFoundException('Job application not found');
