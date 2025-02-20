@@ -21,7 +21,7 @@ import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { JobApplicationService } from './job-applications.service';
 import { StatusJobApplicationDto } from './dto/status-job.dto';
 
-@ApiTags('Job Applications')
+@ApiTags('applicant')
 @ApiBearerAuth()
 @Controller('job-applications')
 export class JobApplicationController {

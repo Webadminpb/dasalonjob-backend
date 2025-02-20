@@ -236,6 +236,9 @@ model Auth {
   jobPost JobPost[]
   jobApplications JobApplication[]
 
+  saveJobPosts SaveJobPost[]
+  partnerSocialLinks PartnerSocialLinks?
+
   applicantShortlistedMessages JobApplicationMessage[] @relation("ApplicantShortlistedMessages")
   partnerShortlistedMessages JobApplicationMessage[] @relation("PartnerShortlistedMessages")
   
@@ -617,6 +620,7 @@ model JobPost {
   isOpen Boolean @default(true)
 
   jobApplications JobApplication[]
+  saveJobPosts SaveJobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -814,6 +818,37 @@ model JobApplicationMessage {
 
 
   message String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SaveJobPost {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // ApplicantId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  jobPostId String @db.ObjectId
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, jobPostId]) 
+}
+
+model PartnerSocialLinks {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  facebook String
+  instagram String
+  linkedin String
+  twitter String
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

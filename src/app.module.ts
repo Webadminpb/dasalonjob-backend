@@ -32,6 +32,8 @@ import { AgencyPartnerSalonsModule } from './modules/agency-partner-salons/agenc
 import { JobPostModule } from './modules/job-post/job-post.module';
 import { JobApplicationsModule } from './modules/job-applications/job-applications.module';
 import { JobApplicationMessageModule } from './modules/job-application-message/job-application-message.module';
+import { SaveJobPostModule } from './modules/save-job-post/save-job-post.module';
+import { PartnerSocialLinksModule } from './modules/partner-social-links/partner-social-links.module';
 
 @Module({
   imports: [
@@ -66,6 +68,8 @@ import { JobApplicationMessageModule } from './modules/job-application-message/j
     JobPostModule,
     JobApplicationsModule,
     JobApplicationMessageModule,
+    SaveJobPostModule,
+    PartnerSocialLinksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
