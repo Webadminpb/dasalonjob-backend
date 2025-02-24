@@ -25,15 +25,7 @@ export class VenueMainBusinessDaysService {
       await this.prismaService.venueMainBusinessDays.create({
         data: {
           days: {
-            set: {
-              monday: body.days.monday,
-              tuesday: body.days.tuesday,
-              wednesday: body.days.wednesday,
-              thursday: body.days.thursday,
-              friday: body.days.friday,
-              saturday: body.days.saturday,
-              sunday: body.days.sunday,
-            },
+            set: body.days, // Directly setting the structured Days object
           },
           userId: user.id,
         },

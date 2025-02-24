@@ -27,16 +27,16 @@ export class CountryService {
     );
   }
 
-  findAll() {
-    const countries = this.prismaService.country.findMany();
+  async findAll() {
+    const countries = await this.prismaService.country.findMany();
     if (!countries) {
       throw new BadRequestException('No countries found');
     }
-    return new ApiSuccessResponse(true, 'Countries found', countries);
+    return new ApiSuccessResponse(true, 'Countries found', { countries });
   }
 
-  findOne(id: string) {
-    const country = this.prismaService.country.findUnique({
+  async findOne(id: string) {
+    const country = await this.prismaService.country.findUnique({
       where: {
         id: id,
       },

@@ -35,6 +35,9 @@ import { JobApplicationMessageModule } from './modules/job-application-message/j
 import { SaveJobPostModule } from './modules/save-job-post/save-job-post.module';
 import { PartnerSocialLinksModule } from './modules/partner-social-links/partner-social-links.module';
 import { CountryModule } from './modules/country/country.module';
+import { VenueAmenitiesModule } from './modules/venue-amenities/venue-amenities.module';
+import { VenueWorkstationModule } from './modules/venue-workstation/venue-workstation.module';
+import { PartnerVenueModule } from './modules/partner-venue/partner-venue.module';
 
 @Module({
   imports: [
@@ -72,6 +75,9 @@ import { CountryModule } from './modules/country/country.module';
     SaveJobPostModule,
     PartnerSocialLinksModule,
     CountryModule,
+    VenueAmenitiesModule,
+    VenueWorkstationModule,
+    PartnerVenueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

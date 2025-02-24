@@ -7,6 +7,7 @@ const createAuthSchema = z.object({
   password: z.string().min(8),
   role: z.nativeEnum(Role),
   phone: z.string().min(10),
+  countryId: z.string().optional(),
   isPhoneVerified: z.boolean().default(false),
   isEmailVerified: z.boolean().default(false),
   phoneVerificationCode: z.string().optional(),

@@ -5,7 +5,12 @@ dotenv.config();
 
 export async function generateJwtToken(user: Auth) {
   return jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      countryId: user?.countryId,
+    },
     process.env.JWT_SECRET,
     { expiresIn: '1y' },
   );

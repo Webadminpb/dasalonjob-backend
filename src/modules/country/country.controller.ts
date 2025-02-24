@@ -14,7 +14,9 @@ import { CountryService } from './country.service';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 import { AllowAuthenticated } from 'src/common/auth/auth-decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('country')
 @Controller('country')
 export class CountryController {
   constructor(private readonly countryService: CountryService) {}

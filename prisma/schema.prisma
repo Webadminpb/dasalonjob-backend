@@ -169,15 +169,40 @@ enum CountryStatus {
   INACTIVE
 }
 
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum Amenities {
+  Facial
+  Lotion 
+  Wifi 
+  Towel
+  Slipper 
+  Custom
+}
+
+
+
 
 type Days {
-  monday Boolean @default(false)
-  tuesday Boolean @default(false)
-  wednesday Boolean @default(false)
-  thursday Boolean @default(false)
-  friday  Boolean @default(false)
-  saturday  Boolean @default(false)
-  sunday  Boolean @default(false)
+  monday Day?
+  tuesday Day?
+  wednesday Day?
+  thursday Day?
+  friday  Day?
+  saturday  Day?
+  sunday  Day?
+}
+
+type Day {
+  isActive Boolean @default(false)
+  from DateTime?
+  to DateTime?
+  offPeakFrom DateTime?
+  offPeakTo DateTime?
+
 }
 
 type SalaryRange {
@@ -199,6 +224,8 @@ model Auth {
   emailVerificationCode       String?
   phoneVerificationCodeExpiry DateTime?
   emailVerificationCodeExpiry DateTime?
+  isBlocked                   Boolean @default(false)
+  status                      AccountStatus @default(ACTIVE)
 
   countryId String? @db.ObjectId
   country Country? @relation(fields: [countryId], references: [id])
@@ -226,6 +253,9 @@ model Auth {
   venueMainBusinessServices VenueMainBusinessServices?
   jobQualification JobQualification[]
   jobBenefits JobBenefits[]
+  venueAmenities VenueAmenities[]
+  venueWorkStation VenueWorkStation[]
+  partnerVenue PartnerVenue[]
 
   agencyDetails AgencyDetails?
   agencyJobBasicInfo AgencyJobBasicInfo?
@@ -471,6 +501,8 @@ model SalonDetails {
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  partnerVenie PartnerVenue[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -493,6 +525,8 @@ model VenueDetails {
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  partnerVenie PartnerVenue[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -881,6 +915,57 @@ model Country {
 
   auth Auth[]
   jobPosts JobPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VenueAmenities {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  amenities Amenities
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerVenue PartnerVenue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model VenueWorkStation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerVenue PartnerVenue[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PartnerVenue {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  venueBasicDetailsId String @db.ObjectId
+  venueBasicDetails VenueDetails @relation(fields: [venueBasicDetailsId], references: [id])
+
+  salonBasicDetailsId String @db.ObjectId
+  salonBasicDetails SalonDetails @relation(fields: [salonBasicDetailsId], references: [id])
+
+  venueAmenityIds String @db.ObjectId
+  venueAmenities VenueAmenities @relation(fields: [venueAmenityIds], references: [id])
+
+  venueWorkStationId String @db.ObjectId
+  venueWorkStation VenueWorkStation @relation(fields: [venueWorkStationId], references: [id])
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -19,6 +19,7 @@ export class JobPostService {
         jobQualificationId: body.jobQualificationId,
         jobDescriptionId: body.jobDescriptionId,
         skillId: body.skillId,
+        countryId: body.countryId,
         languageIds: body.languageIds,
         userId: user.id,
       },
@@ -76,6 +77,9 @@ export class JobPostService {
 
     if (query.status) {
       where.status = query.status;
+    }
+    if (query.countryId) {
+      where.countryId = query.countryId;
     }
 
     const skip = getPaginationSkip(query.page, query.limit);

@@ -11,6 +11,9 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { CreateApplicantDto } from './dto/applicant.profile';
 import { Auth } from '@prisma/client';
+import { CreateChangePasswordDto } from './dto/change-password';
+import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UpdateAccountStatusDto } from './dto/status-auth';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +29,7 @@ export class AuthService {
         password: body.password,
         role: body.role,
         phone: body.phone,
+        countryId: body.countryId,
         isPhoneVerified: body.isPhoneVerified,
         isEmailVerified: body.isEmailVerified,
         phoneVerificationCode: body.phoneVerificationCode,
@@ -149,5 +153,68 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
     return new ApiSuccessResponse(true, 'User data', existingUser);
+  }
+
+  async changePassword(body: CreateChangePasswordDto, user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    if (existingUser.password !== body.current_password) {
+      throw new BadRequestException('Invalid old password');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        password: body.new_password,
+      },
+    });
+    return new ApiSuccessResponse(true, 'Password updated', updatedUser);
+  }
+
+  async deactiveAccount(user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        status: 'INACTIVE',
+      },
+    });
+    return new ApiSuccessResponse(true, 'Account deactivated', updatedUser);
+  }
+
+  async updateAccountStatus(body: UpdateAccountStatusDto, user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        status: body.status,
+      },
+    });
+    return new ApiSuccessResponse(true, 'Account activated', updatedUser);
   }
 }

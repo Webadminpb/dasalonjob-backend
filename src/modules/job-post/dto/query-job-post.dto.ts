@@ -14,6 +14,7 @@ export const QueryJobPostSchema = z.object({
   job_profile: z.nativeEnum(JobBasicInfoProfileType).optional(),
   job_type: z.nativeEnum(JobType).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
+  countryId: z.string().optional(),
   //   order: z.enum(['asc', 'desc']).default('desc'),
   //   sort: z
   //     .enum(['createdAt', 'updatedAt', 'order', 'status'])
