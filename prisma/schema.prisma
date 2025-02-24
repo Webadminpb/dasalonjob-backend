@@ -164,6 +164,11 @@ enum JobApplicationStatus {
   Rejected
 }
 
+enum CountryStatus {
+  ACTIVE
+  INACTIVE
+}
+
 
 type Days {
   monday Boolean @default(false)
@@ -194,6 +199,9 @@ model Auth {
   emailVerificationCode       String?
   phoneVerificationCodeExpiry DateTime?
   emailVerificationCodeExpiry DateTime?
+
+  countryId String? @db.ObjectId
+  country Country? @relation(fields: [countryId], references: [id])
 
 
 
@@ -616,6 +624,9 @@ model JobPost {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  countryId String? @db.ObjectId
+  country Country? @relation(fields: [countryId], references: [id])
+
   status JobPostStatus @default(Approved)
   isOpen Boolean @default(true)
 
@@ -849,6 +860,27 @@ model PartnerSocialLinks {
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Country {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name           String
+  code           String
+  currencyName   String
+  currencySymbol String
+
+  currencyCode      String @default("INR")
+  pincodeLength     Int
+  phoneNumberLength Int
+
+  status CountryStatus @default(ACTIVE)
+
+  auth Auth[]
+  jobPosts JobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

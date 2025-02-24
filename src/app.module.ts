@@ -34,6 +34,7 @@ import { JobApplicationsModule } from './modules/job-applications/job-applicatio
 import { JobApplicationMessageModule } from './modules/job-application-message/job-application-message.module';
 import { SaveJobPostModule } from './modules/save-job-post/save-job-post.module';
 import { PartnerSocialLinksModule } from './modules/partner-social-links/partner-social-links.module';
+import { CountryModule } from './modules/country/country.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { PartnerSocialLinksModule } from './modules/partner-social-links/partner
     JobApplicationMessageModule,
     SaveJobPostModule,
     PartnerSocialLinksModule,
+    CountryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
