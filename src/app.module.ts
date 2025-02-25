@@ -38,6 +38,7 @@ import { CountryModule } from './modules/country/country.module';
 import { VenueAmenitiesModule } from './modules/venue-amenities/venue-amenities.module';
 import { VenueWorkstationModule } from './modules/venue-workstation/venue-workstation.module';
 import { PartnerVenueModule } from './modules/partner-venue/partner-venue.module';
+import { CourseDetailsModule } from './modules/course-details/course-details.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { PartnerVenueModule } from './modules/partner-venue/partner-venue.module
     VenueAmenitiesModule,
     VenueWorkstationModule,
     PartnerVenueModule,
+    CourseDetailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

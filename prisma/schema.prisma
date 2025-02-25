@@ -128,6 +128,16 @@ enum JobType {
   PartTime
 }
 
+enum CourseType {
+  Online
+  Offline
+}
+
+enum CoursePlatform {
+  Zoom
+  GoogleMeet
+}
+
 // Benefits
 enum Incentive {
   HealthInsurance
@@ -210,6 +220,11 @@ type SalaryRange {
   end Int @default(0)
 }
 
+type Content {
+  service HighestEducation
+  list String
+}
+
 
 // for User Partner
 model Auth {
@@ -255,7 +270,13 @@ model Auth {
   jobBenefits JobBenefits[]
   venueAmenities VenueAmenities[]
   venueWorkStation VenueWorkStation[]
-  partnerVenue PartnerVenue[]
+  partnerVenues PartnerVenue[]
+  partnerCourses PartnerCourse[]
+
+  courseDetails CourseDetails[]
+  courseContent CourseContent[]
+  courseAcademy CourseAcademy[]
+  courseTypeAndLocation CourseTypeAndLocation[]
 
   agencyDetails AgencyDetails?
   agencyJobBasicInfo AgencyJobBasicInfo?
@@ -480,6 +501,7 @@ model File {
   basicDetails BasicDetails?
   agencyDetails AgencyDetails?
   agencyVenueDetails AgencyVenueDetails?
+  courseDetails CourseDetails[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -915,6 +937,7 @@ model Country {
 
   auth Auth[]
   jobPosts JobPost[]
+  courseTypeAndLocation CourseTypeAndLocation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -964,6 +987,109 @@ model PartnerVenue {
   venueWorkStationId String @db.ObjectId
   venueWorkStation VenueWorkStation @relation(fields: [venueWorkStationId], references: [id])
 
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  courseDetails CourseDetails[]
+  courseAcademy CourseAcademy[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PartnerCourse {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+// partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model CourseDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  jobProfile JobProfile
+
+  courseName String
+  courseType String
+
+  startDate DateTime
+  endDate DateTime
+
+  price Float
+  offerPrice Float
+
+  isPlacement Boolean @default(false)
+
+  // VenueId
+  providerId String @db.ObjectId
+  provider PartnerVenue @relation(fields: [providerId], references: [id])
+
+  // fileId
+  fileId String? @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseContent {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  content Content[]
+
+  description String? 
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseAcademy {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // VenueId
+  providerId String @db.ObjectId
+  provider PartnerVenue @relation(fields: [providerId], references: [id])
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseTypeAndLocation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  
+  countryId String @db.ObjectId
+  country Country @relation(fields: [countryId], references: [id])
+
+  city String
+  state String
+  pincode String
+  address String
+
+  courseType CourseType 
+
+  platform CoursePlatform
+  link String
+
+  // partnerId
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 

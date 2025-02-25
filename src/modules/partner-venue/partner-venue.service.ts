@@ -3,7 +3,10 @@ import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
 import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { Auth } from '@prisma/client';
+import { Auth, Prisma } from '@prisma/client';
+import { Query } from 'mongoose';
+import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
+import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 
 @Injectable()
 export class PartnerVenueService {
@@ -26,24 +29,56 @@ export class PartnerVenueService {
     );
   }
 
-  async findAll(user: Auth) {
-    const partnerVenues = await this.prismaService.partnerVenue.findMany({
-      where: { userId: user.id },
-      include: {
-        venueBasicDetails: true,
-        salonBasicDetails: true,
-        venueAmenities: true,
-        venueWorkStation: true,
-        user: true,
-      },
-    });
-
-    if (!partnerVenues) {
-      throw new BadRequestException('No Partner Venues found');
+  async findAll(user: Auth, query: QueryPartnerVenueDto) {
+    const where: Prisma.PartnerVenueWhereInput = {
+      userId: user.id,
+    };
+    if (query.search) {
+      where.venueBasicDetails = {
+        OR: [
+          {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      };
     }
-    return new ApiSuccessResponse(true, 'Partner Venues found', {
-      partnerVenues,
-    });
+
+    if (query.date) {
+      const year = query.date;
+      where.createdAt = {
+        gte: new Date(`${year}-01-01T00:00:00.000Z`),
+        lte: new Date(`${year}-12-31T23:59:59.999Z`),
+      };
+    }
+
+    if (query.gender) {
+      where.venueBasicDetails = {
+        gender: query.gender,
+      };
+
+      const partnerVenues = await this.prismaService.partnerVenue.findMany({
+        where: { userId: user.id },
+        include: {
+          venueBasicDetails: true,
+          salonBasicDetails: true,
+          venueAmenities: true,
+          venueWorkStation: true,
+          user: true,
+        },
+        skip: getPaginationSkip(query.page, query.limit),
+        take: getPaginationTake(query.limit),
+      });
+
+      if (!partnerVenues) {
+        throw new BadRequestException('No Partner Venues found');
+      }
+      return new ApiSuccessResponse(true, 'Partner Venues found', {
+        partnerVenues,
+      });
+    }
   }
 
   async findOne(id: string) {

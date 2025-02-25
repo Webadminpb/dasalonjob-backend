@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
@@ -17,6 +16,7 @@ import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
+import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
 
 @ApiTags('partner-venue')
 @Controller('partner-venue')
@@ -33,8 +33,8 @@ export class PartnerVenueController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
-  findAll(@GetUser() user?: Auth) {
-    return this.partnerVenueService.findAll(user);
+  findAll(@GetUser() user: Auth, @Query() query: QueryPartnerVenueDto) {
+    return this.partnerVenueService.findAll(user, query);
   }
 
   @Get(':id')
