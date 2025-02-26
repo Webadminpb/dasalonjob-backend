@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Delete,
   HttpStatus,
   HttpCode,
