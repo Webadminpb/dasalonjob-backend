@@ -3,7 +3,8 @@ import { CreatePartnerCourseDto } from './dto/create-partner-course.dto';
 import { UpdatePartnerCourseDto } from './dto/update-partner-course.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { Auth } from '@prisma/client';
+import { Auth, Prisma } from '@prisma/client';
+import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
 
 @Injectable()
 export class PartnerCourseService {
@@ -28,8 +29,54 @@ export class PartnerCourseService {
     );
   }
 
-  async findAll() {
-    const partnerCourses = await this.prismaService.partnerCourse.findMany();
+  async findAll(query: QueryPartnerCourseDto, user: Auth) {
+    const where: Prisma.PartnerCourseWhereInput = {
+      userId: user.id,
+    };
+    if (query.type) {
+      where.courseTypeAndLocation.courseType = query.type;
+    }
+    if (query.location) {
+      where.courseTypeAndLocation.city = query.location;
+    }
+    if (query.status) {
+      where.status = query.status;
+    }
+    if (query.customDate) {
+      where.createdAt = {
+        gte: new Date(query.customDate),
+      };
+    }
+    if (query.search) {
+      where.OR = [
+        {
+          courseDetails: {
+            courseName: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          courseContent: {
+            description: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    const partnerCourses = await this.prismaService.partnerCourse.findMany({
+      where,
+      include: {
+        courseDetails: true,
+        courseContent: true,
+        courseAcademy: true,
+        courseTypeAndLocation: true,
+      },
+    });
     if (!partnerCourses) {
       throw new BadRequestException('No partner courses found');
     }

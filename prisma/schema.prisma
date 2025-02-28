@@ -520,6 +520,11 @@ model SalonDetails {
   ownerName String
   email String
 
+  firstName String?
+  lastName String?
+  dob DateTime?
+  gender Gender?
+
   phoneCode String
   phoneNumber String 
 

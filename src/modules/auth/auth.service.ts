@@ -125,6 +125,8 @@ export class AuthService {
         salonDetails: true,
         venueDetails: true,
         venueMainBusinessDays: true,
+        venueMainBusinessServices: true,
+        partnerSocialLinks: true,
       },
     });
     if (!existingUser) {
