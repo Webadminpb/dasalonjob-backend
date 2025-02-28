@@ -2,6 +2,7 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ExceptionsFilter } from './exception-filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,11 +18,13 @@ async function bootstrap() {
   // app.useGlobalPipes(new ZodValidationPipe());
 
   app.setGlobalPrefix('api/v1');
-  app.enableCors({
-    origin: ['*', 'http://localhost:3000'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
+  // app.use(cors());
+  app.use(cors({ origin: ['*', 'http://localhost:3000'] }));
+  // app.enableCors({
+  //   origin: ['*', 'http://localhost:3000'],
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true,
+  // });
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(process.env.PORT || 4000);
