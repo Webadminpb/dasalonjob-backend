@@ -18,6 +18,10 @@ export class SalondetailsService {
         phoneCode: body.phoneCode,
         phoneNumber: body.phoneNumber,
         userId: user.id,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        dob: body.dob,
+        gender: body.gender,
       },
     });
     return new ApiSuccessResponse(true, 'Salon details added', salonDetails);
