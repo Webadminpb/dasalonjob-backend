@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { CreateCourseContentDto } from './dto/create-course-content.dto';
 import { UpdateCourseContentDto } from './dto/update-course-content.dto';
-import { Auth } from '@prisma/client';
+import { Auth, HighestEducation } from '@prisma/client';
 
 @Injectable()
 export class CourseContentService {
@@ -13,6 +13,10 @@ export class CourseContentService {
     const courseContent = await this.prismaService.courseContent.create({
       data: {
         // content: body.content,
+        content: body.content.map((item) => ({
+          service: item.service ?? HighestEducation.Degree,
+          list: item.list,
+        })),
         description: body.description,
         userId: body.userId,
       },
@@ -67,6 +71,10 @@ export class CourseContentService {
       },
       data: {
         // content: body.content,
+        content: body.content.map((item) => ({
+          service: item.service,
+          list: item.list,
+        })),
         description: body.description,
         userId: body.userId,
       },

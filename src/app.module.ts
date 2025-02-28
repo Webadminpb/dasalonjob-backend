@@ -40,6 +40,9 @@ import { VenueWorkstationModule } from './modules/venue-workstation/venue-workst
 import { PartnerVenueModule } from './modules/partner-venue/partner-venue.module';
 import { CourseDetailsModule } from './modules/course-details/course-details.module';
 import { CourseContentModule } from './modules/course-content/course-content.module';
+import { CourseAcademyModule } from './modules/course-academy/course-academy.module';
+import { CourseTypeAndLocationModule } from './modules/course-type-and-location/course-type-and-location.module';
+import { PartnerCourseModule } from './modules/partner-course/partner-course.module';
 
 @Module({
   imports: [
@@ -82,6 +85,9 @@ import { CourseContentModule } from './modules/course-content/course-content.mod
     PartnerVenueModule,
     CourseDetailsModule,
     CourseContentModule,
+    CourseAcademyModule,
+    CourseTypeAndLocationModule,
+    PartnerCourseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

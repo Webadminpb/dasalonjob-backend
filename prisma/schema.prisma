@@ -167,6 +167,11 @@ enum JobPostStatus {
   Pending
 }
 
+enum CourseStatus {
+  Approved
+  Canceled
+}
+
 enum JobApplicationStatus {
   Applied
   Shortlisted
@@ -1004,6 +1009,21 @@ model PartnerCourse {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  courseDetailsId String @db.ObjectId
+  courseDetails CourseDetails @relation(fields: [courseDetailsId], references: [id])
+
+  courseContentId String @db.ObjectId
+  courseContent CourseContent @relation(fields: [courseContentId], references: [id])
+
+  courseAcademyId String @db.ObjectId
+  courseAcademy CourseAcademy @relation(fields: [courseAcademyId], references: [id])
+
+  courseTypeAndLocationId String @db.ObjectId
+  courseTypeAndLocation CourseTypeAndLocation @relation(fields: [courseTypeAndLocationId], references: [id])
+
+  status CourseStatus @default(Approved)
+  isOpen Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -1037,6 +1057,9 @@ model CourseDetails {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  partnerCourses PartnerCourse[]
+
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1053,6 +1076,8 @@ model CourseContent {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+   partnerCourses PartnerCourse[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -1068,6 +1093,8 @@ model CourseAcademy {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+   partnerCourses PartnerCourse[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -1076,22 +1103,24 @@ model CourseTypeAndLocation {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   
-  countryId String @db.ObjectId
-  country Country @relation(fields: [countryId], references: [id])
+  countryId String? @db.ObjectId
+  country Country? @relation(fields: [countryId], references: [id])
 
-  city String
-  state String
-  pincode String
-  address String
+  city String?
+  state String?
+  pincode String?
+  address String?
 
   courseType CourseType 
 
-  platform CoursePlatform
-  link String
+  platform CoursePlatform?
+  link String?
 
   // partnerId
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  partnerCourses PartnerCourse[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
