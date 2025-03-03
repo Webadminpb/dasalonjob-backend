@@ -58,27 +58,27 @@ export class PartnerVenueService {
       where.venueBasicDetails = {
         gender: query.gender,
       };
-
-      const partnerVenues = await this.prismaService.partnerVenue.findMany({
-        where: { userId: user.id },
-        include: {
-          venueBasicDetails: true,
-          salonBasicDetails: true,
-          venueAmenities: true,
-          venueWorkStation: true,
-          user: true,
-        },
-        skip: getPaginationSkip(query.page, query.limit),
-        take: getPaginationTake(query.limit),
-      });
-
-      if (!partnerVenues) {
-        throw new BadRequestException('No Partner Venues found');
-      }
-      return new ApiSuccessResponse(true, 'Partner Venues found', {
-        partnerVenues,
-      });
     }
+
+    const partnerVenues = await this.prismaService.partnerVenue.findMany({
+      where: { userId: user.id },
+      include: {
+        venueBasicDetails: true,
+        salonBasicDetails: true,
+        venueAmenities: true,
+        venueWorkStation: true,
+        user: true,
+      },
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+    });
+
+    if (!partnerVenues) {
+      throw new BadRequestException('No Partner Venues found');
+    }
+    return new ApiSuccessResponse(true, 'Partner Venues found', {
+      partnerVenues,
+    });
   }
 
   async findOne(id: string) {
