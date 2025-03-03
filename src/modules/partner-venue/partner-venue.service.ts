@@ -7,6 +7,7 @@ import { Auth, Prisma } from '@prisma/client';
 import { Query } from 'mongoose';
 import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
 import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class PartnerVenueService {
@@ -151,5 +152,36 @@ export class PartnerVenueService {
       'Partner Venue deleted successfully',
       partnerVenue,
     );
+  }
+
+  async dashboardTotal(user: Auth) {
+    const [totalJobs, totalCourses] = await Promise.all([
+      this.prismaService.jobPost.count({ where: { userId: user.id } }),
+      this.prismaService.partnerCourse.count({ where: { userId: user.id } }),
+    ]);
+    return new ApiSuccessResponse(true, 'total', { totalJobs, totalCourses });
+  }
+
+  async jobApplicationTotal(user: Auth) {
+    const [applied, shortlisted, rejected, accepted] = await Promise.all([
+      this.prismaService.jobApplication.count({
+        where: { userId: user.id, status: 'Applied' },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { userId: user.id, status: 'Shortlisted' },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { userId: user.id, status: 'Rejected' },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { userId: user.id, status: 'Accepted' },
+      }),
+    ]);
+    return new ApiSuccessResponse(true, 'total', {
+      applied,
+      shortlisted,
+      rejected,
+      accepted,
+    });
   }
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Auth, Prisma } from '@prisma/client';
 import { CreateJobPostDto } from './dto/create-job-post.dto';
@@ -6,6 +10,7 @@ import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
 import { QueryJobPostDto } from './dto/query-job-post.dto';
 import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class JobPostService {
@@ -141,5 +146,35 @@ export class JobPostService {
       where: { id: existingJobPost.id },
     });
     return new ApiSuccessResponse(true, 'Job post deleted', null);
+  }
+
+  async findExpiringJobs(query: QueryJobPostDto, user: Auth) {
+    const today = new Date();
+    const nextWeek = addDays(today, 7);
+
+    const [expiringJobs, total] = await this.prismaService.jobPost.findMany({
+      where: {
+        userId: user.id,
+        jobBasicInfo: {
+          deadline: {
+            gte: today,
+            lte: nextWeek,
+          },
+        },
+      },
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+      include: {
+        jobBasicInfo: true,
+      },
+    });
+    if (!expiringJobs) {
+      throw new BadRequestException('expired jobs not found');
+    }
+
+    return new ApiSuccessResponse(true, 'partner jobs', {
+      expiringJobs,
+      total,
+    });
   }
 }

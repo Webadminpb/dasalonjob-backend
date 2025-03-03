@@ -67,4 +67,11 @@ export class JobPostController {
   remove(@GetUser() user: Auth, @Param('id') id: string) {
     return this.jobPostService.remove(id, user);
   }
+
+  @Get('deadline-jobs')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  getJobApplicationTotal(user: Auth, @Query() query: QueryJobPostDto) {
+    return this.jobPostService.findExpiringJobs(query, user);
+  }
 }

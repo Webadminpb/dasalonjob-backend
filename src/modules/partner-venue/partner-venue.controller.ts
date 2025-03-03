@@ -62,4 +62,18 @@ export class PartnerVenueController {
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerVenueService.remove(id, user);
   }
+
+  @Get('total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  getDashboardTotal(@GetUser() user: Auth) {
+    return this.partnerVenueService.dashboardTotal(user);
+  }
+
+  @Get('job-application-total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  getJobApplicationTotal(user: Auth) {
+    return this.partnerVenueService.jobApplicationTotal(user);
+  }
 }
