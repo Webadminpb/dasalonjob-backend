@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   JobBasicInfoProfileType,
   JobPostStatus,
@@ -20,4 +21,40 @@ export const QueryJobPostSchema = z.object({
   //     .default('createdAt'),
 });
 
-export class QueryJobPostDto extends createZodDto(QueryJobPostSchema) {}
+export class QueryJobPostDto extends createZodDto(QueryJobPostSchema) {
+  @ApiPropertyOptional({ type: String, description: 'Search query' })
+  search?: string;
+
+  @ApiPropertyOptional({
+    type: Number,
+    description: 'Page number for pagination',
+  })
+  page?: number;
+
+  @ApiPropertyOptional({
+    type: Number,
+    description: 'Number of records per page',
+  })
+  limit?: number;
+
+  @ApiPropertyOptional({
+    enum: JobBasicInfoProfileType,
+    description: 'Filter by job profile type',
+  })
+  job_profile?: JobBasicInfoProfileType;
+
+  @ApiPropertyOptional({
+    enum: JobType,
+    description: 'Filter by job type',
+  })
+  job_type?: JobType;
+
+  @ApiPropertyOptional({
+    enum: JobPostStatus,
+    description: 'Filter by job post status',
+  })
+  status?: JobPostStatus;
+
+  @ApiPropertyOptional({ type: String, description: 'Filter by country ID' })
+  countryId?: string;
+}

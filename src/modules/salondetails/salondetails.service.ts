@@ -18,6 +18,7 @@ export class SalondetailsService {
         phoneCode: body.phoneCode,
         phoneNumber: body.phoneNumber,
         userId: user.id,
+        fileIds: body.fileIds,
         firstName: body.firstName,
         lastName: body.lastName,
         dob: body.dob,

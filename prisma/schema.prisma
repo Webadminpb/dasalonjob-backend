@@ -503,6 +503,9 @@ model File {
   venueDetailIds String[] @db.ObjectId
   venueDetails VenueDetails[] @relation(fields: [venueDetailIds], references: [id])
 
+  salonDetailsIds String[] @db.ObjectId
+  salonDetails SalonDetails[] @relation(fields: [salonDetailsIds], references: [id])
+
   basicDetails BasicDetails?
   agencyDetails AgencyDetails?
   agencyVenueDetails AgencyVenueDetails?
@@ -529,6 +532,10 @@ model SalonDetails {
   phoneNumber String 
 
   isDasalonAccount Boolean?
+
+
+  fileIds String[] @db.ObjectId
+  files File[] @relation(fields: [fileIds], references: [id])
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
@@ -580,6 +587,8 @@ model VenueMainBusinessDays {
   days Days
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  partnerVenue PartnerVenue[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -996,6 +1005,9 @@ model PartnerVenue {
 
   venueWorkStationId String @db.ObjectId
   venueWorkStation VenueWorkStation @relation(fields: [venueWorkStationId], references: [id])
+
+  venueMainBusinessDaysId String @db.ObjectId
+  venueMainBusinessDays VenueMainBusinessDays @relation(fields: [venueMainBusinessDaysId], references: [id])
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])

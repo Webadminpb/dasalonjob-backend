@@ -10,11 +10,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { LangaugesService } from './languages.service';
-import { CreateLangaugeDto } from './dto/create-langauge.dto';
-import { UpdateLangaugeDto } from './dto/update-langauge.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateLanguageDto } from './dto/create-language.dto';
+import { UpdateLanguageDto } from './dto/update-language.dto';
 
 @ApiTags('user partner agency')
 @Controller('languages')
@@ -24,7 +24,7 @@ export class LangaugesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
-  create(@Body() body: CreateLangaugeDto, @GetUser() user: Auth) {
+  create(@Body() body: CreateLanguageDto, @GetUser() user: Auth) {
     return this.langaugesService.create(body, user);
   }
 
@@ -47,7 +47,7 @@ export class LangaugesController {
   @AllowAuthenticated('USER', 'AGENCY', 'PARTNER')
   update(
     @Param('id') id: string,
-    @Body() body: UpdateLangaugeDto,
+    @Body() body: UpdateLanguageDto,
     @GetUser() user: Auth,
   ) {
     return this.langaugesService.update(id, body, user);

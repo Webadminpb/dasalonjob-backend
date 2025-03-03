@@ -26,8 +26,8 @@ export class PartnerVenueController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
-  create(@Body() body: CreatePartnerVenueDto) {
-    return this.partnerVenueService.create(body);
+  create(@Body() body: CreatePartnerVenueDto, @GetUser() user: Auth) {
+    return this.partnerVenueService.create(body, user);
   }
 
   @Get()

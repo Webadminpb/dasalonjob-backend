@@ -13,14 +13,15 @@ import { addDays } from 'date-fns';
 export class PartnerVenueService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreatePartnerVenueDto) {
+  async create(body: CreatePartnerVenueDto, user: Auth) {
     const partnerVenue = await this.prismaService.partnerVenue.create({
       data: {
         venueBasicDetailsId: body.venueBasicDetailsId,
         salonBasicDetailsId: body.salonBasicDetailsId,
         venueAmenityIds: body.venueAmenityIds,
+        venueMainBusinessDaysId: body.venueMainBusinessDaysId,
         venueWorkStationId: body.venueWorkStationId,
-        userId: body.userId,
+        userId: user.id,
       },
     });
     return new ApiSuccessResponse(
@@ -121,7 +122,7 @@ export class PartnerVenueService {
         salonBasicDetailsId: body.salonBasicDetailsId,
         venueAmenityIds: body.venueAmenityIds,
         venueWorkStationId: body.venueWorkStationId,
-        userId: body.userId,
+        userId: user.id,
       },
     });
     return new ApiSuccessResponse(

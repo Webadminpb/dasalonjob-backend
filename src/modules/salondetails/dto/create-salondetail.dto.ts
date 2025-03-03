@@ -13,6 +13,7 @@ export const SalonDetailsSchema = z.object({
   isDasalonAccount: z.boolean().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
+  fileIds: z.array(z.string()).optional(),
   dob: zDateOptional,
   gender: z.nativeEnum(Gender).optional(),
 });
@@ -51,6 +52,9 @@ export class CreateSalonDetailsDto extends createZodDto(SalonDetailsSchema) {
 
   @ApiProperty({ description: 'The lastname optional', example: 'jaggarwal' })
   lastName: string;
+
+  @ApiProperty({ description: 'fileIds optional', example: '' })
+  fileIds: string[];
 
   @ApiProperty({ description: 'date', example: 'sahil' })
   dob: Date;

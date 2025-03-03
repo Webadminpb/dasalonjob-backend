@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateLangaugeDto } from './dto/create-langauge.dto';
-import { UpdateLangaugeDto } from './dto/update-langauge.dto';
 import { Auth } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import { CreateLanguageDto } from './dto/create-language.dto';
+import { UpdateLanguageDto } from './dto/update-language.dto';
 
 @Injectable()
 export class LangaugesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreateLangaugeDto, user: Auth) {
+  async create(body: CreateLanguageDto, user: Auth) {
     const language = await this.prismaService.languages.create({
       data: {
         userId: user.id,
@@ -50,7 +50,7 @@ export class LangaugesService {
     return new ApiSuccessResponse(true, 'Langauage data ', language);
   }
 
-  async update(id: string, body: UpdateLangaugeDto, user: Auth) {
+  async update(id: string, body: UpdateLanguageDto, user: Auth) {
     const existingLanguage = await this.prismaService.languages.findUnique({
       where: {
         id,
