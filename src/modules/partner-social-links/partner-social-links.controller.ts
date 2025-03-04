@@ -26,28 +26,28 @@ export class PartnerSocialLinksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('PARTNER')
   create(@Body() body: CreatePartnerSocialLinksDto, @GetUser() user: Auth) {
     return this.partnerSocialLinksService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('PARTNER')
   findMySocialLinks(@GetUser() user: Auth) {
     return this.partnerSocialLinksService.findMySocialLinks(user);
   }
 
   @Put()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('PARTNER')
   update(@Body() body: UpdatePartnerSocialLinksDto, @GetUser() user: Auth) {
     return this.partnerSocialLinksService.update(body, user);
   }
 
   @Delete()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('PARTNER')
   remove(@GetUser() user: Auth) {
     return this.partnerSocialLinksService.remove(user);
   }
