@@ -164,21 +164,44 @@ export class PartnerVenueService {
   }
 
   async jobApplicationTotal(user: Auth) {
+    console.log('userId ', user);
+
     const [applied, shortlisted, rejected, accepted] = await Promise.all([
       this.prismaService.jobApplication.count({
-        where: { userId: user.id, status: 'Applied' },
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: 'Applied',
+        },
       }),
       this.prismaService.jobApplication.count({
-        where: { userId: user.id, status: 'Shortlisted' },
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: 'Shortlisted',
+        },
       }),
       this.prismaService.jobApplication.count({
-        where: { userId: user.id, status: 'Rejected' },
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: 'Rejected',
+        },
       }),
       this.prismaService.jobApplication.count({
-        where: { userId: user.id, status: 'Accepted' },
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: 'Accepted',
+        },
       }),
     ]);
-    return new ApiSuccessResponse(true, 'total', {
+
+    return new ApiSuccessResponse(true, 'Total Job Applications', {
       applied,
       shortlisted,
       rejected,

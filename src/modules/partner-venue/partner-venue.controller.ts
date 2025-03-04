@@ -9,6 +9,7 @@ import {
   HttpStatus,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { PartnerVenueService } from './partner-venue.service';
 import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
@@ -38,6 +39,20 @@ export class PartnerVenueController {
     return this.partnerVenueService.findAll(user, query);
   }
 
+  @Get('job-application-total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  getJobApplicationTotal(@GetUser() user: Auth, @Req() req: any) {
+    return this.partnerVenueService.jobApplicationTotal(user);
+  }
+
+  @Get('total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  getDashboardTotal(@GetUser() user: Auth) {
+    return this.partnerVenueService.dashboardTotal(user);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
@@ -61,19 +76,5 @@ export class PartnerVenueController {
   @AllowAuthenticated('PARTNER')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerVenueService.remove(id, user);
-  }
-
-  @Get('total')
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
-  getDashboardTotal(@GetUser() user: Auth) {
-    return this.partnerVenueService.dashboardTotal(user);
-  }
-
-  @Get('job-application-total')
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
-  getJobApplicationTotal(user: Auth) {
-    return this.partnerVenueService.jobApplicationTotal(user);
   }
 }

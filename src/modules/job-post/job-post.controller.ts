@@ -44,6 +44,16 @@ export class JobPostController {
     return this.jobPostService.findAll(query);
   }
 
+  @Get('deadline-jobs')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  getJobApplicationTotal(
+    @GetUser() user: Auth,
+    @Query() query: QueryJobPostDto,
+  ) {
+    return this.jobPostService.findExpiringJobs(query, user);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
@@ -66,12 +76,5 @@ export class JobPostController {
   @AllowAuthenticated('PARTNER')
   remove(@GetUser() user: Auth, @Param('id') id: string) {
     return this.jobPostService.remove(id, user);
-  }
-
-  @Get('deadline-jobs')
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
-  getJobApplicationTotal(user: Auth, @Query() query: QueryJobPostDto) {
-    return this.jobPostService.findExpiringJobs(query, user);
   }
 }

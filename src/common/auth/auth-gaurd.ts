@@ -117,11 +117,13 @@ export class AuthGaurd implements CanActivate {
     }
 
     if (userRole === 'PARTNER') {
+      console.log('partner....');
       const partner = await this.prisma.auth.findUnique({
         where: {
           id: req.user.id,
         },
       });
+      console.log('partner... line 126');
       if (!partner) {
         throw new UnauthorizedException('Invalid Partner id.');
       }
@@ -129,6 +131,7 @@ export class AuthGaurd implements CanActivate {
         throw new UnauthorizedException('Inavlid partner role');
       }
       req.partner = partner;
+      console.log('req.partner ', req.partner);
     }
     return requiredRoles.includes(userRole);
   }
