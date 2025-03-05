@@ -301,6 +301,7 @@ model Auth {
   jobApplications JobApplication[]
 
   saveJobPosts SaveJobPost[]
+  saveCourses SaveCourse[]
   partnerSocialLinks PartnerSocialLinks?
 
   applicantShortlistedMessages JobApplicationMessage[] @relation("ApplicantShortlistedMessages")
@@ -931,7 +932,7 @@ model PartnerSocialLinks {
   facebook String
   instagram String
   linkedin String
-  twitter String
+  website String
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
@@ -1041,6 +1042,8 @@ model PartnerCourse {
   status CourseStatus @default(Approved)
   isOpen Boolean @default(true)
 
+  saveCourses SaveCourse[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -1141,6 +1144,22 @@ model CourseTypeAndLocation {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SaveCourse {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // ApplicantId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  courseId String @db.ObjectId
+  course PartnerCourse @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId]) 
 }
 
 

@@ -1,9 +1,3 @@
-import {
-  JobBasicInfoProfileType,
-  JobPostStatus,
-  JobProfile,
-  JobType,
-} from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 

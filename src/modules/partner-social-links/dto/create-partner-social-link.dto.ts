@@ -5,7 +5,7 @@ export const createPartnerSocialLinksSchema = z.object({
   facebook: z.string().optional(),
   instagram: z.string().optional(),
   linkedin: z.string().optional(),
-  twitter: z.string().optional(),
+  website: z.string().optional(),
 });
 
 export class CreatePartnerSocialLinksDto extends createZodDto(

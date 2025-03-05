@@ -31,7 +31,7 @@ export class PartnerSocialLinksService {
         facebook: body.facebook,
         instagram: body.instagram,
         linkedin: body.linkedin,
-        twitter: body.twitter,
+        website: body.website,
       },
     });
 
