@@ -1052,7 +1052,7 @@ model CourseDetails {
   jobProfile JobProfile
 
   courseName String
-  courseType String
+  courseType String?
 
   startDate DateTime
   endDate DateTime

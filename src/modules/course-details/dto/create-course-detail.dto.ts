@@ -5,7 +5,7 @@ import { JobProfile } from '@prisma/client';
 export const CreateCourseDetailsSchema = z.object({
   jobProfile: z.nativeEnum(JobProfile),
   courseName: z.string(),
-  courseType: z.string(),
+  courseType: z.string().optional(),
   startDate: z.string().datetime(),
   endDate: z.string().datetime(),
   price: z.number(),
