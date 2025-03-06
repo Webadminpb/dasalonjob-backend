@@ -365,8 +365,9 @@ model Languages {
   userId      String @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
 
-  jobPostIds String[] @db.ObjectId
-  jobPosts JobPost[] @relation(fields: [jobPostIds], references: [id])
+  jobQualificationIds String[] @db.ObjectId
+  jobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
+
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -378,8 +379,12 @@ model Skills {
 
   name String
 
-  jobPostIds String[] @db.ObjectId
-  jobPosts JobPost[] @relation(fields: [jobPostIds], references: [id])
+  // jobPostIds String[] @db.ObjectId
+  // jobPosts JobPost[] @relation(fields: [jobPostIds], references: [id])
+
+
+  jobQualificationIds String[] @db.ObjectId
+  JobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -622,6 +627,9 @@ model JobBasicInfo {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  venueId String? @db.ObjectId @unique
+  venue PartnerVenue? @relation(fields: [venueId], references: [id])
+
   jobPost JobPost[]
 
   createdAt DateTime @default(now())
@@ -649,6 +657,12 @@ model JobQualification {
   minExperience Boolean
   certification Boolean
   isProfessional Boolean
+
+  skillIds String[] @db.ObjectId
+  skills Skills[] @relation(fields: [skillIds], references: [id])
+
+  languageIds String[] @db.ObjectId
+  languages Languages[] @relation(fields: [languageIds], references: [id])
 
   
   userId String @db.ObjectId
@@ -692,11 +706,7 @@ model JobPost {
   jobDescriptionId String?  @db.ObjectId
   jobDescription JobDescription? @relation(fields: [jobDescriptionId], references: [id])
 
-  skillIds String[] @db.ObjectId
-  skills Skills[] @relation(fields: [skillIds], references: [id])
 
-  languageIds String[] @db.ObjectId
-  languages Languages[] @relation(fields: [languageIds], references: [id])
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
@@ -1017,6 +1027,7 @@ model PartnerVenue {
 
   courseDetails CourseDetails[]
   courseAcademy CourseAcademy[]
+  jobBasicInfo JobBasicInfo?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

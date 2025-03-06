@@ -13,6 +13,7 @@ export class JobBasicInfoService {
     const jobBasicInfo = await this.prismaService.jobBasicInfo.create({
       data: {
         title: body.title,
+        venueId: body.venueId,
         profile: body.profile,
         jobType: body.jobType,
         totalOpening: body.totalOpening,

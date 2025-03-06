@@ -8,6 +8,8 @@ export const JobQualificationSchema = z.object({
   minExperience: z.boolean(),
   certification: z.boolean(),
   isProfessional: z.boolean(),
+  languageIds: z.array(z.string()),
+  skillIds: z.array(z.string()),
 });
 
 export class CreateJobQualificationDto extends createZodDto(

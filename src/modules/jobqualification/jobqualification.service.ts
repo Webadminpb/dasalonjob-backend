@@ -17,6 +17,8 @@ export class JobQualificationService {
         education: body.education,
         minExperience: body.minExperience,
         userId: user.id,
+        languageIds: body.languageIds,
+        skillIds: body.skillIds,
       },
     });
     return new ApiSuccessResponse(

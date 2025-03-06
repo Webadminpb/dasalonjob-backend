@@ -23,9 +23,9 @@ export class JobPostService {
         jobBenefitsId: body.jobBenefitsId,
         jobQualificationId: body.jobQualificationId,
         jobDescriptionId: body.jobDescriptionId,
-        skillIds: body.skillIds,
+        // skillIds: body.skillIds,
         countryId: body.countryId,
-        languageIds: body.languageIds,
+        // languageIds: body.languageIds,
         userId: user.id,
       },
     });
@@ -44,9 +44,13 @@ export class JobPostService {
         jobBasicInfo: true,
         jobBenefits: true,
         jobDescription: true,
-        jobQualification: true,
-        languages: true,
-        skills: true,
+        jobQualification: {
+          include: {
+            skills: true,
+            languages: true,
+          },
+        },
+        // skills: true,
       },
     });
     if (!jobPost) {
@@ -96,17 +100,15 @@ export class JobPostService {
       await this.prismaService.jobPost.findMany({
         where,
         include: {
-          user: {
-            include: {
-              venueDetails: true,
-            },
-          },
           jobBasicInfo: true,
           jobBenefits: true,
           jobDescription: true,
-          jobQualification: true,
-          languages: true,
-          skills: true,
+          jobQualification: {
+            include: {
+              skills: true,
+            },
+          },
+          // skills: true,
         },
         skip,
         take,
