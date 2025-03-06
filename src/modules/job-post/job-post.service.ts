@@ -151,7 +151,13 @@ export class JobPostService {
   async findExpiringJobs(query: QueryJobPostDto, user: Auth) {
     const today = new Date();
     const nextWeek = addDays(today, 7);
-
+    console.log(
+      await this.prismaService.jobPost.findMany({
+        include: { jobBasicInfo: true },
+      }),
+    );
+    console.log('today ', today);
+    console.log('week ', nextWeek);
     const [expiringJobs, total] = await this.prismaService.jobPost.findMany({
       where: {
         userId: user.id,
@@ -162,12 +168,13 @@ export class JobPostService {
           },
         },
       },
-      skip: getPaginationSkip(query.page, query.limit),
-      take: getPaginationTake(query.limit),
+      // skip: getPaginationSkip(query.page, query.limit),
+      // take: getPaginationTake(query.limit),
       include: {
         jobBasicInfo: true,
       },
     });
+    console.log('data ', expiringJobs);
     if (!expiringJobs) {
       throw new BadRequestException('expired jobs not found');
     }

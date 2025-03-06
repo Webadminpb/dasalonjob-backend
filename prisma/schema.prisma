@@ -282,6 +282,7 @@ model Auth {
   courseContent CourseContent[]
   courseAcademy CourseAcademy[]
   courseTypeAndLocation CourseTypeAndLocation[]
+  CourseApplications CourseApplication[]
 
   agencyDetails AgencyDetails?
   agencyJobBasicInfo AgencyJobBasicInfo?
@@ -873,6 +874,7 @@ model AgencyPlan {
 model JobApplication {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  // Applicant Id
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
@@ -1043,6 +1045,7 @@ model PartnerCourse {
   isOpen Boolean @default(true)
 
   saveCourses SaveCourse[]
+  courseApplications CourseApplication[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1160,6 +1163,21 @@ model SaveCourse {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId]) 
+}
+
+model CourseApplication {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  courseId String @db.ObjectId
+  course PartnerCourse @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
 }
 
 
