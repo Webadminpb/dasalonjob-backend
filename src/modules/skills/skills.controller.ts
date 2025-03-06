@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
@@ -22,29 +21,29 @@ import { ApiTags } from '@nestjs/swagger';
 export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
-  @Post()
+  @Post('admin')
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER', 'PARTNER', 'AGENCY')
+  @AllowAuthenticated('ADMIN')
   create(@Body() body: CreateSkillDto, @GetUser() user: Auth) {
     return this.skillsService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'PARTNER', 'AGENCY')
-  findMySkills(@GetUser() user: Auth) {
-    return this.skillsService.findMySkills(user);
+  @AllowAuthenticated()
+  findAll() {
+    return this.skillsService.findAll();
   }
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'PARTNER', 'AGENCY')
+  @AllowAuthenticated('ADMIN')
   findOne(@Param('id') id: string) {
     return this.skillsService.findOne(id);
   }
 
-  @Put(':id')
+  @Put('admin/:id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'PARTNER', 'AGENCY')
+  @AllowAuthenticated('ADMIN')
   update(
     @Body() body: UpdateSkillDto,
     @GetUser() user: Auth,
@@ -53,10 +52,10 @@ export class SkillsController {
     return this.skillsService.update(id, body, user);
   }
 
-  @Delete(':id')
+  @Delete('admin/:id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'PARTNER', 'AGENCY')
-  remove(@Param('id') id: string, @GetUser() user: Auth) {
-    return this.skillsService.remove(id, user);
+  @AllowAuthenticated('ADMIN')
+  remove(@Param('id') id: string) {
+    return this.skillsService.remove(id);
   }
 }

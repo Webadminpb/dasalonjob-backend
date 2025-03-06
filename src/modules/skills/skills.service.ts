@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -15,17 +11,16 @@ export class SkillsService {
   async create(body: CreateSkillDto, user: Auth) {
     const skills = await this.prismaService.skills.create({
       data: {
-        skills: body.skills,
-        userId: user.id,
+        name: body.name,
       },
     });
 
     return new ApiSuccessResponse(true, 'skills added ', skills);
   }
 
-  async findMySkills(user: Auth) {
+  async findAll() {
     const skills = await this.prismaService.skills.findMany({
-      where: { userId: user.id },
+      where: {},
     });
     if (!skills) {
       throw new NotFoundException('skills not found');
@@ -46,7 +41,6 @@ export class SkillsService {
   async update(id: string, body: UpdateSkillDto, user: Auth) {
     const existingSkills = await this.prismaService.skills.findUnique({
       where: {
-        userId: user.id,
         id,
       },
     });
@@ -64,10 +58,9 @@ export class SkillsService {
     return new ApiSuccessResponse(true, 'skill updated', updatedSkills);
   }
 
-  async remove(id: string, user: Auth) {
+  async remove(id: string) {
     const existingSkills = await this.prismaService.skills.findUnique({
       where: {
-        userId: user.id,
         id,
       },
     });

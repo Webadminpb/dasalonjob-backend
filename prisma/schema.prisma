@@ -255,7 +255,7 @@ model Auth {
   basicDetails BasicDetails? 
   contactDetails ContactDetails?
   jobPreference JobPreference?
-  skills Skills[]
+  // skills Skills[]
   PastWork PastWork?
   experiences Experience[]
   educations Education[]
@@ -375,12 +375,12 @@ model Languages {
 // for User Partner
 model Skills {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  skills String[] 
 
-  userId      String @db.ObjectId
-  user        Auth   @relation(fields: [userId], references: [id])
+  name String
 
-  jobPost JobPost[]
+  jobPostIds String[] @db.ObjectId
+  jobPosts JobPost[] @relation(fields: [jobPostIds], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -692,8 +692,8 @@ model JobPost {
   jobDescriptionId String?  @db.ObjectId
   jobDescription JobDescription? @relation(fields: [jobDescriptionId], references: [id])
 
-  skillId String? @db.ObjectId
-  skills Skills? @relation(fields: [skillId], references: [id])
+  skillIds String[] @db.ObjectId
+  skills Skills[] @relation(fields: [skillIds], references: [id])
 
   languageIds String[] @db.ObjectId
   languages Languages[] @relation(fields: [languageIds], references: [id])

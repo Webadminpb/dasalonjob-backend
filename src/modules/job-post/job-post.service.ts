@@ -23,7 +23,7 @@ export class JobPostService {
         jobBenefitsId: body.jobBenefitsId,
         jobQualificationId: body.jobQualificationId,
         jobDescriptionId: body.jobDescriptionId,
-        skillId: body.skillId,
+        skillIds: body.skillIds,
         countryId: body.countryId,
         languageIds: body.languageIds,
         userId: user.id,

@@ -164,7 +164,6 @@ export class JobApplicationService {
         include: {
           user: {
             include: {
-              skills: true,
               languages: true,
               educations: true,
               basicDetails: true,

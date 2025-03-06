@@ -7,7 +7,7 @@ export const JobPostSchema = z.object({
   jobBasicInfoId: z.string().optional(),
   jobBenefitsId: z.string().optional(),
   jobQualificationId: z.string().optional(),
-  skillId: z.string().optional(),
+  skillIds: z.array(z.string()).optional(),
   jobDescriptionId: z.string().optional(),
   languageIds: z.array(z.string()).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
@@ -42,7 +42,7 @@ export class CreateJobPostDto extends createZodDto(JobPostSchema) {
     example: '123e4567-e89b-12d3-a456-426614174003',
     required: false,
   })
-  skillId?: string;
+  skillIds?: string[];
 
   @ApiProperty({
     description: 'Job Description ID',
