@@ -85,15 +85,15 @@ export class JobApplicationService {
       };
     }
 
-    if (query.language) {
-      where.user = {
-        languages: {
-          some: {
-            language: query.language,
-          },
-        },
-      };
-    }
+    // if (query.language) {
+    //   where.user = {
+    //     languages: {
+    //       some: {
+    //         language: query.language,
+    //       },
+    //     },
+    //   };
+    // }
 
     if (query.skills) {
       where.user = where.user || {};

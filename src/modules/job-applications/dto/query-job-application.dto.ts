@@ -13,7 +13,7 @@ export const QueryJobApplicationSchema = z.object({
   page: z.string().optional().transform(Number).optional(),
   limit: z.string().optional().transform(Number).optional(),
   location: z.string().optional(),
-  language: z.nativeEnum(Language).optional(),
+  // languageIds: z.array(z.string()).optional(),
   education: z.nativeEnum(HighestEducation).optional(),
   skills: z.string().optional(),
   isTrained: z.boolean().optional(),
@@ -48,11 +48,11 @@ export class QueryJobApplicationDto extends createZodDto(
   @ApiPropertyOptional({ type: String, description: 'Filter by location' })
   location?: string;
 
-  @ApiPropertyOptional({
-    enum: Language,
-    description: 'Filter by language proficiency',
-  })
-  language?: Language;
+  // @ApiPropertyOptional({
+  //   enum: Language,
+  //   description: 'Filter by language proficiency',
+  // })
+  // language?: Language;
 
   @ApiPropertyOptional({
     enum: HighestEducation,

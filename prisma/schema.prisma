@@ -59,11 +59,11 @@ enum HighestEducation {
   Certificate
 }
 
-enum Language {
-  Hindi
-  English
-  Japanese
-}
+// enum Language {
+//   Hindi
+//   English
+//   Japanese
+// }
 
 enum Proficiency {
   Native
@@ -260,7 +260,7 @@ model Auth {
   experiences Experience[]
   educations Education[]
   pastExperiences PastExperience[]
-  languages Languages[]
+  languages UserLanguage[]
   certificates Certificate[]
   files File[]
 
@@ -356,18 +356,33 @@ model ContactDetails {
 }
 
 // for User Partner
-model Languages {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+model UserLanguage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  language    Language
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
   proficiency Proficiency @default(Basic)
 
-  userId      String @db.ObjectId
-  user        Auth   @relation(fields: [userId], references: [id])
+  languageId String @db.ObjectId
+  language Language @relation(fields: [languageId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Language {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  name    String
+  // proficiency Proficiency @default(Basic)
+
+  // userId      String @db.ObjectId
+  // user        Auth   @relation(fields: [userId], references: [id])
 
   jobQualificationIds String[] @db.ObjectId
   jobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
 
+  userLanguages UserLanguage[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -662,7 +677,7 @@ model JobQualification {
   skills Skills[] @relation(fields: [skillIds], references: [id])
 
   languageIds String[] @db.ObjectId
-  languages Languages[] @relation(fields: [languageIds], references: [id])
+  languages Language[] @relation(fields: [languageIds], references: [id])
 
   
   userId String @db.ObjectId

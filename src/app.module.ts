@@ -45,6 +45,7 @@ import { CourseTypeAndLocationModule } from './modules/course-type-and-location/
 import { PartnerCourseModule } from './modules/partner-course/partner-course.module';
 import { SaveCourseModule } from './modules/save-course/save-course.module';
 import { CourseApplicationModule } from './modules/course-application/course-application.module';
+import { UserLanguagesModule } from './modules/user-languages/user-languages.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { CourseApplicationModule } from './modules/course-application/course-app
     PartnerCourseModule,
     SaveCourseModule,
     CourseApplicationModule,
+    UserLanguagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
