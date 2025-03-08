@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Gender } from '@prisma/client';
+import { BusinessType, Gender } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -11,6 +11,7 @@ export const VenueDetailsSchema = z.object({
   zipCode: z.string(),
   city: z.string(),
   streetAddress: z.string(),
+  businessType: z.nativeEnum(BusinessType),
   gender: z.nativeEnum(Gender),
   fileIds: z.array(z.string()).optional(),
 });

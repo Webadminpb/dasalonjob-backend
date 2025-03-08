@@ -4,15 +4,15 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const CreateVenueAmenitiesSchema = z.object({
-  amenities: z.nativeEnum(Amenities),
+  amenities: z.array(z.nativeEnum(Amenities)),
 });
 
 export class CreateVenueAmenitiesDto extends createZodDto(
   CreateVenueAmenitiesSchema,
 ) {
   @ApiProperty({
-    enum: Amenities,
+    enum: [Amenities],
     description: 'Type of amenity available at the venue',
   })
-  amenities: Amenities;
+  amenities: Amenities[];
 }

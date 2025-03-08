@@ -587,6 +587,8 @@ model VenueDetails {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
+  businessType BusinessType?
+
   partnerVenues PartnerVenue[]
 
   createdAt DateTime @default(now())
@@ -993,7 +995,7 @@ model Country {
 model VenueAmenities {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  amenities Amenities
+  amenities Amenities[]
 
   // partnerId
   userId String @db.ObjectId
