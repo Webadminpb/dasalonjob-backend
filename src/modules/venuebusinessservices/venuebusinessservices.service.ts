@@ -24,10 +24,10 @@ export class VenueMainBusinessServicesService {
     );
   }
 
-  async findMyVenueMainBusinessServices(user: Auth) {
+  async findVenueMainBusinessServices(id: string) {
     const venueMainBusinessServices =
       await this.prismaService.venueMainBusinessServices.findUnique({
-        where: { userId: user.id },
+        where: { id },
       });
     if (!venueMainBusinessServices) {
       throw new NotFoundException('Venue main business services not found');
@@ -39,10 +39,27 @@ export class VenueMainBusinessServicesService {
     );
   }
 
-  async update(user: Auth, body: UpdateVenueMainBusinessServicesDto) {
+  async findAllVenueMainBusinessServices(user: Auth) {
+    const venueMainBusinessServices =
+      await this.prismaService.venueMainBusinessServices.findMany({
+        where: { userId: user.id },
+      });
+    if (!venueMainBusinessServices) {
+      throw new NotFoundException('Venue main business services not found');
+    }
+    return new ApiSuccessResponse(true, 'Venue main business services found', {
+      venueMainBusinessServices,
+    });
+  }
+
+  async update(
+    id: string,
+    user: Auth,
+    body: UpdateVenueMainBusinessServicesDto,
+  ) {
     const existingVenueMainBusinessServices =
       await this.prismaService.venueMainBusinessServices.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueMainBusinessServices) {
       throw new NotFoundException('Venue main business services not found');
@@ -66,10 +83,10 @@ export class VenueMainBusinessServicesService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingVenueMainBusinessServices =
       await this.prismaService.venueMainBusinessServices.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueMainBusinessServices) {
       throw new NotFoundException('Venue main business services not found');

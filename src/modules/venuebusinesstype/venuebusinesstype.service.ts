@@ -1,13 +1,8 @@
-// venue-main-business-type.service.ts
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { CreateVenueMainBusinessTypeDto } from './dto/create-venuebusinesstype.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateVenueMainBusinessTypeDto } from './dto/create-venuebusinesstype.dto';
 import { UpdateVenuebusinesstypeDto } from './dto/update-venuebusinesstype.dto';
 
 @Injectable()
@@ -38,8 +33,21 @@ export class VenueMainBusinessTypeService {
 
   async findMyVenueMainBusinessType(user: Auth) {
     const venueMainBusinessType =
-      await this.prismaService.venueMainBusinessType.findUnique({
+      await this.prismaService.venueMainBusinessType.findMany({
         where: { userId: user.id },
+      });
+    if (!venueMainBusinessType) {
+      throw new NotFoundException('Venue main business type not found');
+    }
+    return new ApiSuccessResponse(true, 'Venue main business type found', {
+      venueMainBusinessType,
+    });
+  }
+
+  async findVenueMainBusinessType(id: string) {
+    const venueMainBusinessType =
+      await this.prismaService.venueMainBusinessType.findUnique({
+        where: { id },
       });
     if (!venueMainBusinessType) {
       throw new NotFoundException('Venue main business type not found');
@@ -51,10 +59,10 @@ export class VenueMainBusinessTypeService {
     );
   }
 
-  async update(user: Auth, body: UpdateVenuebusinesstypeDto) {
+  async update(id: string, user: Auth, body: UpdateVenuebusinesstypeDto) {
     const existingVenueMainBusinessType =
       await this.prismaService.venueMainBusinessType.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueMainBusinessType) {
       throw new NotFoundException('Venue main business type not found');
@@ -73,10 +81,10 @@ export class VenueMainBusinessTypeService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingVenueMainBusinessType =
       await this.prismaService.venueMainBusinessType.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueMainBusinessType) {
       throw new NotFoundException('Venue main business type not found');

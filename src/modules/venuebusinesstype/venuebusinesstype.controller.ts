@@ -7,6 +7,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { VenueMainBusinessTypeService } from './venuebusinesstype.service';
@@ -46,7 +47,7 @@ export class VenueMainBusinessTypeController {
     return this.venueMainBusinessTypeService.create(body, user);
   }
 
-  @Get()
+  @Get('all')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   @ApiOperation({ summary: 'Get venue main business type' })
@@ -58,11 +59,27 @@ export class VenueMainBusinessTypeController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  findMyVenueMainBusinessType(@GetUser() user: Auth) {
+  findAllVenueMainBusinessType(@GetUser() user: Auth) {
     return this.venueMainBusinessTypeService.findMyVenueMainBusinessType(user);
   }
 
-  @Put()
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  @ApiOperation({ summary: 'Get venue main business type' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Venue main business type retrieved successfully.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  findVenueMainBusinessType(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.venueMainBusinessTypeService.findMyVenueMainBusinessType(user);
+  }
+
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   @ApiOperation({ summary: 'Update venue main business type' })
@@ -75,11 +92,15 @@ export class VenueMainBusinessTypeController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  update(@Body() body: UpdateVenuebusinesstypeDto, @GetUser() user: Auth) {
-    return this.venueMainBusinessTypeService.update(user, body);
+  update(
+    @Body() body: UpdateVenuebusinesstypeDto,
+    @GetUser() user: Auth,
+    @Param('id') id: string,
+  ) {
+    return this.venueMainBusinessTypeService.update(id, user, body);
   }
 
-  @Delete()
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   @ApiOperation({ summary: 'Delete venue main business type' })
@@ -91,7 +112,7 @@ export class VenueMainBusinessTypeController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  remove(@GetUser() user: Auth) {
-    return this.venueMainBusinessTypeService.remove(user);
+  remove(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.venueMainBusinessTypeService.remove(id, user);
   }
 }

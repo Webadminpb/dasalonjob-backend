@@ -14,6 +14,7 @@ export class VenueMainBusinessDaysService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateVenueMainBusinessDaysDto, user: Auth) {
+    console.log('body ', body);
     // const existingVenueBusinessDays =
     //   await this.prismaService.venueMainBusinessDays.findUnique({
     //     where: { userId: user.id },
@@ -24,9 +25,8 @@ export class VenueMainBusinessDaysService {
     const venueMainBusinessDays =
       await this.prismaService.venueMainBusinessDays.create({
         data: {
-          days: {
-            set: body.days, // Directly setting the structured Days object
-          },
+          days: body.days, // Directly setting the structured Days object
+
           userId: user.id,
         },
       });
@@ -77,9 +77,14 @@ export class VenueMainBusinessDaysService {
       throw new NotFoundException('Venue main business days not found');
     }
 
+    // ✅ Ensure `days` is a proper object
+    const existingDays = existingVenueMainBusinessDays.days
+      ? JSON.parse(JSON.stringify(existingVenueMainBusinessDays.days))
+      : {};
+
     const updatedDays = {
-      ...existingVenueMainBusinessDays.days,
-      ...body.days,
+      ...existingDays,
+      ...(body.days ?? {}),
     };
 
     const updatedVenueMainBusinessDays =
