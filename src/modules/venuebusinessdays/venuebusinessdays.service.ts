@@ -14,13 +14,13 @@ export class VenueMainBusinessDaysService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateVenueMainBusinessDaysDto, user: Auth) {
-    const existingVenueBusinessDays =
-      await this.prismaService.venueMainBusinessDays.findUnique({
-        where: { userId: user.id },
-      });
-    if (existingVenueBusinessDays) {
-      throw new BadRequestException('venue business days already added');
-    }
+    // const existingVenueBusinessDays =
+    //   await this.prismaService.venueMainBusinessDays.findUnique({
+    //     where: { userId: user.id },
+    //   });
+    // if (existingVenueBusinessDays) {
+    //   throw new BadRequestException('venue business days already added');
+    // }
     const venueMainBusinessDays =
       await this.prismaService.venueMainBusinessDays.create({
         data: {
