@@ -3,11 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Delete,
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 
 import { Auth } from '@prisma/client';
@@ -31,24 +31,38 @@ export class VenueMainBusinessDaysController {
     return this.venueMainBusinessDaysService.create(body, user);
   }
 
-  @Get()
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  findVenueMainBusinessDays(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.venueMainBusinessDaysService.findMyVenueMainBusinessDays(
+      id,
+      user,
+    );
+  }
+
+  @Get('all')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   findMyVenueMainBusinessDays(@GetUser() user: Auth) {
-    return this.venueMainBusinessDaysService.findMyVenueMainBusinessDays(user);
+    return this.venueMainBusinessDaysService.findAllVenueMainBusinessDays(user);
   }
 
   @Put()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  update(@Body() body: UpdateVenueMainBusinessDaysDto, @GetUser() user: Auth) {
-    return this.venueMainBusinessDaysService.update(user, body);
+  update(
+    @Body() body: UpdateVenueMainBusinessDaysDto,
+    @GetUser() user: Auth,
+    @Param('id') id: string,
+  ) {
+    return this.venueMainBusinessDaysService.update(id, user, body);
   }
 
   @Delete()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  remove(@GetUser() user: Auth) {
-    return this.venueMainBusinessDaysService.remove(user);
+  remove(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.venueMainBusinessDaysService.remove(id, user);
   }
 }

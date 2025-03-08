@@ -1013,7 +1013,8 @@ model VenueWorkStation {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  partnerVenue PartnerVenue[]
+  partnerVenueIds String[] @db.ObjectId
+  partnerVenues PartnerVenue[] @relation(fields: [partnerVenueIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1031,8 +1032,8 @@ model PartnerVenue {
   venueAmenityIds String @db.ObjectId
   venueAmenities VenueAmenities @relation(fields: [venueAmenityIds], references: [id])
 
-  venueWorkStationId String @db.ObjectId
-  venueWorkStation VenueWorkStation @relation(fields: [venueWorkStationId], references: [id])
+  venueWorkStationIds String[] @db.ObjectId
+  venueWorkStations VenueWorkStation[] @relation(fields: [venueWorkStationIds], references: [id])
 
   venueMainBusinessDaysId String @db.ObjectId
   venueMainBusinessDays VenueMainBusinessDays @relation(fields: [venueMainBusinessDaysId], references: [id])

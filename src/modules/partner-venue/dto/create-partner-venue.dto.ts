@@ -6,7 +6,7 @@ export const CreatePartnerVenueSchema = z.object({
   venueBasicDetailsId: z.string(),
   salonBasicDetailsId: z.string(),
   venueAmenityIds: z.string(),
-  venueWorkStationId: z.string(),
+  venueWorkStationIds: z.array(z.string()),
   venueMainBusinessDaysId: z.string(),
 });
 
@@ -22,8 +22,8 @@ export class CreatePartnerVenueDto extends createZodDto(
   @ApiProperty({ type: String, description: 'ID of the venue amenities' })
   venueAmenityIds: string;
 
-  @ApiProperty({ type: String, description: 'ID of the venue workstation' })
-  venueWorkStationId: string;
+  @ApiProperty({ type: [String], description: 'ID of the venue workstation' })
+  venueWorkStationIds: string[];
 
   @ApiProperty({
     type: String,

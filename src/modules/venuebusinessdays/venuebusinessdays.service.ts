@@ -37,9 +37,24 @@ export class VenueMainBusinessDaysService {
     );
   }
 
-  async findMyVenueMainBusinessDays(user: Auth) {
+  async findMyVenueMainBusinessDays(id: string, user: Auth) {
     const venueMainBusinessDays =
       await this.prismaService.venueMainBusinessDays.findUnique({
+        where: { id, userId: user.id },
+      });
+    if (!venueMainBusinessDays) {
+      throw new NotFoundException('Venue main business days not found');
+    }
+    return new ApiSuccessResponse(
+      true,
+      'Venue main business days found',
+      venueMainBusinessDays,
+    );
+  }
+
+  async findAllVenueMainBusinessDays(user: Auth) {
+    const venueMainBusinessDays =
+      await this.prismaService.venueMainBusinessDays.findMany({
         where: { userId: user.id },
       });
     if (!venueMainBusinessDays) {
@@ -52,10 +67,10 @@ export class VenueMainBusinessDaysService {
     );
   }
 
-  async update(user: Auth, body: UpdateVenueMainBusinessDaysDto) {
+  async update(id: string, user: Auth, body: UpdateVenueMainBusinessDaysDto) {
     const existingVenueMainBusinessDays =
       await this.prismaService.venueMainBusinessDays.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
 
     if (!existingVenueMainBusinessDays) {
@@ -82,10 +97,10 @@ export class VenueMainBusinessDaysService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingVenueMainBusinessDays =
       await this.prismaService.venueMainBusinessDays.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueMainBusinessDays) {
       throw new NotFoundException('Venue main business days not found');

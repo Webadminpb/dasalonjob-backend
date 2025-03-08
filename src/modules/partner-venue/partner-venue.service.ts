@@ -1,13 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
-import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { Auth, Prisma } from '@prisma/client';
-import { Query } from 'mongoose';
-import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
+import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { getPaginationSkip, getPaginationTake } from 'src/common/common';
-import { addDays } from 'date-fns';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
+import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
+import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
 
 @Injectable()
 export class PartnerVenueService {
@@ -20,7 +18,7 @@ export class PartnerVenueService {
         salonBasicDetailsId: body.salonBasicDetailsId,
         venueAmenityIds: body.venueAmenityIds,
         venueMainBusinessDaysId: body.venueMainBusinessDaysId,
-        venueWorkStationId: body.venueWorkStationId,
+        venueWorkStationIds: body.venueWorkStationIds,
         userId: user.id,
       },
     });
@@ -68,7 +66,7 @@ export class PartnerVenueService {
         venueBasicDetails: true,
         salonBasicDetails: true,
         venueAmenities: true,
-        venueWorkStation: true,
+        venueWorkStations: true,
         user: true,
       },
       skip: getPaginationSkip(query.page, query.limit),
@@ -92,7 +90,7 @@ export class PartnerVenueService {
         venueBasicDetails: true,
         salonBasicDetails: true,
         venueAmenities: true,
-        venueWorkStation: true,
+        venueWorkStations: true,
         user: true,
       },
     });
@@ -118,10 +116,7 @@ export class PartnerVenueService {
         id: id,
       },
       data: {
-        venueBasicDetailsId: body.venueBasicDetailsId,
-        salonBasicDetailsId: body.salonBasicDetailsId,
-        venueAmenityIds: body.venueAmenityIds,
-        venueWorkStationId: body.venueWorkStationId,
+        ...body,
         userId: user.id,
       },
     });
