@@ -28,7 +28,7 @@ export class VenueDetailsService {
   }
 
   async findMyVenueDetails(user: Auth) {
-    const venueDetails = await this.prismaService.venueDetails.findUnique({
+    const venueDetails = await this.prismaService.venueDetails.findMany({
       where: { userId: user.id },
       include: {
         files: true,
@@ -40,10 +40,10 @@ export class VenueDetailsService {
     return new ApiSuccessResponse(true, 'Venue details found', venueDetails);
   }
 
-  async update(user: Auth, body: UpdateVenueDetailsDto) {
+  async update(id: string, user: Auth, body: UpdateVenueDetailsDto) {
     const existingVenueDetails =
       await this.prismaService.venueDetails.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueDetails) {
       throw new NotFoundException('Venue details not found');
@@ -61,10 +61,10 @@ export class VenueDetailsService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingVenueDetails =
       await this.prismaService.venueDetails.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingVenueDetails) {
       throw new NotFoundException('Venue details not found');

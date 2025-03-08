@@ -7,6 +7,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { VenueDetailsService } from './venuedetails.service';
@@ -60,7 +61,7 @@ export class VenueDetailsController {
     return this.venueDetailsService.findMyVenueDetails(user);
   }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   @ApiOperation({ summary: 'Update venue details' })
@@ -73,11 +74,15 @@ export class VenueDetailsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  update(@Body() body: UpdateVenueDetailsDto, @GetUser() user: Auth) {
-    return this.venueDetailsService.update(user, body);
+  update(
+    @Param('id') id: string,
+    @Body() body: UpdateVenueDetailsDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.venueDetailsService.update(id, user, body);
   }
 
-  @Delete()
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   @ApiOperation({ summary: 'Delete venue details' })
@@ -89,7 +94,7 @@ export class VenueDetailsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  remove(@GetUser() user: Auth) {
-    return this.venueDetailsService.remove(user);
+  remove(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.venueDetailsService.remove(id, user);
   }
 }

@@ -29,19 +29,21 @@ export class SalondetailsService {
   }
 
   async findMySalonDetails(user: Auth) {
-    const salonDetails = await this.prismaService.salonDetails.findUnique({
+    const salonDetails = await this.prismaService.salonDetails.findMany({
       where: { userId: user.id },
     });
     if (!salonDetails) {
       throw new NotFoundException('Salon details not found');
     }
-    return new ApiSuccessResponse(true, 'Salon details found', salonDetails);
+    return new ApiSuccessResponse(true, 'Salon details found', {
+      salonDetails,
+    });
   }
 
-  async update(user: Auth, body: UpdateSalonDetailDto) {
+  async update(id: string, user: Auth, body: UpdateSalonDetailDto) {
     const existingSalonDetails =
       await this.prismaService.salonDetails.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingSalonDetails) {
       throw new NotFoundException('Salon details not found');
@@ -59,10 +61,10 @@ export class SalondetailsService {
     );
   }
 
-  async remove(user: Auth) {
+  async remove(id, user: Auth) {
     const existingSalonDetails =
       await this.prismaService.salonDetails.findUnique({
-        where: { userId: user.id },
+        where: { id, userId: user.id },
       });
     if (!existingSalonDetails) {
       throw new NotFoundException('Salon details not found');

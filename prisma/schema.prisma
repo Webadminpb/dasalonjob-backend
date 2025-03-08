@@ -264,8 +264,8 @@ model Auth {
   certificates Certificate[]
   files File[]
 
-  venueDetails VenueDetails?
-  salonDetails SalonDetails?
+  venueDetails VenueDetails[]
+  salonDetails SalonDetails[]
   jobBasicInfo JobBasicInfo[]
   jobDescription JobDescription[]
   venueMainBusinessType VenueMainBusinessType?
@@ -559,10 +559,10 @@ model SalonDetails {
   fileIds String[] @db.ObjectId
   files File[] @relation(fields: [fileIds], references: [id])
 
-  userId String @unique @db.ObjectId
+  userId String  @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  partnerVenie PartnerVenue[]
+  partnerVenues PartnerVenue[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -584,10 +584,10 @@ model VenueDetails {
   fileIds String[] @db.ObjectId
   files File[] @relation(fields: [fileIds], references: [id])
 
-  userId String @unique @db.ObjectId
+  userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  partnerVenie PartnerVenue[]
+  partnerVenues PartnerVenue[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1022,7 +1022,7 @@ model VenueWorkStation {
 model PartnerVenue {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  venueBasicDetailsId String @db.ObjectId
+  venueBasicDetailsId String @db.ObjectId 
   venueBasicDetails VenueDetails @relation(fields: [venueBasicDetailsId], references: [id])
 
   salonBasicDetailsId String @db.ObjectId

@@ -7,6 +7,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 import { SalondetailsService } from './salondetails.service';
 import { CreateSalonDetailsDto } from './dto/create-salondetail.dto';
@@ -60,7 +61,7 @@ export class SalondetailsController {
     return this.salondetailsService.findMySalonDetails(user);
   }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   @ApiOperation({ summary: 'Update salon details' })
@@ -73,11 +74,15 @@ export class SalondetailsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  update(@Body() body: UpdateSalonDetailDto, @GetUser() user: Auth) {
-    return this.salondetailsService.update(user, body);
+  update(
+    @Param('id') id: string,
+    @Body() body: UpdateSalonDetailDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.salondetailsService.update(id, user, body);
   }
 
-  @Delete()
+  @Delete(':id')
   @ApiOperation({ summary: 'Delete salon details' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -89,7 +94,7 @@ export class SalondetailsController {
   })
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  remove(@GetUser() user: Auth) {
-    return this.salondetailsService.remove(user);
+  remove(@GetUser() user: Auth, @Param('id') id: string) {
+    return this.salondetailsService.remove(id, user);
   }
 }
