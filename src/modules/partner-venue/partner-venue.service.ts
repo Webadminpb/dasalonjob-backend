@@ -20,7 +20,7 @@ export class PartnerVenueService {
         salonBasicDetailsId: body.salonBasicDetailsId,
         venueAmenityIds: body.venueAmenityIds,
         venueMainBusinessDaysId: body.venueMainBusinessDaysId,
-        venueWorkStationId: body.venueWorkStationId,
+        venueWorkStationIds: body.venueWorkStationIds,
         userId: user.id,
       },
     });
@@ -68,7 +68,7 @@ export class PartnerVenueService {
         venueBasicDetails: true,
         salonBasicDetails: true,
         venueAmenities: true,
-        venueWorkStation: true,
+        venueWorkStations: true,
         user: true,
       },
       skip: getPaginationSkip(query.page, query.limit),
@@ -92,7 +92,7 @@ export class PartnerVenueService {
         venueBasicDetails: true,
         salonBasicDetails: true,
         venueAmenities: true,
-        venueWorkStation: true,
+        venueWorkStations: true,
         user: true,
       },
     });
@@ -121,7 +121,7 @@ export class PartnerVenueService {
         venueBasicDetailsId: body.venueBasicDetailsId,
         salonBasicDetailsId: body.salonBasicDetailsId,
         venueAmenityIds: body.venueAmenityIds,
-        venueWorkStationId: body.venueWorkStationId,
+        venueWorkStationIds: body.venueWorkStationIds,
         userId: user.id,
       },
     });
