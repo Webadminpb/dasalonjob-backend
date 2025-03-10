@@ -16,7 +16,6 @@ import { CreatePartnerCourseDto } from './dto/create-partner-course.dto';
 import { UpdatePartnerCourseDto } from './dto/update-partner-course.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
-import { QueryPartnerVenueDto } from '../partner-venue/dto/query-partner-venue.dto';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
 
 @Controller('partner-course')

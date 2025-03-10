@@ -46,6 +46,7 @@ import { PartnerCourseModule } from './modules/partner-course/partner-course.mod
 import { SaveCourseModule } from './modules/save-course/save-course.module';
 import { CourseApplicationModule } from './modules/course-application/course-application.module';
 import { UserLanguagesModule } from './modules/user-languages/user-languages.module';
+import { PartnerPersonalDataModule } from './modules/partner-personal-data/partner-personal-data.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { UserLanguagesModule } from './modules/user-languages/user-languages.mod
     SaveCourseModule,
     CourseApplicationModule,
     UserLanguagesModule,
+    PartnerPersonalDataModule,
   ],
   controllers: [AppController],
   providers: [AppService],

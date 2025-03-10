@@ -126,6 +126,7 @@ export class AuthService {
         venueMainBusinessDays: true,
         venueMainBusinessServices: true,
         partnerSocialLinks: true,
+        partnerPersonalData: true,
       },
     });
     if (!existingUser) {

@@ -257,6 +257,7 @@ model Auth {
   jobPreference JobPreference?
   // skills Skills[]
   PastWork PastWork?
+  partnerPersonalData PartnerPersonalData?
   experiences Experience[]
   educations Education[]
   pastExperiences PastExperience[]
@@ -1046,6 +1047,21 @@ model PartnerVenue {
   courseDetails CourseDetails[]
   courseAcademy CourseAcademy[]
   jobBasicInfo JobBasicInfo?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PartnerPersonalData {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  firstName String?
+  lastName String?
+  dob DateTime?
+  gender Gender?
+
+  userId String @db.ObjectId @unique
+  user Auth @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
