@@ -245,11 +245,17 @@ model Auth {
   phoneVerificationCodeExpiry DateTime?
   emailVerificationCodeExpiry DateTime?
   isBlocked                   Boolean @default(false)
+  isVerified                  Boolean @default(true)
   status                      AccountStatus @default(ACTIVE)
 
   countryId String? @db.ObjectId
   country Country? @relation(fields: [countryId], references: [id])
 
+  profileImageId String? @db.ObjectId 
+  profileImage File? @relation("ProfileImage", fields: [profileImageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  verificationFileId String? @db.ObjectId 
+  verificationFile File? @relation("VerificationFile", fields: [verificationFileId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 
   basicDetails BasicDetails? 
@@ -534,6 +540,12 @@ model File {
   agencyVenueDetails AgencyVenueDetails?
   courseDetails CourseDetails[]
 
+    // Fix: Add proper relation name that matches Auth model
+  profileImageAuth Auth[] @relation("ProfileImage")
+
+  // Fix: Add proper relation name that matches Auth model
+  verificationFileAuth Auth[] @relation("VerificationFile")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -733,7 +745,7 @@ model JobPost {
   country Country? @relation(fields: [countryId], references: [id])
 
   status JobPostStatus @default(Approved)
-  isOpen Boolean @default(true)
+  isOpen Boolean @default(true) // false fullfilled ?
 
   jobApplications JobApplication[]
   saveJobPosts SaveJobPost[]

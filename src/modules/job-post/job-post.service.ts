@@ -94,13 +94,24 @@ export class JobPostService {
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
 
-    console.log('query ', where, query);
+    const [totalOpenJobs, totalFulfilledJobs] = await Promise.all([
+      this.prismaService.jobPost.count({ where: { isOpen: true } }),
+      this.prismaService.jobPost.count({ where: { isOpen: false } }),
+    ]);
 
     const [jobPost, total] = await Promise.all([
       await this.prismaService.jobPost.findMany({
         where,
         include: {
-          jobBasicInfo: true,
+          jobBasicInfo: {
+            include: {
+              venue: {
+                include: {
+                  venueBasicDetails: true,
+                },
+              },
+            },
+          },
           jobBenefits: true,
           jobDescription: true,
           jobQualification: {
@@ -108,17 +119,29 @@ export class JobPostService {
               skills: true,
             },
           },
-          // skills: true,
+          jobApplications: true,
+          saveJobPosts: true,
         },
         skip,
         take,
       }),
       this.prismaService.jobPost.count({ where, skip, take }),
     ]);
+
     if (!jobPost) {
       throw new NotFoundException('Job post not found');
     }
-    return new ApiSuccessResponse(true, 'Job post found', { total, jobPost });
+    const jobPostWithCounts = jobPost.map((job: any) => ({
+      ...job,
+      totalApplicants: job.jobApplications.length,
+      totalSaved: job.saveJobPosts.length,
+    }));
+    return new ApiSuccessResponse(true, 'Job post found', {
+      total,
+      totalOpenJobs,
+      totalFulfilledJobs,
+      jobPosts: jobPostWithCounts,
+    });
   }
 
   async update(id: string, user: Auth, body: UpdateJobPostDto) {

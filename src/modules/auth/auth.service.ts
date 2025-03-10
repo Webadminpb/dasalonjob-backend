@@ -14,6 +14,7 @@ import { Auth } from '@prisma/client';
 import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UpdateAccountStatusDto } from './dto/status-auth';
+import { CreateAuthFileDto } from './dto/file-dto';
 
 @Injectable()
 export class AuthService {
@@ -214,6 +215,44 @@ export class AuthService {
       },
       data: {
         status: body.status,
+      },
+    });
+    return new ApiSuccessResponse(true, 'Account activated', updatedUser);
+  }
+  async updateProfileImage(body: CreateAuthFileDto, user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        profileImageId: body.profileImageId,
+      },
+    });
+    return new ApiSuccessResponse(true, 'Account activated', updatedUser);
+  }
+  async updateVerificationFile(body: CreateAuthFileDto, user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        verificationFileId: body.verificationFileId,
       },
     });
     return new ApiSuccessResponse(true, 'Account activated', updatedUser);

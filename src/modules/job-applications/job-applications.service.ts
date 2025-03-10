@@ -173,6 +173,7 @@ export class JobApplicationService {
           jobPost: {
             include: {
               user: true,
+              jobBasicInfo: true,
             },
           },
         },

@@ -16,6 +16,7 @@ import { CreateApplicantDto } from './dto/applicant.profile';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
+import { CreateAuthFileDto } from './dto/file-dto';
 
 @ApiTags('users')
 @Controller('auth')
@@ -65,5 +66,19 @@ export class AuthController {
     @GetUser() user: Auth,
   ) {
     return this.authService.updateApplicantProfile(body, user);
+  }
+
+  @Put('/profile-image')
+  @AllowAuthenticated()
+  updateProfileImage(@Body() body: CreateAuthFileDto, @GetUser() user: Auth) {
+    return this.authService.updateProfileImage(body, user);
+  }
+  @Put('/verification-file')
+  @AllowAuthenticated()
+  updateVerificationFile(
+    @Body() body: CreateAuthFileDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.authService.updateVerificationFile(body, user);
   }
 }
