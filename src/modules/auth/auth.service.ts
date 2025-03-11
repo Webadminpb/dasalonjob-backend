@@ -12,7 +12,6 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { CreateApplicantDto } from './dto/applicant.profile';
 import { Auth } from '@prisma/client';
 import { CreateChangePasswordDto } from './dto/change-password';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
 
@@ -60,6 +59,9 @@ export class AuthService {
   async login(body: LoginAuthDto) {
     const user = await this.prismaService.auth.findUnique({
       where: { email: body.email },
+      include: {
+        profileImage: true,
+      },
     });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -122,6 +124,7 @@ export class AuthService {
         id: user.id,
       },
       include: {
+        profileImage: true,
         salonDetails: true,
         venueDetails: true,
         venueMainBusinessDays: true,

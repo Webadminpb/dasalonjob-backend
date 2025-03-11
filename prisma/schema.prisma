@@ -245,7 +245,7 @@ model Auth {
   phoneVerificationCodeExpiry DateTime?
   emailVerificationCodeExpiry DateTime?
   isBlocked                   Boolean @default(false)
-  isVerified                  Boolean @default(true)
+  isVerified                  Boolean @default(false)
   status                      AccountStatus @default(ACTIVE)
 
   countryId String? @db.ObjectId

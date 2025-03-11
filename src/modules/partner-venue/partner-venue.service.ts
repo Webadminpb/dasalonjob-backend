@@ -63,7 +63,11 @@ export class PartnerVenueService {
     const partnerVenues = await this.prismaService.partnerVenue.findMany({
       where: { userId: user.id },
       include: {
-        venueBasicDetails: true,
+        venueBasicDetails: {
+          include: {
+            files: true,
+          },
+        },
         salonBasicDetails: true,
         venueAmenities: true,
         venueWorkStations: true,
