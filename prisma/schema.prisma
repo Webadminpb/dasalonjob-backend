@@ -657,7 +657,7 @@ model JobBasicInfo {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  venueId String? @db.ObjectId @unique
+  venueId String? @db.ObjectId 
   venue PartnerVenue? @relation(fields: [venueId], references: [id])
 
   jobPost JobPost[]
@@ -1058,7 +1058,7 @@ model PartnerVenue {
 
   courseDetails CourseDetails[]
   courseAcademy CourseAcademy[]
-  jobBasicInfo JobBasicInfo?
+  jobBasicInfo JobBasicInfo[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

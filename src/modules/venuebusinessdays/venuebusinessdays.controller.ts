@@ -31,6 +31,14 @@ export class VenueMainBusinessDaysController {
     return this.venueMainBusinessDaysService.create(body, user);
   }
 
+  @Get('all')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  findMyVenueMainBusinessDays(@GetUser() user: Auth) {
+    console.log('all api running');
+    return this.venueMainBusinessDaysService.findAllVenueMainBusinessDays(user);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
@@ -39,13 +47,6 @@ export class VenueMainBusinessDaysController {
       id,
       user,
     );
-  }
-
-  @Get('all')
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
-  findMyVenueMainBusinessDays(@GetUser() user: Auth) {
-    return this.venueMainBusinessDaysService.findAllVenueMainBusinessDays(user);
   }
 
   @Put()

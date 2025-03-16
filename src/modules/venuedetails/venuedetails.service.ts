@@ -22,6 +22,7 @@ export class VenueDetailsService {
         zipCode: body.zipCode,
         fileIds: body.fileIds,
         userId: user.id,
+        businessType: body.businessType,
       },
     });
     return new ApiSuccessResponse(true, 'Venue details added', venueDetails);

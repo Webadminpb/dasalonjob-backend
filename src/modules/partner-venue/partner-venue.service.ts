@@ -72,6 +72,7 @@ export class PartnerVenueService {
         venueAmenities: true,
         venueWorkStations: true,
         user: true,
+        venueMainBusinessDays: true,
       },
       skip: getPaginationSkip(query.page, query.limit),
       take: getPaginationTake(query.limit),
