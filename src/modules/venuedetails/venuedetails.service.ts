@@ -23,6 +23,8 @@ export class VenueDetailsService {
         fileIds: body.fileIds,
         userId: user.id,
         businessType: body.businessType,
+        latitude: body.latitide,
+        longitude: body.longitude,
       },
     });
     return new ApiSuccessResponse(true, 'Venue details added', venueDetails);

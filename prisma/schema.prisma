@@ -254,8 +254,8 @@ model Auth {
   profileImageId String? @db.ObjectId 
   profileImage File? @relation("ProfileImage", fields: [profileImageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  verificationFileId String? @db.ObjectId 
-  verificationFile File? @relation("VerificationFile", fields: [verificationFileId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  verificationFileId String[] @db.ObjectId 
+  verificationFile File[] @relation("VerificationFile", fields: [verificationFileId], references: [id])
 
 
   basicDetails BasicDetails? 
@@ -540,11 +540,10 @@ model File {
   agencyVenueDetails AgencyVenueDetails?
   courseDetails CourseDetails[]
 
-    // Fix: Add proper relation name that matches Auth model
   profileImageAuth Auth[] @relation("ProfileImage")
 
-  // Fix: Add proper relation name that matches Auth model
-  verificationFileAuth Auth[] @relation("VerificationFile")
+  verificationFileAuth Auth[] @relation("VerificationFile", fields: [verificationFileAuthId], references: [id])
+  verificationFileAuthId String[] @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -594,13 +593,16 @@ model VenueDetails {
   streetAddress String
   gender Gender
 
+  latitude String?
+  longitude String?
+
   fileIds String[] @db.ObjectId
   files File[] @relation(fields: [fileIds], references: [id])
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  businessType BusinessType?
+  businessType BusinessType[]
 
   partnerVenues PartnerVenue[]
 

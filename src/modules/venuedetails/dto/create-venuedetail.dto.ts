@@ -11,9 +11,11 @@ export const VenueDetailsSchema = z.object({
   zipCode: z.string(),
   city: z.string(),
   streetAddress: z.string(),
-  businessType: z.nativeEnum(BusinessType),
+  businessType: z.array(z.nativeEnum(BusinessType)),
   gender: z.nativeEnum(Gender),
   fileIds: z.array(z.string()).optional(),
+  latitide: z.string().optional(),
+  longitude: z.string().optional(),
 });
 
 export class CreateVenueDetailsDto extends createZodDto(VenueDetailsSchema) {
@@ -58,4 +60,9 @@ export class CreateVenueDetailsDto extends createZodDto(VenueDetailsSchema) {
     example: ['file1', 'file2'],
   })
   fileIds?: string[];
+
+  @ApiProperty({ description: 'latitude' })
+  latitide: string;
+  @ApiProperty({ description: 'longitude' })
+  longitude: string;
 }
