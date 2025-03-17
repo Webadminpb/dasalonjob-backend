@@ -24,8 +24,8 @@ export class SkillsController {
   @Post('admin')
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('ADMIN')
-  create(@Body() body: CreateSkillDto, @GetUser() user: Auth) {
-    return this.skillsService.create(body, user);
+  create(@Body() body: CreateSkillDto) {
+    return this.skillsService.create(body);
   }
 
   @Get()
@@ -36,7 +36,7 @@ export class SkillsController {
   }
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN')
+  @AllowAuthenticated()
   findOne(@Param('id') id: string) {
     return this.skillsService.findOne(id);
   }

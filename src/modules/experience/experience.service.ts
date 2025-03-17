@@ -14,6 +14,8 @@ export class ExperienceService {
         userId: user.id,
         profile: body.profile,
         location: body.location,
+        longitude: body.longitude,
+        latitude: body.latitude,
         startDate: body.startDate,
         endDate: body.endDate,
         description: body.description,

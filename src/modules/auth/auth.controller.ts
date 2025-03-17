@@ -42,6 +42,13 @@ export class AuthController {
     return this.authService.getMyPartnerProfile(user);
   }
 
+  @Get('applicant/profile')
+  @HttpCode(200)
+  @AllowAuthenticated('USER')
+  getApplicantProfile(@GetUser() user: Auth) {
+    return this.authService.myApplicantProfile(user);
+  }
+
   @Put('change-password')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()

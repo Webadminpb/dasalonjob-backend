@@ -6,6 +6,8 @@ import { zDateOptional } from 'src/common/validation';
 export const createExperienceSchema = z.object({
   profile: z.nativeEnum(JobProfile),
   location: z.string(),
+  longitude: z.string(),
+  latitude: z.string(),
   startDate: zDateOptional,
   endDate: zDateOptional,
   description: z.string().optional(),

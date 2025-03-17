@@ -38,6 +38,10 @@ enum JoiningAvailability {
   TwoWeek
   ThreeWeek
   FourWeek
+  OneMonth
+  TwoMonth
+  ThreeMonth
+  AnyTime 
 }
 
 enum JobBasicInfoProfileType {
@@ -330,7 +334,10 @@ model Auth {
 // for User
 model BasicDetails {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  fullName  String
+  // fullName  String
+  firstName String?
+  lastName String?
+
   gender    Gender 
   dob       DateTime
 
@@ -340,7 +347,7 @@ model BasicDetails {
   fileId String? @unique @db.ObjectId
   file File? @relation(fields: [fileId], references: [id])
 
-  martialStatus MartialStatus
+  martialStatus MartialStatus? // optional
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt
 }
@@ -349,12 +356,15 @@ model BasicDetails {
 model ContactDetails {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
 
-  phoneCode   String
-  phoneNumber String
-  zipCode     String
-  state       String
-  city        String
-  streetAddress String
+  phoneCode   String?
+  phoneNumber String?
+  zipCode     String? //optional
+  state       String? // optional
+  city        String? // optional
+  streetAddress String?
+
+  longitude String? 
+  latitude String?
 
   userId      String @unique @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
@@ -408,6 +418,8 @@ model Skills {
   jobQualificationIds String[] @db.ObjectId
   JobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
 
+  jobPreference JobPreference[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -421,7 +433,11 @@ model JobPreference {
 
   locations String[]
   joining JoiningAvailability
-  salary String
+  salary SalaryRange 
+
+  skillsIds String @db.ObjectId
+  skills Skills @relation(fields: [skillsIds], references: [id])
+
 
 
   createdAt DateTime @default(now())
@@ -434,11 +450,11 @@ model Experience {
 
   profile JobProfile
   location String
+  longitude String
+  latitude String
   startDate DateTime
   endDate DateTime
   description String?
-
-
 
   userId      String  @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])
@@ -490,7 +506,13 @@ model PastExperience {
   certificateName String
   certificateId String
   instituteName String
-  description String?
+  // profile JobProfile
+  // location String
+  // longitude String
+  // latitude String
+  // startDate DateTime
+  // endDate DateTime
+  // description String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -592,6 +614,8 @@ model VenueDetails {
   city String
   streetAddress String
   gender Gender
+
+  franchise String?
 
   latitude String?
   longitude String?

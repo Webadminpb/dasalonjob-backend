@@ -22,6 +22,7 @@ export class VenueDetailsService {
         zipCode: body.zipCode,
         fileIds: body.fileIds,
         userId: user.id,
+        franchise: body.franchise,
         businessType: body.businessType,
         latitude: body.latitide,
         longitude: body.longitude,

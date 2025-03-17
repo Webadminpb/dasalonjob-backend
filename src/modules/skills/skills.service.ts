@@ -8,7 +8,7 @@ import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 @Injectable()
 export class SkillsService {
   constructor(private readonly prismaService: PrismaService) {}
-  async create(body: CreateSkillDto, user: Auth) {
+  async create(body: CreateSkillDto) {
     const skills = await this.prismaService.skills.create({
       data: {
         name: body.name,

@@ -4,7 +4,6 @@ import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { CreateUserLanguageDto } from './dto/create-user-language.dto';
 import { UpdateUserLanguageDto } from './dto/update-user-language.dto';
 import { Auth } from '@prisma/client';
-import { userInfo } from 'os';
 
 @Injectable()
 export class UserLanguagesService {

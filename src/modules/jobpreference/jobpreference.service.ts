@@ -16,6 +16,7 @@ export class JobpreferenceService {
         joining: body.joining,
         locations: body.locations,
         salary: body.salary,
+        skillsIds: body.skillsIds,
       },
     });
     return new ApiSuccessResponse(true, 'job preference added', jobPreference);

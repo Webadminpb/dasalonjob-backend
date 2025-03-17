@@ -33,6 +33,8 @@ export class ContactdetailsService {
         state: body.state,
         city: body.city,
         streetAddress: body.streetAddress,
+        longitude: body.longitude,
+        latitude: body.latitude,
       },
     });
     return new ApiSuccessResponse(

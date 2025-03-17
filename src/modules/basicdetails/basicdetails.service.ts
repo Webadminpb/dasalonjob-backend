@@ -14,7 +14,6 @@ export class BasicdetailsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateBasicdetailDto, user: Auth) {
-    console.log('body ', body);
     const existingBasicDetails =
       await this.prismaService.basicDetails.findUnique({
         where: {
@@ -28,7 +27,9 @@ export class BasicdetailsService {
     const basicDetails = await this.prismaService.basicDetails.create({
       data: {
         userId: user.id,
-        fullName: body.fullName,
+        // fullName: body.fullName,
+        firstName: body.firstName,
+        lastName: body.lastName,
         gender: body.gender,
         dob: body.dob,
         martialStatus: body.martialStatus,

@@ -92,7 +92,12 @@ export class PartnerVenueService {
         id: id,
       },
       include: {
-        venueBasicDetails: true,
+        venueBasicDetails: {
+          include: {
+            files: true,
+          },
+        },
+        venueMainBusinessDays: true,
         salonBasicDetails: true,
         venueAmenities: true,
         venueWorkStations: true,

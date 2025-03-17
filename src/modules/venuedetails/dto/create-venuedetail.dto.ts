@@ -9,6 +9,7 @@ export const VenueDetailsSchema = z.object({
   phoneCode: z.string(),
   phoneNumber: z.string(),
   zipCode: z.string(),
+  franchise: z.string().optional(),
   city: z.string(),
   streetAddress: z.string(),
   businessType: z.array(z.nativeEnum(BusinessType)),

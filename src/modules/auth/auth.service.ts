@@ -18,6 +18,7 @@ import { CreateAuthFileDto } from './dto/file-dto';
 @Injectable()
 export class AuthService {
   constructor(private readonly prismaService: PrismaService) {}
+
   async signup(body: CreateAuthDto) {
     const phoneVerificationCode = await generateSixDigitOTP();
     const phoneVerificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
@@ -103,7 +104,6 @@ export class AuthService {
       },
       include: {
         basicDetails: true,
-        languages: true,
         contactDetails: true,
         jobPreference: true,
         pastExperiences: true,
