@@ -1076,8 +1076,8 @@ model PartnerVenue {
   venueWorkStationIds String[] @db.ObjectId
   venueWorkStations VenueWorkStation[] @relation(fields: [venueWorkStationIds], references: [id])
 
-  venueMainBusinessDaysId String @db.ObjectId
-  venueMainBusinessDays VenueMainBusinessDays @relation(fields: [venueMainBusinessDaysId], references: [id])
+  venueMainBusinessDaysId String? @db.ObjectId
+  venueMainBusinessDays VenueMainBusinessDays? @relation(fields: [venueMainBusinessDaysId], references: [id])
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
