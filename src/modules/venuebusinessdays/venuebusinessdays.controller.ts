@@ -49,7 +49,7 @@ export class VenueMainBusinessDaysController {
     );
   }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   update(
@@ -60,7 +60,7 @@ export class VenueMainBusinessDaysController {
     return this.venueMainBusinessDaysService.update(id, user, body);
   }
 
-  @Delete()
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
   remove(@GetUser() user: Auth, @Param('id') id: string) {
