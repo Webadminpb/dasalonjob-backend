@@ -13,6 +13,7 @@ export class CertificateService {
   async create(body: CreateCertificateDto, user: Auth) {
     const certificate = await this.prismaService.certificate.create({
       data: {
+        fileId: body.fileId,
         userId: user.id,
         certificateName: body.certificateName,
         certificateId: body.certificateId,

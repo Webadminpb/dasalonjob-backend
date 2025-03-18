@@ -10,6 +10,9 @@ export const QueryCourseApplicationSchema = z.object({
   search: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
+  courseId: z.string().optional(),
+  location: z.string().optional(),
+  languageId: z.string().optional(),
   customDate: zDateOptional,
   customerYear: zDateOptional,
 });

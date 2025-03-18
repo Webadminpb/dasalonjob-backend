@@ -527,7 +527,8 @@ model Certificate {
   instituationName String
   description String?
 
-
+  fileId String @db.ObjectId
+  file File @relation(fields: [fileId], references: [id])
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
@@ -561,6 +562,7 @@ model File {
   agencyDetails AgencyDetails?
   agencyVenueDetails AgencyVenueDetails?
   courseDetails CourseDetails[]
+  certificates Certificate[]
 
   profileImageAuth Auth[] @relation("ProfileImage")
 

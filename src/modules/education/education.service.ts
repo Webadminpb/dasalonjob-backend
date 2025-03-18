@@ -33,8 +33,8 @@ export class EducationService {
     return new ApiSuccessResponse(true, 'educations data', { educations });
   }
 
-  findOne(id: string) {
-    const education = this.prismaService.education.findUnique({
+  async findOne(id: string) {
+    const education = await this.prismaService.education.findUnique({
       where: {
         id,
       },
@@ -46,7 +46,7 @@ export class EducationService {
   }
 
   async update(id: string, body: UpdateEducationDto, user: Auth) {
-    const existingEducation = this.prismaService.education.findUnique({
+    const existingEducation = await this.prismaService.education.findUnique({
       where: {
         userId: user.id,
         id,
@@ -65,7 +65,7 @@ export class EducationService {
   }
 
   async remove(id: string, user: Auth) {
-    const existingEducation = this.prismaService.education.findUnique({
+    const existingEducation = await this.prismaService.education.findUnique({
       where: {
         userId: user.id,
         id,
