@@ -13,6 +13,7 @@ export class LangaugesService {
     const language = await this.prismaService.language.create({
       data: {
         name: body.name,
+        fileId: body.fileId,
       },
     });
     return new ApiSuccessResponse(
@@ -25,6 +26,9 @@ export class LangaugesService {
   async findAll() {
     const languages = await this.prismaService.language.findMany({
       where: {},
+      include: {
+        file: true,
+      },
     });
     if (!languages) {
       throw new NotFoundException('Language not found');
@@ -36,6 +40,9 @@ export class LangaugesService {
     const language = await this.prismaService.language.findUnique({
       where: {
         id,
+      },
+      include: {
+        file: true,
       },
     });
     if (!language) {

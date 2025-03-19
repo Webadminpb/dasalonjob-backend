@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export const createLanguageSchema = z.object({
   name: z.string(),
+  fileId: z.string().optional(),
   // proficiency: z.nativeEnum(Proficiency).optional(),
 });
 

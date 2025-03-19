@@ -38,7 +38,7 @@ export class UploadsController {
     if (!files) {
       throw new BadRequestException('File is Required');
     }
-    console.log('user Id ', user.id);
+    // console.log('user Id ', user.id);
     return await this.uploadsService.uploadFiles(
       files,
       folder ?? 'default',

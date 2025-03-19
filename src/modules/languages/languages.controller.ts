@@ -31,7 +31,7 @@ export class LangaugesController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
-  findAll(@GetUser() user: Auth) {
+  findAll() {
     return this.langaugesService.findAll();
   }
 

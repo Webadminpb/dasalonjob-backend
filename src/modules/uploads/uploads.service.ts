@@ -19,7 +19,7 @@ export class UploadsService {
     // Map files to upload promises
     const uploadPromises: Promise<any>[] = files.map(async (file: any) => {
       const compressedBuffer = await this.compressFile(file.buffer);
-      const folderPath = `dasalon/${user.id}/${folder}`;
+      const folderPath = `dasalon/${user?.id ?? 'default'}/${folder}`;
       let newFileName = file.originalname;
       if (!newFileName.endsWith('.webp')) {
         newFileName = newFileName.split('.').slice(0, -1).join('.');

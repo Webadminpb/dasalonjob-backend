@@ -396,13 +396,13 @@ model Language {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
 
   name    String
-  // proficiency Proficiency @default(Basic)
 
-  // userId      String @db.ObjectId
-  // user        Auth   @relation(fields: [userId], references: [id])
 
   jobQualificationIds String[] @db.ObjectId
   jobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
+
+  fileId String? @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
 
   userLanguages UserLanguage[]
 
@@ -568,6 +568,7 @@ model File {
   agencyVenueDetails AgencyVenueDetails?
   courseDetails CourseDetails[]
   certificates Certificate[]
+  languages Language[]
 
   profileImageAuth Auth[] @relation("ProfileImage")
 
