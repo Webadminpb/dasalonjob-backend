@@ -33,30 +33,39 @@ export class JobPostService {
   }
 
   async findOne(id: string) {
-    const jobPost = await this.prismaService.jobPost.findUnique({
-      where: { id },
-      include: {
-        user: {
-          include: {
-            venueDetails: true,
+    const [jobPost, applicantCount] = await Promise.all([
+      this.prismaService.jobPost.findUnique({
+        where: { id },
+        include: {
+          user: {
+            include: {
+              venueDetails: true,
+            },
+          },
+          jobBasicInfo: true,
+          jobBenefits: true,
+          jobDescription: true,
+          jobQualification: {
+            include: {
+              skills: true,
+              languages: true,
+            },
           },
         },
-        jobBasicInfo: true,
-        jobBenefits: true,
-        jobDescription: true,
-        jobQualification: {
-          include: {
-            skills: true,
-            languages: true,
-          },
-        },
-        // skills: true,
-      },
-    });
+      }),
+      this.prismaService.jobApplication.count({
+        where: { jobPostId: id },
+      }),
+    ]);
+
     if (!jobPost) {
       throw new NotFoundException('Job post not found');
     }
-    return new ApiSuccessResponse(true, 'Job post found', jobPost);
+
+    return new ApiSuccessResponse(true, 'Job post found', {
+      ...jobPost,
+      applicantCount,
+    });
   }
 
   async findAll(query: QueryJobPostDto, user?: Auth) {
