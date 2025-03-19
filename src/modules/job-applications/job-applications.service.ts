@@ -65,6 +65,9 @@ export class JobApplicationService {
 
       where.jobPost.userId = user.id;
     }
+    if (query.jobPostId) {
+      where.jobPostId = query.jobPostId;
+    }
     if (query.status) {
       where.status = query.status;
     }

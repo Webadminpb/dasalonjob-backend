@@ -18,7 +18,7 @@ enum Role {
   ADMIN
   USER
   SUPER_ADMIN
-  PARTNER
+  PARTNER // Owner Staff Manager
   AGENCY
 }
 
@@ -225,6 +225,11 @@ type Day {
 }
 
 type SalaryRange {
+  start Int @default(0)
+  end Int @default(0)
+}
+
+type ExperienceRange {
   start Int @default(0)
   end Int @default(0)
 }
@@ -712,7 +717,7 @@ model JobQualification {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   education HighestEducation
-  minExperience Boolean
+  minExperience ExperienceRange 
   certification Boolean
   isProfessional Boolean
 
@@ -764,7 +769,8 @@ model JobPost {
   jobDescriptionId String?  @db.ObjectId
   jobDescription JobDescription? @relation(fields: [jobDescriptionId], references: [id])
 
-
+  venueId String? @db.ObjectId
+  venue PartnerVenue? @relation(fields: [venueId], references: [id])
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
@@ -1087,6 +1093,7 @@ model PartnerVenue {
   courseDetails CourseDetails[]
   courseAcademy CourseAcademy[]
   jobBasicInfo JobBasicInfo[]
+  jobPosts JobPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

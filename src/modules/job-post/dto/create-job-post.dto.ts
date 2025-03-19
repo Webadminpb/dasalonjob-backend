@@ -12,6 +12,7 @@ export const JobPostSchema = z.object({
   languageIds: z.array(z.string()).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
   countryId: z.string().optional(),
+  venueId: z.string().optional(),
   isOpen: z.boolean().optional(),
 });
 

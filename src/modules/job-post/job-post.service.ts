@@ -23,6 +23,7 @@ export class JobPostService {
         jobBenefitsId: body.jobBenefitsId,
         jobQualificationId: body.jobQualificationId,
         jobDescriptionId: body.jobDescriptionId,
+        venueId: body.venueId,
         // skillIds: body.skillIds,
         countryId: body.countryId,
         // languageIds: body.languageIds,
@@ -37,9 +38,10 @@ export class JobPostService {
       this.prismaService.jobPost.findUnique({
         where: { id },
         include: {
-          user: {
+          user: true,
+          venue: {
             include: {
-              venueDetails: true,
+              venueBasicDetails: true,
             },
           },
           jobBasicInfo: true,

@@ -13,6 +13,7 @@ export const QueryJobApplicationSchema = z.object({
   page: z.string().optional().transform(Number).optional(),
   limit: z.string().optional().transform(Number).optional(),
   location: z.string().optional(),
+  jobPostId: z.string().optional(),
   // languageIds: z.array(z.string()).optional(),
   education: z.nativeEnum(HighestEducation).optional(),
   skills: z.string().optional(),
