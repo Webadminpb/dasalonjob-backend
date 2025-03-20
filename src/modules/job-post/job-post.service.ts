@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Auth, Prisma } from '@prisma/client';
+import { Auth, JobApplicationStatus, Prisma } from '@prisma/client';
 import { CreateJobPostDto } from './dto/create-job-post.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
@@ -24,9 +24,7 @@ export class JobPostService {
         jobQualificationId: body.jobQualificationId,
         jobDescriptionId: body.jobDescriptionId,
         venueId: body.venueId,
-        // skillIds: body.skillIds,
         countryId: body.countryId,
-        // languageIds: body.languageIds,
         userId: user.id,
       },
     });
@@ -34,7 +32,14 @@ export class JobPostService {
   }
 
   async findOne(id: string) {
-    const [jobPost, applicantCount] = await Promise.all([
+    const [
+      jobPost,
+      applicantCount,
+      savedCount,
+      shortlistedCount,
+      rejectedCount,
+      acceptedCount,
+    ] = await Promise.all([
       this.prismaService.jobPost.findUnique({
         where: { id },
         include: {
@@ -62,6 +67,18 @@ export class JobPostService {
       this.prismaService.jobApplication.count({
         where: { jobPostId: id },
       }),
+      this.prismaService.saveJobPost.count({
+        where: { jobPostId: id },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { id, status: JobApplicationStatus.Shortlisted },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { id, status: JobApplicationStatus.Rejected },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { id, status: JobApplicationStatus.Accepted },
+      }),
     ]);
 
     if (!jobPost) {
@@ -71,6 +88,11 @@ export class JobPostService {
     return new ApiSuccessResponse(true, 'Job post found', {
       ...jobPost,
       applicantCount,
+      savedCount,
+      shortlistedCount,
+      rejectedCount,
+      acceptedCount,
+      totalViews: 0,
     });
   }
 
@@ -196,8 +218,6 @@ export class JobPostService {
         include: { jobBasicInfo: true },
       }),
     );
-    console.log('today ', today);
-    console.log('week ', nextWeek);
     const [expiringJobs, total] = await this.prismaService.jobPost.findMany({
       where: {
         userId: user.id,

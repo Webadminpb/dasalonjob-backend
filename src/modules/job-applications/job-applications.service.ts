@@ -8,7 +8,7 @@ import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { QueryJobApplicationDto } from './dto/query-job-application.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { Auth, JobApplicationStatus } from '@prisma/client';
+import { Auth } from '@prisma/client';
 import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 import { StatusJobApplicationDto } from './dto/status-job.dto';
 
