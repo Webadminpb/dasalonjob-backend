@@ -50,7 +50,11 @@ export class JobPostService {
           jobQualification: {
             include: {
               skills: true,
-              languages: true,
+              languages: {
+                include: {
+                  file: true,
+                },
+              },
             },
           },
         },
