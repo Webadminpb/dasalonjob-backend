@@ -321,8 +321,10 @@ model Auth {
   saveCourses SaveCourse[]
   partnerSocialLinks PartnerSocialLinks?
 
-  applicantShortlistedMessages JobApplicationMessage[] @relation("ApplicantShortlistedMessages")
-  partnerShortlistedMessages JobApplicationMessage[] @relation("PartnerShortlistedMessages")
+  ApplicantMessages JobApplicationPartnerMessage[] @relation("ApplicantMessage")
+  PartnerMessages JobApplicationPartnerMessage[] @relation("PartnerMessage")
+  jobApplicationApplicantMessage JobApplicationApplicantMessage[]
+
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -785,6 +787,8 @@ model JobPost {
   jobApplications JobApplication[]
   saveJobPosts SaveJobPost[]
 
+  views Int @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -960,7 +964,8 @@ model JobApplication {
 
   message String?
 
-  shortlisted JobApplicationMessage[]
+  partnerMessages JobApplicationPartnerMessage[]
+  applicantMessage JobApplicationApplicantMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -968,18 +973,32 @@ model JobApplication {
   @@unique([userId, jobPostId]) 
 }
 
-model JobApplicationMessage {
+model JobApplicationPartnerMessage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   applicantId String @db.ObjectId
-  applicant Auth @relation("ApplicantShortlistedMessages", fields: [applicantId], references: [id])
+  applicant Auth @relation("ApplicantMessage", fields: [applicantId], references: [id])
 
   partnerId String @db.ObjectId
-  partner Auth @relation("PartnerShortlistedMessages", fields: [partnerId], references: [id])
+  partner Auth @relation("PartnerMessage", fields: [partnerId], references: [id])
 
   jobApplicationId String @db.ObjectId
   jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id])
 
+
+  message String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model JobApplicationApplicantMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  applicantId String @db.ObjectId
+  applicant Auth @relation(fields: [applicantId], references: [id])
+
+  jobApplicationId String @db.ObjectId
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id])
 
   message String
 

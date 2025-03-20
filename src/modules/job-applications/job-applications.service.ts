@@ -44,8 +44,18 @@ export class JobApplicationService {
     const jobApplication = await this.prismaService.jobApplication.findUnique({
       where: { id },
       include: {
-        user: true,
+        user: {
+          include: {
+            jobPreference: true,
+            profileImage: true,
+            languages: true,
+            educations: true,
+            basicDetails: true,
+            contactDetails: true,
+          },
+        },
         jobPost: true,
+        applicantMessage: true,
       },
     });
     if (!jobApplication) {
@@ -167,6 +177,8 @@ export class JobApplicationService {
         include: {
           user: {
             include: {
+              jobPreference: true,
+              profileImage: true,
               languages: true,
               educations: true,
               basicDetails: true,

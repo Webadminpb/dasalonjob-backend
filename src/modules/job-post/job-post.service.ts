@@ -31,7 +31,7 @@ export class JobPostService {
     return new ApiSuccessResponse(true, 'Job post added', jobPost);
   }
 
-  async findOne(id: string) {
+  async findOneForPartner(id: string) {
     const [
       jobPost,
       applicantCount,
@@ -92,8 +92,50 @@ export class JobPostService {
       shortlistedCount,
       rejectedCount,
       acceptedCount,
-      totalViews: 0,
+      totalViews: jobPost?.views || 0,
     });
+  }
+  async findOne(id: string) {
+    const [jobPost, update] = await this.prismaService.$transaction([
+      this.prismaService.jobPost.findUnique({
+        where: { id },
+        include: {
+          user: true,
+          venue: {
+            include: {
+              venueBasicDetails: true,
+            },
+          },
+          jobBasicInfo: true,
+          jobBenefits: true,
+          jobDescription: true,
+          jobQualification: {
+            include: {
+              skills: true,
+              languages: {
+                include: {
+                  file: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      this.prismaService.jobPost.update({
+        where: { id },
+        data: {
+          views: {
+            increment: 1,
+          },
+        },
+      }),
+    ]);
+
+    if (!jobPost) {
+      throw new NotFoundException('Job post not found');
+    }
+
+    return new ApiSuccessResponse(true, 'Job post found', jobPost);
   }
 
   async findAll(query: QueryJobPostDto, user?: Auth) {

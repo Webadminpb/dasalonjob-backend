@@ -26,48 +26,84 @@ export class JobApplicationMessageController {
   @Post('/partner')
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
-  create(@Body() body: CreateJobApplicationMessageDto, @GetUser() user: Auth) {
-    return this.jobApplicationMessageService.create(body, user);
-  }
-
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'PARTNER')
-  findAll(@GetUser() user: Auth) {
-    return this.jobApplicationMessageService.findAll(user);
-  }
-
-  @Get('/job-application/:id')
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER', 'PARTNER')
-  findJobApplicationMessage(@GetUser() user: Auth, @Param('id') id: string) {
-    return this.jobApplicationMessageService.findJobApplicationMessage(
-      id,
+  createMessageFromPartnerSide(
+    @Body() body: CreateJobApplicationMessageDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationMessageService.createMessageFromPartnerSide(
+      body,
       user,
     );
   }
-  @Get(':id')
+
+  @Post('/applicant')
+  @HttpCode(HttpStatus.CREATED)
+  @AllowAuthenticated('USER')
+  createMessageFromApplicantSide(
+    @Body() body: CreateJobApplicationMessageDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationMessageService.createMessageFromPartnerSide(
+      body,
+      user,
+    );
+  }
+
+  @Get('/partner/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  findOnePartnerMessage(@Param('id') id: string) {
+    return this.jobApplicationMessageService.findOnePartnerMessage(id);
+  }
+
+  @Get('/applicant/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
-  findOne(@Param('id') id: string) {
-    return this.jobApplicationMessageService.findOne(id);
+  findOneApplicantMessage(@Param('id') id: string) {
+    return this.jobApplicationMessageService.findOneApplicantMessage(id);
   }
 
   @Put('/partner/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  update(
+  updatePartnerMessage(
     @Param('id') id: string,
     @Body() body: UpdateJobApplicationMessageDto,
     @GetUser() user: Auth,
   ) {
-    return this.jobApplicationMessageService.update(id, body, user);
+    return this.jobApplicationMessageService.updatePartnerMessage(
+      id,
+      body,
+      user,
+    );
+  }
+
+  @Put('/applicant/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  updateApplicantMessage(
+    @Param('id') id: string,
+    @Body() body: UpdateJobApplicationMessageDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationMessageService.updateApplicantMessage(
+      id,
+      body,
+      user,
+    );
   }
 
   @Delete('/partner/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  remove(@Param('id') id: string, @GetUser() user: Auth) {
-    return this.jobApplicationMessageService.remove(id, user);
+  removePartnerMessage(@Param('id') id: string, @GetUser() user: Auth) {
+    return this.jobApplicationMessageService.removePartnerMessage(id, user);
+  }
+
+  @Delete('/applicant/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  removeApplicant(@Param('id') id: string, @GetUser() user: Auth) {
+    return this.jobApplicationMessageService.removeApplicantMessage(id, user);
   }
 }

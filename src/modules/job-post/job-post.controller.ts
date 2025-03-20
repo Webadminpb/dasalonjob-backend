@@ -54,7 +54,13 @@ export class JobPostController {
     return this.jobPostService.findExpiringJobs(query, user);
   }
 
-  @Get(':id')
+  @Get('/partner/:id')
+  @HttpCode(HttpStatus.OK)
+  findOneFor(@Param('id') id: string) {
+    return this.jobPostService.findOneForPartner(id);
+  }
+
+  @Get('/applicant/:id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
     return this.jobPostService.findOne(id);
