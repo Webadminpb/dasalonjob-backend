@@ -13,7 +13,7 @@ import { EducationModule } from './modules/education/education.module';
 import { CertificateModule } from './modules/certificate/certificate.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 import { SalondetailsModule } from './modules/salondetails/salondetails.module';
-import { VenuedetailsModule } from './modules/venuedetails/venuedetails.module';
+import { VenuedetailsModule } from './modules/venue-details/venue-details.module';
 import { VenuebusinesstypeModule } from './modules/venuebusinesstype/venuebusinesstype.module';
 import { VenuebusinessdaysModule } from './modules/venuebusinessdays/venuebusinessdays.module';
 import { VenuebusinessservicesModule } from './modules/venuebusinessservices/venuebusinessservices.module';
@@ -44,7 +44,7 @@ import { CourseAcademyModule } from './modules/course-academy/course-academy.mod
 import { CourseTypeAndLocationModule } from './modules/course-type-and-location/course-type-and-location.module';
 import { PartnerCourseModule } from './modules/partner-course/partner-course.module';
 import { SaveCourseModule } from './modules/save-course/save-course.module';
-import { CourseApplicationModule } from './modules/course-application/course-application.module';
+import { CourseApplicationModule } from './modules/course-applications/course-application.module';
 import { UserLanguagesModule } from './modules/user-languages/user-languages.module';
 import { PartnerPersonalDataModule } from './modules/partner-personal-data/partner-personal-data.module';
 

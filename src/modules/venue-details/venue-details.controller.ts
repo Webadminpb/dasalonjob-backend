@@ -8,12 +8,13 @@ import {
   HttpCode,
   Put,
   Param,
+  Query,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { VenueDetailsService } from './venuedetails.service';
-import { CreateVenueDetailsDto } from './dto/create-venuedetail.dto';
+import { VenueDetailsService } from './venue-details.service';
+import { CreateVenueDetailsDto } from './dto/create-venue-detail.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
-import { UpdateVenueDetailsDto } from './dto/update-venuedetail.dto';
+import { UpdateVenueDetailsDto } from './dto/update-venue-detail.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -21,6 +22,7 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { QueryVenueDetailsDto } from './dto/query-venue-details.dto';
 
 @ApiTags('partner')
 @ApiBearerAuth()
@@ -57,8 +59,11 @@ export class VenueDetailsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
-  findMyVenueDetails(@GetUser() user: Auth) {
-    return this.venueDetailsService.findMyVenueDetails(user);
+  findMyVenueDetails(
+    @Query() query: QueryVenueDetailsDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.venueDetailsService.findMyVenueDetails(query, user);
   }
 
   @Put(':id')

@@ -23,16 +23,16 @@ export class SaveCourseController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('USER')
   async create(@Body() body: CreateSaveCourseDto, @GetUser() user: Auth) {
     return this.saveCourseService.create(body, user);
   }
 
-  @Get()
+  @Get('user')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('USER')
   findAll(@GetUser() user: Auth, @Query() query: QuerySaveCourseDto) {
-    return this.saveCourseService.findAll(user, query);
+    return this.saveCourseService.findAllForApplicant(user, query);
   }
 
   @Get(':id')

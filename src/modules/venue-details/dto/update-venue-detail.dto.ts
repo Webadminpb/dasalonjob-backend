@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { VenueDetailsSchema } from './create-venuedetail.dto';
+import { VenueDetailsSchema } from './create-venue-detail.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '@prisma/client';
 

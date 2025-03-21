@@ -50,7 +50,7 @@ export class PartnerVenueService {
       const year = query.date;
       where.createdAt = {
         gte: new Date(`${year}-01-01T00:00:00.000Z`),
-        lte: new Date(`${year}-12-31T23:59:59.999Z`),
+        lte: new Date(`${year}-12-61T23:59:59.999Z`),
       };
     }
 
@@ -161,11 +161,27 @@ export class PartnerVenueService {
   }
 
   async dashboardTotal(user: Auth) {
-    const [totalJobs, totalCourses] = await Promise.all([
+    const [
+      totalJobs = 0,
+      totalCourses = 0,
+      totalJobApplicants = 0,
+      totalCourseApplicants = 0,
+    ] = await Promise.all([
       this.prismaService.jobPost.count({ where: { userId: user.id } }),
       this.prismaService.partnerCourse.count({ where: { userId: user.id } }),
+      this.prismaService.jobApplication.count({
+        where: { jobPost: { userId: user.id } },
+      }),
+      this.prismaService.courseApplication.count({
+        where: { course: { userId: user.id } },
+      }),
     ]);
-    return new ApiSuccessResponse(true, 'total', { totalJobs, totalCourses });
+    return new ApiSuccessResponse(true, 'total', {
+      totalJobs,
+      totalCourses,
+      totalJobApplicants,
+      totalCourseApplicants,
+    });
   }
 
   async jobApplicationTotal(user: Auth) {

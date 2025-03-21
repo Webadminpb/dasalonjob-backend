@@ -11,7 +11,7 @@ export const createJobPreferenceSchema = z.object({
   locations: z.array(z.string()),
   joining: z.nativeEnum(JoiningAvailability),
   salary: SalaryRangeSchema,
-  skillsIds: z.string().optional(),
+  skillsIds: z.array(z.string()).optional(),
 });
 
 export class CreateJobpreferenceDto extends createZodDto(

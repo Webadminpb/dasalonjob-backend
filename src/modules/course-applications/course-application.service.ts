@@ -43,6 +43,22 @@ export class CourseApplicationService {
     if (user.id) {
       where.userId = user.id;
     }
+
+    if (query.customDate) {
+      const date = new Date(query.customDate);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lt: new Date(date.setHours(23, 59, 59, 999)),
+      };
+    }
+
+    if (query.customerYear) {
+      const year = new Date(query.customerYear).getFullYear();
+      where.createdAt = {
+        gte: new Date(year, 0, 1),
+        lt: new Date(year + 1, 0, 1),
+      };
+    }
     const [courses, total] = await Promise.all([
       this.prismaService.courseApplication.findMany({
         where,
@@ -74,6 +90,26 @@ export class CourseApplicationService {
     if (query.courseId) {
       where.courseId = query.courseId;
     }
+    if (query.search) {
+      where.user = {
+        basicDetails: {
+          OR: [
+            {
+              firstName: {
+                contains: query.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              lastName: {
+                contains: query.search,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      };
+    }
     if (query.location) {
       where.user = where.user || {};
       where.user.contactDetails = where.user.contactDetails || {};
@@ -88,10 +124,9 @@ export class CourseApplicationService {
     }
 
     if (query.customerYear) {
-      const year = new Date(query.customerYear).getFullYear();
       where.createdAt = {
-        gte: new Date(year, 0, 1),
-        lt: new Date(year + 1, 0, 1),
+        gte: new Date(query.customerYear, 0, 1),
+        lt: new Date(query.customerYear + 1, 0, 1),
       };
     }
     if (query.languageId) {

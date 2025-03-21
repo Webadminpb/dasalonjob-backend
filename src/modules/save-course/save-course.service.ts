@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Auth, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { QuerySaveCourseDto } from './dto/query-save-course.dto';
+import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 
 @Injectable()
 export class SaveCourseService {
@@ -34,7 +35,7 @@ export class SaveCourseService {
     return new ApiSuccessResponse(true, 'Saved successfully', null);
   }
 
-  async findAll(user: Auth, query: QuerySaveCourseDto) {
+  async findAllForApplicant(user: Auth, query: QuerySaveCourseDto) {
     const where: Prisma.SaveCourseWhereInput = {
       userId: user.id,
     };
@@ -71,6 +72,23 @@ export class SaveCourseService {
       };
     }
 
+    if (query.customDate) {
+      const date = new Date(query.customDate);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lt: new Date(date.setHours(23, 59, 59, 999)),
+      };
+    }
+
+    if (query.customerYear) {
+      where.createdAt = {
+        gte: new Date(query.customerYear, 0, 1),
+        lt: new Date(query.customerYear + 1, 0, 1),
+      };
+    }
+    const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
+    const sortBy = query.sort || 'createdAt';
+
     const [saveCourses, total] = await Promise.all([
       this.prismaService.saveCourse.findMany({
         where,
@@ -81,6 +99,74 @@ export class SaveCourseService {
             },
           },
         },
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      }),
+      this.prismaService.saveCourse.count({ where }),
+    ]);
+
+    if (!saveCourses.length) {
+      throw new NotFoundException('Saved course not found');
+    }
+
+    return new ApiSuccessResponse(true, 'Get all saved courses successfully', {
+      saveCourses,
+      total,
+    });
+  }
+
+  async findAllForPartner(user: Auth, query: QuerySaveCourseDto) {
+    const where: Prisma.SaveCourseWhereInput = {};
+
+    if (query.location || query.type) {
+      where.course = {
+        courseTypeAndLocation: {
+          OR: [
+            ...(query.location
+              ? [
+                  {
+                    city: {
+                      contains: query.location,
+                      mode: 'insensitive',
+                    } as any,
+                  },
+                  {
+                    state: {
+                      contains: query.location,
+                      mode: 'insensitive',
+                    } as any,
+                  },
+                ]
+              : []),
+            ...(query.type
+              ? [
+                  {
+                    courseType: { equals: query.type as any },
+                  },
+                ]
+              : []),
+          ],
+        },
+      };
+    }
+
+    if (user.id) {
+      where.course = { userId: user.id };
+    }
+
+    const [saveCourses, total] = await Promise.all([
+      this.prismaService.saveCourse.findMany({
+        where,
+        include: {
+          course: {
+            include: {
+              courseTypeAndLocation: true,
+            },
+          },
+        },
+        skip: getPaginationSkip(query.page, query.limit),
+        take: getPaginationTake(query.limit),
       }),
       this.prismaService.saveCourse.count({ where }),
     ]);

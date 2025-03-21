@@ -323,7 +323,7 @@ model Auth {
 
   ApplicantMessages JobApplicationPartnerMessage[] @relation("ApplicantMessage")
   PartnerMessages JobApplicationPartnerMessage[] @relation("PartnerMessage")
-  jobApplicationApplicantMessage JobApplicationApplicantMessage[]
+  jobApplicationApplicantMessage JobApplicationApplicantMessage?
 
   
   isEducation    Boolean?
@@ -425,7 +425,8 @@ model Skills {
   jobQualificationIds String[] @db.ObjectId
   JobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
 
-  jobPreference JobPreference[]
+  jobPreferenceIds String[] @db.ObjectId
+  jobPreferences JobPreference[] @relation(fields: [jobPreferenceIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -442,8 +443,8 @@ model JobPreference {
   joining JoiningAvailability
   salary SalaryRange 
 
-  skillsIds String @db.ObjectId
-  skills Skills @relation(fields: [skillsIds], references: [id])
+  skillsIds String[] @db.ObjectId
+  skills Skills[] @relation(fields: [skillsIds], references: [id])
 
 
 
@@ -994,10 +995,10 @@ model JobApplicationPartnerMessage {
 model JobApplicationApplicantMessage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  applicantId String @db.ObjectId
+  applicantId String @db.ObjectId @unique
   applicant Auth @relation(fields: [applicantId], references: [id])
 
-  jobApplicationId String @db.ObjectId
+  jobApplicationId String @db.ObjectId @unique
   jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id])
 
   message String
@@ -1158,6 +1159,8 @@ model PartnerCourse {
 
   saveCourses SaveCourse[]
   courseApplications CourseApplication[]
+
+  views Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

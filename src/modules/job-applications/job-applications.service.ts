@@ -68,7 +68,7 @@ export class JobApplicationService {
     );
   }
 
-  async findAll(query: QueryJobApplicationDto, user?: Auth) {
+  async findAllForPartner(query: QueryJobApplicationDto, user?: Auth) {
     const where: any = {};
     if (user.id) {
       where.jobPost = where.jobPost || {};
@@ -86,34 +86,21 @@ export class JobApplicationService {
       where.user.contactDetails = where.user.contactDetails || {};
       where.user.contactDetails.city = query.location;
     }
-    if (query.skills) {
+
+    if (query.languageId) {
       where.user = {
-        skills: {
-          some: {
-            skills: {
-              has: query.skills.trim(),
-            },
-          },
+        languages: {
+          languageId: query.languageId,
         },
       };
     }
 
-    // if (query.language) {
-    //   where.user = {
-    //     languages: {
-    //       some: {
-    //         language: query.language,
-    //       },
-    //     },
-    //   };
-    // }
-
-    if (query.skills) {
+    if (query.skillId) {
       where.user = where.user || {};
-      where.user.skills = {
+      where.user.jobPreference = {
         some: {
-          skills: {
-            has: query.skills.trim(),
+          skillsIds: {
+            hasSome: query.skillId,
           },
         },
       };
@@ -156,7 +143,128 @@ export class JobApplicationService {
       };
     }
 
-    // **Custom Year Filtering**
+    if (query.customerYear) {
+      const year = new Date(query.customerYear).getFullYear();
+      where.createdAt = {
+        gte: new Date(year, 0, 1),
+        lt: new Date(year + 1, 0, 1),
+      };
+    }
+
+    const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
+    const sortBy = query.sort || 'createdAt';
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
+
+    const [jobApplications, total] = await Promise.all([
+      this.prismaService.jobApplication.findMany({
+        where,
+        include: {
+          user: {
+            include: {
+              jobPreference: true,
+              profileImage: true,
+              languages: true,
+              educations: true,
+              basicDetails: true,
+              contactDetails: true,
+              jobApplicationApplicantMessage: true,
+            },
+          },
+          jobPost: {
+            include: {
+              user: true,
+              jobBasicInfo: true,
+            },
+          },
+        },
+        skip,
+        take,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      }),
+      this.prismaService.jobApplication.count({ where, skip, take }),
+    ]);
+
+    return new ApiSuccessResponse(true, 'Job applications found', {
+      total,
+      jobApplications,
+    });
+  }
+
+  async findAllForApplicant(query: QueryJobApplicationDto, user?: Auth) {
+    const where: any = {};
+    if (user.id) {
+      where.userId = user.id;
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+    if (query.location) {
+      where.user = where.user || {};
+      where.user.contactDetails = where.user.contactDetails || {};
+      where.user.contactDetails.city = query.location;
+    }
+
+    if (query.languageId) {
+      where.user = {
+        languages: {
+          languageId: query.languageId,
+        },
+      };
+    }
+
+    if (query.skillId) {
+      where.user = where.user || {};
+      where.user.jobPreference = {
+        some: {
+          skillsIds: {
+            hasSome: query.skillId,
+          },
+        },
+      };
+    }
+
+    if (query.education) {
+      where.user = where.user || {};
+      where.user.educations = {
+        some: {
+          education: query.education,
+        },
+      };
+    }
+
+    if (query.isTrained) {
+      where.user = where.user || {};
+      where.user.isProfessional = Boolean(query.isTrained);
+    }
+
+    if (query.search) {
+      where.OR = [
+        {
+          user: {
+            contactDetails: {
+              phoneNumber: {
+                contains: query.search.trim(),
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ];
+    }
+
+    if (query.customDate) {
+      const date = new Date(query.customDate);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lt: new Date(date.setHours(23, 59, 59, 999)),
+      };
+    }
+
     if (query.customerYear) {
       const year = new Date(query.customerYear).getFullYear();
       where.createdAt = {

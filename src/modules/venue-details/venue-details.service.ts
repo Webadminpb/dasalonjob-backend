@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Auth } from '@prisma/client';
+import { Auth, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { CreateVenueDetailsDto } from './dto/create-venuedetail.dto';
-import { UpdateVenueDetailsDto } from './dto/update-venuedetail.dto';
+import { CreateVenueDetailsDto } from './dto/create-venue-detail.dto';
+import { UpdateVenueDetailsDto } from './dto/update-venue-detail.dto';
+import { QueryVenueDetailsDto } from './dto/query-venue-details.dto';
+import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 
 @Injectable()
 export class VenueDetailsService {
@@ -31,12 +33,40 @@ export class VenueDetailsService {
     return new ApiSuccessResponse(true, 'Venue details added', venueDetails);
   }
 
-  async findMyVenueDetails(user: Auth) {
+  async findMyVenueDetails(query: QueryVenueDetailsDto, user: Auth) {
+    const where: Prisma.VenueDetailsWhereInput = {
+      userId: user.id,
+    };
+    if (query.search) {
+      where.name = {
+        contains: query.search,
+        mode: 'insensitive',
+      };
+    }
+
+    if (query.date) {
+      const date = new Date(query.date);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lt: new Date(date.setHours(23, 59, 59, 999)),
+      };
+    }
+
+    if (query.year) {
+      const year = new Date(query.year).getFullYear();
+      where.createdAt = {
+        gte: new Date(year, 0, 1),
+        lt: new Date(year + 1, 0, 1),
+      };
+    }
+
     const venueDetails = await this.prismaService.venueDetails.findMany({
-      where: { userId: user.id },
+      where,
       include: {
         files: true,
       },
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
     });
     if (!venueDetails) {
       throw new NotFoundException('Venue details not found');

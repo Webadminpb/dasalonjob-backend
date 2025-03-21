@@ -6,7 +6,7 @@ import {
   Language,
 } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional, zYearOptional } from 'src/common/validation';
 import { z } from 'zod';
 
 export const QueryPartnerCourseSchema = z.object({
@@ -19,7 +19,7 @@ export const QueryPartnerCourseSchema = z.object({
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
   customDate: zDateOptional,
-  customerYear: zDateOptional,
+  customerYear: zYearOptional,
 });
 
 export class QueryPartnerCourseDto extends createZodDto(

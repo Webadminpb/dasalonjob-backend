@@ -37,8 +37,21 @@ export class JobApplicationController {
   @Get('/partner')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
-  findAll(@Query() query: QueryJobApplicationDto, @GetUser() user: Auth) {
-    return this.jobApplicationService.findAll(query, user);
+  findAllForPartner(
+    @Query() query: QueryJobApplicationDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationService.findAllForPartner(query, user);
+  }
+
+  @Get('/user')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('USER')
+  findAllForApplicant(
+    @Query() query: QueryJobApplicationDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationService.findAllForApplicant(query, user);
   }
 
   @Get('/partner/total')

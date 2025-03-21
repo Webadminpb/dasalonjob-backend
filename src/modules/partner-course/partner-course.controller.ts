@@ -32,18 +32,25 @@ export class PartnerCourseController {
     return this.partnerCourseService.create(createPartnerCourseDto, user);
   }
 
-  @Get()
+  @Get('partner')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.OK)
   findAll(@Query() query: QueryPartnerCourseDto, @GetUser() user: Auth) {
     return this.partnerCourseService.findAll(query, user);
   }
 
-  @Get(':id')
+  @Get('partner/:id')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
-    return this.partnerCourseService.findOne(id);
+  findOneForPartner(@Param('id') id: string, @GetUser() user: Auth) {
+    return this.partnerCourseService.findOneForPartner(id, user);
+  }
+
+  @Get('user/:id')
+  @AllowAuthenticated('PARTNER')
+  @HttpCode(HttpStatus.OK)
+  findOneForApplicant(@Param('id') id: string) {
+    return this.partnerCourseService.findOneForApplicant(id);
   }
 
   @Put(':id')

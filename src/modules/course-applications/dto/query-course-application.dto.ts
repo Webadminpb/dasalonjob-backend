@@ -1,6 +1,6 @@
 import { CourseType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional, zYearOptional } from 'src/common/validation';
 import { z } from 'zod';
 
 export const QueryCourseApplicationSchema = z.object({
@@ -14,7 +14,7 @@ export const QueryCourseApplicationSchema = z.object({
   location: z.string().optional(),
   languageId: z.string().optional(),
   customDate: zDateOptional,
-  customerYear: zDateOptional,
+  customerYear: zYearOptional,
 });
 
 export class QueryCourseApplicationDto extends createZodDto(
