@@ -8,7 +8,7 @@ import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { QueryJobApplicationDto } from './dto/query-job-application.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { Auth } from '@prisma/client';
+import { Auth, JobApplicationStatus } from '@prisma/client';
 import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 import { StatusJobApplicationDto } from './dto/status-job.dto';
 
@@ -157,7 +157,13 @@ export class JobApplicationService {
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
 
-    const [jobApplications, total] = await Promise.all([
+    const [
+      jobApplications,
+      appliedTotal,
+      acceptedTotal,
+      shortlistedTotal,
+      rejectedTotal,
+    ] = await Promise.all([
       this.prismaService.jobApplication.findMany({
         where,
         include: {
@@ -185,12 +191,46 @@ export class JobApplicationService {
           [sortBy]: sortOrder,
         },
       }),
-      this.prismaService.jobApplication.count({ where, skip, take }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: JobApplicationStatus.Applied,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: JobApplicationStatus.Accepted,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: JobApplicationStatus.Shortlisted,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+          status: JobApplicationStatus.Rejected,
+        },
+      }),
     ]);
 
     return new ApiSuccessResponse(true, 'Job applications found', {
-      total,
       jobApplications,
+      appliedTotal,
+      acceptedTotal,
+      shortlistedTotal,
+      rejectedTotal,
     });
   }
 
