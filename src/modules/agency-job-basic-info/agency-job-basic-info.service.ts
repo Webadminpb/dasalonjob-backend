@@ -20,7 +20,7 @@ export class AgencyJobBasicInfoService {
           totalOpening: body.totalOpening,
           gender: body.gender,
           salaryRange: body.salaryRange,
-          deadline: body.deadline,
+          deadline: new Date(body.deadline).toISOString(),
         },
       });
 

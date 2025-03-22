@@ -12,3 +12,11 @@ export const getPaginationSkip = (
 ) => {
   return page && limit ? (Number(page) - 1) * Number(limit) : undefined;
 };
+
+export const getSortOrder = (order?: string) => {
+  return order === 'asc' ? 'asc' : 'desc';
+};
+
+export const getSortBy = (sort?: string) => {
+  return sort || 'createdAt';
+};

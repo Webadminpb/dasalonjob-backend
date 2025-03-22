@@ -16,7 +16,7 @@ export class PartnerPersonalDataService {
           userId: user.id,
           firstName: body.firstName,
           lastName: body.lastName,
-          dob: body.dob,
+          dob: new Date(body.dob).toISOString(),
           gender: body.gender,
         },
       });
@@ -94,7 +94,7 @@ export class PartnerPersonalDataService {
           userId: user.id,
           firstName: body.firstName,
           lastName: body.lastName,
-          dob: body.dob,
+          dob: new Date(body.dob).toISOString(),
           gender: body.gender,
         },
       });

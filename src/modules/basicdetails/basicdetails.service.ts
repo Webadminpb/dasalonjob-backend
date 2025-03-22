@@ -27,11 +27,10 @@ export class BasicdetailsService {
     const basicDetails = await this.prismaService.basicDetails.create({
       data: {
         userId: user.id,
-        // fullName: body.fullName,
         firstName: body.firstName,
         lastName: body.lastName,
         gender: body.gender,
-        dob: body.dob,
+        dob: new Date(body.dob).toISOString(),
         martialStatus: body.martialStatus,
         fileId: body.fileId,
       },
@@ -71,7 +70,12 @@ export class BasicdetailsService {
         id: existingBasicDetails.id,
       },
       data: {
-        ...body,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        gender: body.gender,
+        dob: new Date(body.dob).toISOString(),
+        martialStatus: body.martialStatus,
+        fileId: body.fileId,
       },
     });
     return new ApiSuccessResponse(

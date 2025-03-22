@@ -16,8 +16,8 @@ export class ExperienceService {
         location: body.location,
         longitude: body.longitude,
         latitude: body.latitude,
-        startDate: body.startDate,
-        endDate: body.endDate,
+        startDate: new Date(body.startDate).toISOString(),
+        endDate: new Date(body.endDate).toISOString(),
         description: body.description,
       },
     });
@@ -64,7 +64,12 @@ export class ExperienceService {
         id: existingExperience.id,
       },
       data: {
-        ...body,
+        profile: body.profile,
+        location: body.location,
+        longitude: body.longitude,
+        latitude: body.latitude,
+        startDate: new Date(body.startDate).toISOString(),
+        endDate: new Date(body.endDate).toISOString(),
       },
     });
     return new ApiSuccessResponse(

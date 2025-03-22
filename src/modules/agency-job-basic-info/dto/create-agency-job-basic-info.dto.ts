@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 import { Gender, JobType, TotalOpening } from '@prisma/client';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
 export const SalaryRangeSchema = z.object({
   start: z.number().int().min(0).default(0),

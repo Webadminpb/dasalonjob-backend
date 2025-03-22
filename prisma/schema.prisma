@@ -130,6 +130,8 @@ enum AdditionalServices {
 enum JobType {
   FullTime
   PartTime
+  Contract
+  Freelance
 }
 
 enum CourseType {
@@ -224,14 +226,30 @@ type Day {
 
 }
 
+enum Date {
+  
+  Two
+  Three
+}
+
 type SalaryRange {
   start Int @default(0)
   end Int @default(0)
 }
 
-type ExperienceRange {
-  start Int @default(0)
-  end Int @default(0)
+// type ExperienceRange {
+//   start Int @default(0)
+//   end Int @default(0)
+// }
+
+
+enum UserExperience {
+  FRESHER
+  ONE_YEAR
+  TWO_YEAR
+  THREE_YEAR
+  FOUR_YEAR
+  FIVE_PLUS_YEAR
 }
 
 type Content {
@@ -721,7 +739,7 @@ model JobQualification {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   education HighestEducation
-  minExperience ExperienceRange 
+  minExperience UserExperience
   certification Boolean
   isProfessional Boolean
 

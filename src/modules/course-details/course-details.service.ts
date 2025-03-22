@@ -15,8 +15,8 @@ export class CourseDetailsService {
         jobProfile: body.jobProfile,
         courseName: body.courseName,
         courseType: body.courseType,
-        startDate: new Date(body.startDate),
-        endDate: new Date(body.endDate),
+        startDate: new Date(body.startDate).toISOString(),
+        endDate: new Date(body.endDate).toISOString(),
         price: body.price,
         offerPrice: body.offerPrice,
         isPlacement: body.isPlacement || false,
@@ -77,8 +77,12 @@ export class CourseDetailsService {
         jobProfile: body.jobProfile,
         courseName: body.courseName,
         courseType: body.courseType,
-        startDate: body.startDate ? new Date(body.startDate) : undefined,
-        endDate: body.endDate ? new Date(body.endDate) : undefined,
+        startDate: body.startDate
+          ? new Date(body.startDate).toISOString()
+          : undefined,
+        endDate: body.endDate
+          ? new Date(body.endDate).toISOString()
+          : undefined,
         price: body.price,
         offerPrice: body.offerPrice,
         isPlacement: body.isPlacement,

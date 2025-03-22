@@ -19,7 +19,7 @@ export class JobBasicInfoService {
         totalOpening: body.totalOpening,
         gender: body.gender,
         salaryRange: body.salaryRange,
-        deadline: body.deadline,
+        deadline: new Date(body.deadline).toISOString(),
         userId: user.id,
       },
     });
@@ -49,7 +49,14 @@ export class JobBasicInfoService {
     const updatedJobBasicInfo = await this.prismaService.jobBasicInfo.update({
       where: { id: existingJobBasicInfo.id },
       data: {
-        ...body,
+        title: body.title,
+        venueId: body.venueId,
+        profile: body.profile,
+        jobType: body.jobType,
+        totalOpening: body.totalOpening,
+        gender: body.gender,
+        salaryRange: body.salaryRange,
+        deadline: new Date(body.deadline).toISOString(),
       },
     });
     return new ApiSuccessResponse(

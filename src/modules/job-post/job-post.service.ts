@@ -9,9 +9,13 @@ import { CreateJobPostDto } from './dto/create-job-post.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
 import { QueryJobPostDto } from './dto/query-job-post.dto';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import {
+  getPaginationSkip,
+  getPaginationTake,
+  getSortBy,
+  getSortOrder,
+} from 'src/common/common';
 import { addDays } from 'date-fns';
-
 @Injectable()
 export class JobPostService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -95,6 +99,7 @@ export class JobPostService {
       totalViews: jobPost?.views || 0,
     });
   }
+
   async findOne(id: string) {
     const [jobPost, update] = await this.prismaService.$transaction([
       this.prismaService.jobPost.findUnique({
@@ -147,8 +152,10 @@ export class JobPostService {
     if (query.job_profile || query.search || query.job_type) {
       where.jobBasicInfo = {};
 
-      if (query.job_profile) {
-        where.jobBasicInfo.profile = query.job_profile;
+      if (query.job_profile?.length) {
+        where.jobBasicInfo.profile = {
+          in: query.job_profile,
+        };
       }
 
       if (query.search) {
@@ -158,8 +165,24 @@ export class JobPostService {
         };
       }
 
-      if (query.job_type) {
-        where.jobBasicInfo.jobType = query.job_type;
+      if (query.job_type?.length) {
+        where.jobBasicInfo.jobType = {
+          in: query.job_type,
+        };
+      }
+
+      if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+        const salaryFilter: any = {};
+
+        if (query.minSalary !== undefined) {
+          salaryFilter.start = { gte: query.minSalary };
+        }
+
+        if (query.maxSalary !== undefined) {
+          salaryFilter.end = { lte: query.maxSalary };
+        }
+
+        where.jobBasicInfo.salaryRange = salaryFilter;
       }
     }
 
@@ -170,8 +193,24 @@ export class JobPostService {
       where.countryId = query.countryId;
     }
 
+    if (query.experience) {
+      where.jobQualification = {
+        minExperience: query.experience,
+      };
+    }
+
+    if (query.locations && query.locations.length > 0) {
+      where.venue = {
+        venueBasicDetails: {
+          city: { in: query.locations },
+        },
+      };
+    }
+
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
+    const sortOrder = getSortOrder(query.order);
+    const orderBy = getSortBy(query.sort);
 
     const [totalOpenJobs, totalFulfilledJobs] = await Promise.all([
       this.prismaService.jobPost.count({ where: { isOpen: true } }),
@@ -203,6 +242,9 @@ export class JobPostService {
         },
         skip,
         take,
+        orderBy: {
+          [orderBy]: sortOrder,
+        },
       }),
       this.prismaService.jobPost.count({ where, skip, take }),
     ]);
@@ -253,8 +295,8 @@ export class JobPostService {
   }
 
   async findExpiringJobs(query: QueryJobPostDto, user: Auth) {
-    const today = new Date();
-    const nextWeek = addDays(today, 7);
+    const today = new Date().toISOString();
+    const nextWeek = addDays(today, 7).toISOString();
     console.log(
       await this.prismaService.jobPost.findMany({
         include: { jobBasicInfo: true },

@@ -13,8 +13,8 @@ export class EducationService {
       data: {
         education: body.education,
         school: body.school,
-        attended: body.attended,
-        graduated: body.graduated,
+        attended: new Date(body.attended).toISOString(),
+        graduated: new Date(body.graduated).toISOString(),
         userId: user.id,
       },
     });
@@ -59,7 +59,12 @@ export class EducationService {
       where: {
         id: id,
       },
-      data: { ...body },
+      data: {
+        education: body.education,
+        school: body.school,
+        attended: new Date(body.attended).toISOString(),
+        graduated: new Date(body.graduated).toISOString(),
+      },
     });
     return new ApiSuccessResponse(true, 'eduction updated ', updatedEducation);
   }

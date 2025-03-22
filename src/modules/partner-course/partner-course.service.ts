@@ -45,7 +45,7 @@ export class PartnerCourseService {
     }
     if (query.customDate) {
       where.createdAt = {
-        gte: new Date(query.customDate),
+        gte: new Date(query.customDate).toISOString(),
       };
     }
     if (query.search) {

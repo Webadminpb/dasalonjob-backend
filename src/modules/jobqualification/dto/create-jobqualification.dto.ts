@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExperienceRange, HighestEducation } from '@prisma/client';
+import { HighestEducation, UserExperience } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -9,7 +9,7 @@ export const ExperienceRangeSchema = z.object({
 });
 export const JobQualificationSchema = z.object({
   education: z.nativeEnum(HighestEducation),
-  minExperience: ExperienceRangeSchema,
+  minExperience: z.nativeEnum(UserExperience),
   certification: z.boolean(),
   isProfessional: z.boolean(),
   languageIds: z.array(z.string()),
@@ -26,7 +26,7 @@ export class CreateJobQualificationDto extends createZodDto(
   education: HighestEducation;
 
   @ApiProperty({ example: true })
-  minExperience: ExperienceRange;
+  minExperience: UserExperience;
 
   @ApiProperty({ example: false })
   certification: boolean;

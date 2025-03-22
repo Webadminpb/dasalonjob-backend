@@ -75,15 +75,15 @@ export class SaveCourseService {
     if (query.customDate) {
       const date = new Date(query.customDate);
       where.createdAt = {
-        gte: new Date(date.setHours(0, 0, 0, 0)),
-        lt: new Date(date.setHours(23, 59, 59, 999)),
+        gte: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
+        lt: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
       };
     }
 
     if (query.customerYear) {
       where.createdAt = {
-        gte: new Date(query.customerYear, 0, 1),
-        lt: new Date(query.customerYear + 1, 0, 1),
+        gte: new Date(query.customerYear, 0, 1).toISOString(),
+        lt: new Date(query.customerYear + 1, 0, 1).toISOString(),
       };
     }
     const sortOrder = query.order === 'asc' ? 'asc' : 'desc';

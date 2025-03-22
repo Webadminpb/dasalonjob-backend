@@ -35,8 +35,12 @@ export class AuthService {
         isEmailVerified: body.isEmailVerified,
         phoneVerificationCode: body.phoneVerificationCode,
         emailVerificationCode: body.emailVerificationCode,
-        phoneVerificationCodeExpiry: body.phoneVerificationCodeExpiry,
-        emailVerificationCodeExpiry: body.emailVerificationCodeExpiry,
+        phoneVerificationCodeExpiry: new Date(
+          body.phoneVerificationCodeExpiry,
+        ).toISOString(),
+        emailVerificationCodeExpiry: new Date(
+          body.emailVerificationCodeExpiry,
+        ).toISOString(),
       },
     });
     const updateUser = await this.prismaService.auth.update({
@@ -46,8 +50,12 @@ export class AuthService {
       data: {
         phoneVerificationCode,
         emailVerificationCode,
-        phoneVerificationCodeExpiry,
-        emailVerificationCodeExpiry,
+        phoneVerificationCodeExpiry: new Date(
+          body.phoneVerificationCodeExpiry,
+        ).toISOString(),
+        emailVerificationCodeExpiry: new Date(
+          body.emailVerificationCodeExpiry,
+        ).toISOString(),
       },
     });
     return new ApiSuccessResponse(

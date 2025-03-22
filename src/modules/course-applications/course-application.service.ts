@@ -47,16 +47,16 @@ export class CourseApplicationService {
     if (query.customDate) {
       const date = new Date(query.customDate);
       where.createdAt = {
-        gte: new Date(date.setHours(0, 0, 0, 0)),
-        lt: new Date(date.setHours(23, 59, 59, 999)),
+        gte: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
+        lt: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
       };
     }
 
     if (query.customerYear) {
       const year = new Date(query.customerYear).getFullYear();
       where.createdAt = {
-        gte: new Date(year, 0, 1),
-        lt: new Date(year + 1, 0, 1),
+        gte: new Date(year, 0, 1).toISOString(),
+        lt: new Date(year + 1, 0, 1).toISOString(),
       };
     }
     const [courses, total] = await Promise.all([
@@ -118,15 +118,15 @@ export class CourseApplicationService {
     if (query.customDate) {
       const date = new Date(query.customDate);
       where.createdAt = {
-        gte: new Date(date.setHours(0, 0, 0, 0)),
-        lt: new Date(date.setHours(23, 59, 59, 999)),
+        gte: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
+        lt: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
       };
     }
 
     if (query.customerYear) {
       where.createdAt = {
-        gte: new Date(query.customerYear, 0, 1),
-        lt: new Date(query.customerYear + 1, 0, 1),
+        gte: new Date(query.customerYear, 0, 1).toISOString(),
+        lt: new Date(query.customerYear + 1, 0, 1).toISOString(),
       };
     }
     if (query.languageId) {

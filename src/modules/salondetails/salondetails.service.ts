@@ -21,7 +21,7 @@ export class SalondetailsService {
         fileIds: body.fileIds,
         firstName: body.firstName,
         lastName: body.lastName,
-        dob: body.dob,
+        dob: new Date(body.dob).toISOString(),
         gender: body.gender,
       },
     });
@@ -51,7 +51,15 @@ export class SalondetailsService {
     const updatedSalonDetails = await this.prismaService.salonDetails.update({
       where: { id: existingSalonDetails.id },
       data: {
-        ...body,
+        businessName: body.businessName,
+        email: body.email,
+        ownerName: body.email,
+        phoneCode: body.phoneCode,
+        phoneNumber: body.phoneNumber,
+        fileIds: body.fileIds,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        dob: new Date(body.dob).toISOString(),
       },
     });
     return new ApiSuccessResponse(

@@ -49,8 +49,8 @@ export class PartnerVenueService {
     if (query.date) {
       const year = query.date;
       where.createdAt = {
-        gte: new Date(`${year}-01-01T00:00:00.000Z`),
-        lte: new Date(`${year}-12-61T23:59:59.999Z`),
+        gte: new Date(`${year}-01-01T00:00:00.000Z`).toISOString(),
+        lte: new Date(`${year}-12-61T23:59:59.999Z`).toISOString(),
       };
     }
 
