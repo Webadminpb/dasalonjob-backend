@@ -24,7 +24,7 @@ export class CourseDetailsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('ADMIN')
+  @AllowAuthenticated('PARTNER')
   create(@Body() body: CreateCourseDetailsDto) {
     return this.courseDetailsService.create(body);
   }
@@ -45,7 +45,7 @@ export class CourseDetailsController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER')
   update(
     @Param('id') id: string,
     @Body() body: UpdateCourseDetailsDto,
@@ -56,7 +56,7 @@ export class CourseDetailsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.courseDetailsService.remove(id, user);
   }
