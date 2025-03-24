@@ -25,8 +25,8 @@ export class CourseDetailsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
-  create(@Body() body: CreateCourseDetailsDto) {
-    return this.courseDetailsService.create(body);
+  create(@Body() body: CreateCourseDetailsDto, @GetUser() user: Auth) {
+    return this.courseDetailsService.create(body, user);
   }
 
   @Get()

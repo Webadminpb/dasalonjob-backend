@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
 import { JobProfile } from '@prisma/client';
+import { userInfo } from 'os';
 
 export const CreateCourseDetailsSchema = z.object({
   jobProfile: z.nativeEnum(JobProfile),

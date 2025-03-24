@@ -9,7 +9,9 @@ import { Auth } from '@prisma/client';
 export class CourseDetailsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreateCourseDetailsDto) {
+  async create(body: CreateCourseDetailsDto, user: Auth) {
+    console.log('user', user);
+    console.log('body', body);
     const courseDetails = await this.prismaService.courseDetails.create({
       data: {
         jobProfile: body.jobProfile,
@@ -22,7 +24,8 @@ export class CourseDetailsService {
         isPlacement: body.isPlacement || false,
         providerId: body.providerId,
         fileId: body.fileId,
-        userId: body.userId,
+        // userId: body.userId,
+        userId: user.id,
       },
     });
     return new ApiSuccessResponse(
@@ -88,7 +91,7 @@ export class CourseDetailsService {
         isPlacement: body.isPlacement,
         providerId: body.providerId,
         fileId: body.fileId,
-        userId: body.userId,
+        userId: user.id,
       },
     });
     return new ApiSuccessResponse(
