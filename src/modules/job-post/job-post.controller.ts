@@ -44,6 +44,13 @@ export class JobPostController {
     return this.jobPostService.findAll(query);
   }
 
+  @Get('admin/total/job-status')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getJobStatusTotal() {
+    return this.jobPostService.getJobStatusTotal();
+  }
+
   @Get('deadline-jobs')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')

@@ -70,4 +70,11 @@ export class PartnerCourseController {
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerCourseService.remove(id);
   }
+
+  @Get('admin/total/course-status')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getJobStatusTotal() {
+    return this.partnerCourseService.getCourseStatusTotal();
+  }
 }

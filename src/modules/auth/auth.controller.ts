@@ -4,9 +4,11 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -17,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
+import { QueryAuthDto } from './dto/query-auth.dto';
 
 @ApiTags('users')
 @Controller('auth')
@@ -87,5 +90,42 @@ export class AuthController {
     @GetUser() user: Auth,
   ) {
     return this.authService.updateVerificationFile(body, user);
+  }
+
+  @Get('applicant/total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getApplicants(@Query() query: QueryAuthDto) {
+    return this.authService.getAllUsersForAdmin(query);
+  }
+
+  @Get('admin/all/users')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getAllUsers(@Query() query: QueryAuthDto) {
+    return this.authService.getAllUsersForAdmin(query);
+  }
+
+  @Patch('admin/user/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  updateAccountStatusByAdmin(
+    @Body() body: UpdateAccountStatusDto,
+    @Param('id') id: string,
+  ) {
+    return this.authService.updateAccountStatusByAdmin(body, id);
+  }
+
+  @Get('admin/applicant/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getApplicantById(@Param('id') id: string) {
+    return this.authService.findOneApplicant(id);
+  }
+  @Get('admin/admin/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getPartnerById(@Param('id') id: string) {
+    return this.authService.findOneAdmin(id);
   }
 }

@@ -184,6 +184,26 @@ export class PartnerVenueService {
     });
   }
 
+  async adminDashboardTotal() {
+    const [
+      totalApplicants = 0,
+      totalPartners = 0,
+      totalJobs = 0,
+      totalCourses = 0,
+    ] = await Promise.all([
+      this.prismaService.auth.count({ where: { role: 'USER' } }),
+      this.prismaService.auth.count({ where: { role: 'PARTNER' } }),
+      this.prismaService.jobPost.count(),
+      this.prismaService.partnerCourse.count(),
+    ]);
+    return new ApiSuccessResponse(true, 'total', {
+      totalApplicants,
+      totalPartners,
+      totalJobs,
+      totalCourses,
+    });
+  }
+
   async jobApplicationTotal(user: Auth) {
     console.log('userId ', user);
 

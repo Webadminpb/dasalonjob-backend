@@ -24,7 +24,7 @@ export class CourseDetailsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('SUPER_ADMIN')
+  @AllowAuthenticated('ADMIN')
   create(@Body() body: CreateCourseDetailsDto) {
     return this.courseDetailsService.create(body);
   }

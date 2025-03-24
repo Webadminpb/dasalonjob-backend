@@ -176,6 +176,7 @@ enum JobPostStatus {
 enum CourseStatus {
   Approved
   Canceled
+  Pending
 }
 
 enum JobApplicationStatus {
@@ -343,6 +344,7 @@ model Auth {
   PartnerMessages JobApplicationPartnerMessage[] @relation("PartnerMessage")
   jobApplicationApplicantMessage JobApplicationApplicantMessage?
 
+  loginHistories LoginHistory[]
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -1316,6 +1318,16 @@ model CourseApplication {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId])
+}
+
+model LoginHistory {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 

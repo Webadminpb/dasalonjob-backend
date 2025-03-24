@@ -196,4 +196,25 @@ export class PartnerCourseService {
       partnerCourse,
     );
   }
+
+  async getCourseStatusTotal() {
+    const [totalApplicants, totalActives, totalPendings, totalFullfields] =
+      await Promise.all([
+        this.prismaService.auth.count({ where: { role: 'USER' } }),
+        this.prismaService.partnerCourse.count({ where: { isOpen: true } }),
+        this.prismaService.partnerCourse.count({
+          where: { status: 'Pending' },
+        }),
+        this.prismaService.partnerCourse.count({
+          where: { isOpen: false },
+        }),
+      ]);
+
+    return new ApiSuccessResponse(true, 'Job post status total', {
+      totalApplicants,
+      totalActives,
+      totalPendings,
+      totalFullfields,
+    });
+  }
 }

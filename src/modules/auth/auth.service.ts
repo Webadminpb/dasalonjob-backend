@@ -5,15 +5,22 @@ import {
 } from '@nestjs/common';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { generateJwtToken } from 'src/common/auth/auth-common';
-import { generateSixDigitOTP } from 'src/common/common';
+import {
+  generateSixDigitOTP,
+  getPaginationSkip,
+  getPaginationTake,
+  getSortBy,
+  getSortOrder,
+} from 'src/common/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { CreateApplicantDto } from './dto/applicant.profile';
-import { Auth } from '@prisma/client';
+import { Auth, BusinessType, Prisma } from '@prisma/client';
 import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
+import { QueryAuthDto } from './dto/query-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -79,6 +86,11 @@ export class AuthService {
       throw new BadRequestException('Invalid password');
     }
     const token = await generateJwtToken(user);
+    await this.prismaService.loginHistory.create({
+      data: {
+        userId: user.id,
+      },
+    });
     return new ApiSuccessResponse(true, 'User logged in successfully', {
       user,
       token,
@@ -267,5 +279,218 @@ export class AuthService {
       },
     });
     return new ApiSuccessResponse(true, 'Account activated', updatedUser);
+  }
+
+  async getAllUsersForAdmin(query: QueryAuthDto) {
+    const where: Prisma.AuthWhereInput = {};
+    if (query.role) {
+      where.role = query.role;
+    }
+    if (query.status) {
+      where.status = query.status;
+    }
+    if (query.countryId) {
+      where.countryId = query.countryId;
+    }
+    if (query.education) {
+      where.educations = {
+        some: {
+          education: query.education,
+        },
+      };
+    }
+
+    if (query.locations) {
+      where.OR = [
+        {
+          contactDetails: {
+            city: { contains: query.locations, mode: 'insensitive' },
+          },
+        },
+        {
+          contactDetails: {
+            state: { contains: query.locations, mode: 'insensitive' },
+          },
+        },
+        {
+          contactDetails: {
+            streetAddress: { contains: query.locations, mode: 'insensitive' },
+          },
+        },
+        {
+          partnerVenues: {
+            some: {
+              venueBasicDetails: {
+                city: { contains: query.locations, mode: 'insensitive' },
+              },
+            },
+          },
+        },
+        {
+          partnerVenues: {
+            some: {
+              venueBasicDetails: {
+                state: { contains: query.locations, mode: 'insensitive' },
+              },
+            },
+          },
+        },
+        {
+          partnerVenues: {
+            some: {
+              venueBasicDetails: {
+                streetAddress: {
+                  contains: query.locations,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        },
+      ];
+    }
+
+    if (query.search) {
+      where.email = {
+        contains: query.search,
+        mode: 'insensitive',
+      };
+    }
+    if (query.date) {
+      where.createdAt = {
+        gte: new Date(query.date).toISOString(),
+      };
+    }
+    if (query.year) {
+      where.createdAt = {
+        gte: new Date(query.year).toISOString(),
+      };
+    }
+
+    if (query.businessType) {
+      where.partnerVenues = {
+        some: {
+          venueBasicDetails: {
+            businessType: {
+              hasSome: [query.businessType as BusinessType],
+            },
+          },
+        },
+      };
+    }
+
+    const orderBy = getSortOrder(query.order);
+    const sortBy = getSortBy(query.sort);
+    const [users, total] = await Promise.all([
+      this.prismaService.auth.findMany({
+        where,
+        include: {
+          basicDetails: true,
+          partnerVenues: {
+            include: {
+              venueBasicDetails: true,
+            },
+          },
+          contactDetails: true,
+          educations: true,
+          pastExperiences: true,
+          PastWork: true,
+          jobPreference: true,
+          certificates: true,
+          languages: true,
+        },
+        orderBy: {
+          [orderBy]: sortBy,
+        },
+        skip: getPaginationSkip(query.page, query.limit),
+        take: getPaginationTake(query.limit),
+      }),
+      this.prismaService.auth.count({ where }),
+    ]);
+    if (!users) {
+      throw new BadRequestException('No users found');
+    }
+    return new ApiSuccessResponse(true, 'Users found', {
+      users,
+      total,
+    });
+  }
+
+  async updateAccountStatusByAdmin(body: UpdateAccountStatusDto, id: string) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        status: body.status,
+      },
+    });
+    return new ApiSuccessResponse(
+      true,
+      'Account Status Changed Successfully',
+      updatedUser,
+    );
+  }
+
+  async findOneApplicant(id: string) {
+    const user = await this.prismaService.auth.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        basicDetails: true,
+        contactDetails: true,
+        educations: true,
+        pastExperiences: true,
+        PastWork: true,
+        jobPreference: true,
+        certificates: true,
+        languages: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return new ApiSuccessResponse(true, 'User found', user);
+  }
+
+  async findOnePartner(id: string) {
+    const user = await this.prismaService.auth.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        profileImage: true,
+        partnerSocialLinks: true,
+        partnerPersonalData: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('Partner not found');
+    }
+    return new ApiSuccessResponse(true, 'Partner found', user);
+  }
+
+  async findOneAdmin(id: string) {
+    const user = await this.prismaService.auth.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        profileImage: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('Admin not found');
+    }
+    return new ApiSuccessResponse(true, 'Admin found', user);
   }
 }

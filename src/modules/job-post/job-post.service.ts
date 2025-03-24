@@ -143,6 +143,23 @@ export class JobPostService {
     return new ApiSuccessResponse(true, 'Job post found', jobPost);
   }
 
+  async getJobStatusTotal() {
+    const [totalApplicants, totalActives, totalPendings, totalFullfields] =
+      await Promise.all([
+        this.prismaService.auth.count({ where: { role: 'USER' } }),
+        this.prismaService.jobPost.count({ where: { isOpen: true } }),
+        this.prismaService.jobPost.count({ where: { status: 'Pending' } }),
+        this.prismaService.jobPost.count({ where: { isOpen: false } }),
+      ]);
+
+    return new ApiSuccessResponse(true, 'Job post status total', {
+      totalApplicants,
+      totalActives,
+      totalPendings,
+      totalFullfields,
+    });
+  }
+
   async findAll(query: QueryJobPostDto, user?: Auth) {
     const where: Prisma.JobPostWhereInput = {};
     if (user) {

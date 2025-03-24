@@ -53,6 +53,13 @@ export class PartnerVenueController {
     return this.partnerVenueService.dashboardTotal(user);
   }
 
+  @Get('admin/total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getAdminDashboardTotal() {
+    return this.partnerVenueService.adminDashboardTotal();
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
