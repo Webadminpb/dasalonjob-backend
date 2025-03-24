@@ -4,7 +4,7 @@ import { HighestEducation } from '@prisma/client';
 
 const ContentSchema = z.object({
   service: z.nativeEnum(HighestEducation),
-  list: z.array(z.string()),
+  // list: z.array(z.string()),
 });
 
 export const CreateCourseContentSchema = z.object({

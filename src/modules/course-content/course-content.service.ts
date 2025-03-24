@@ -69,7 +69,7 @@ export class CourseContentService {
         // content: body.content,
         content: body.content.map((item) => ({
           service: item.service,
-          list: item.list,
+          // list: item.list,
         })),
         description: body.description,
         userId: body.userId,
