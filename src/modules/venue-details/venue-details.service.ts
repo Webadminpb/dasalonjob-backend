@@ -21,6 +21,8 @@ export class VenueDetailsService {
         city: body.city,
         streetAddress: body.streetAddress,
         gender: body.gender,
+        state: body.state,
+        countryId: body.countryId,
         zipCode: body.zipCode,
         fileIds: body.fileIds,
         userId: user.id,

@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { BasicdetailsModule } from './modules/basicdetails/basicdetails.module';
-import { ContactdetailsModule } from './modules/contactdetails/contactdetails.module';
+import { ContactdetailsModule } from './modules/contact-details/contactdetails.module';
 import { LangaugesModule } from './modules/languages/languages.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { JobpreferenceModule } from './modules/jobpreference/jobpreference.module';

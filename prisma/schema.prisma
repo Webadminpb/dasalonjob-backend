@@ -641,6 +641,7 @@ model VenueDetails {
   phoneNumber String
   zipCode String
   city String
+  state String?
   streetAddress String
   gender Gender
 
@@ -654,6 +655,9 @@ model VenueDetails {
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  countryId String? @db.ObjectId
+  country Country? @relation(fields: [countryId], references: [id])
 
   businessType BusinessType[]
 
@@ -1073,6 +1077,7 @@ model Country {
   auth Auth[]
   jobPosts JobPost[]
   courseTypeAndLocation CourseTypeAndLocation[]
+  venueDetails VenueDetails[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1232,7 +1237,7 @@ model CourseContent {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-   partnerCourses PartnerCourse[]
+  partnerCourses PartnerCourse[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

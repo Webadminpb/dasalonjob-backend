@@ -15,6 +15,8 @@ export const VenueDetailsSchema = z.object({
   businessType: z.array(z.nativeEnum(BusinessType)),
   gender: z.nativeEnum(Gender),
   fileIds: z.array(z.string()).optional(),
+  state: z.string().optional(),
+  countryId: z.string().optional(),
   latitide: z.string().optional(),
   longitude: z.string().optional(),
 });
