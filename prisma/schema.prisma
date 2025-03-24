@@ -1209,8 +1209,8 @@ model CourseDetails {
   isPlacement Boolean @default(false)
 
   // VenueId
-  providerId String @db.ObjectId
-  provider PartnerVenue @relation(fields: [providerId], references: [id])
+  providerId String? @db.ObjectId
+  provider PartnerVenue? @relation(fields: [providerId], references: [id])
 
   // fileId
   fileId String? @db.ObjectId

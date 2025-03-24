@@ -11,7 +11,7 @@ export const CreateCourseDetailsSchema = z.object({
   price: z.number(),
   offerPrice: z.number(),
   isPlacement: z.boolean().optional(),
-  providerId: z.string(),
+  providerId: z.string().optional(),
   fileId: z.string().optional(),
   userId: z.string(),
 });
