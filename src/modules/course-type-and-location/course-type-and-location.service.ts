@@ -3,12 +3,13 @@ import { CreateCourseTypeAndLocationDto } from './dto/create-course-type-and-loc
 import { UpdateCourseTypeAndLocationDto } from './dto/update-course-type-and-location.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import { Auth } from '@prisma/client';
 
 @Injectable()
 export class CourseTypeAndLocationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreateCourseTypeAndLocationDto) {
+  async create(body: CreateCourseTypeAndLocationDto, user: Auth) {
     const courseTypeAndLocation =
       await this.prismaService.courseTypeAndLocation.create({
         data: {
@@ -20,7 +21,7 @@ export class CourseTypeAndLocationService {
           courseType: body.courseType,
           platform: body.platform,
           link: body.link,
-          userId: body.userId,
+          userId: user.id,
         },
       });
     return new ApiSuccessResponse(

@@ -255,7 +255,7 @@ enum UserExperience {
 
 type Content {
   service HighestEducation
-  list String
+  list String[]
 }
 
 
@@ -1231,7 +1231,7 @@ model CourseDetails {
 model CourseContent {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  content Content[]
+  content Json
 
   description String? 
 

@@ -12,8 +12,9 @@ import {
 import { CourseTypeAndLocationService } from './course-type-and-location.service';
 import { CreateCourseTypeAndLocationDto } from './dto/create-course-type-and-location.dto';
 import { UpdateCourseTypeAndLocationDto } from './dto/update-course-type-and-location.dto';
-import { AllowAuthenticated } from 'src/common/auth/auth-decorator';
+import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { Auth } from '@prisma/client';
 
 @ApiTags('course-type-and-location')
 @Controller('course-type-and-location')
@@ -25,8 +26,8 @@ export class CourseTypeAndLocationController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
-  create(@Body() body: CreateCourseTypeAndLocationDto) {
-    return this.courseTypeAndLocationService.create(body);
+  create(@Body() body: CreateCourseTypeAndLocationDto, @GetUser() user: Auth) {
+    return this.courseTypeAndLocationService.create(body, user);
   }
 
   @Get()

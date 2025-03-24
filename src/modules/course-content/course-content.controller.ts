@@ -24,9 +24,9 @@ export class CourseContentController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('SUPER_ADMIN')
-  create(@Body() body: CreateCourseContentDto) {
-    return this.courseContentService.create(body);
+  @AllowAuthenticated('PARTNER')
+  create(@Body() body: CreateCourseContentDto, @GetUser() user: Auth) {
+    return this.courseContentService.create(body, user);
   }
 
   @Get()
@@ -45,7 +45,7 @@ export class CourseContentController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER')
   update(
     @Param('id') id: string,
     @Body() body: UpdateCourseContentDto,
@@ -56,7 +56,7 @@ export class CourseContentController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.courseContentService.remove(id, user);
   }

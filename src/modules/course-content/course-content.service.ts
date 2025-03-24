@@ -9,16 +9,12 @@ import { Auth, HighestEducation } from '@prisma/client';
 export class CourseContentService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreateCourseContentDto) {
+  async create(body: CreateCourseContentDto, user: Auth) {
     const courseContent = await this.prismaService.courseContent.create({
       data: {
-        // content: body.content,
-        content: body.content.map((item) => ({
-          service: item.service ?? HighestEducation.Degree,
-          list: item.list,
-        })),
+        content: body.content,
         description: body.description,
-        userId: body.userId,
+        userId: user.id,
       },
     });
     return new ApiSuccessResponse(
