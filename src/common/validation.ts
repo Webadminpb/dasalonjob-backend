@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 export const zDateOptional = z
   .string()
   .nullish()
@@ -11,3 +12,12 @@ export const zYearOptional = z
     message: 'Date should be a valid year (YYYY)',
   })
   .transform((v) => (v ? parseInt(v, 10) : null));
+
+export const createDateBeforeFilter = (
+  date?: string | Date | null,
+): Prisma.DateTimeFilter | undefined => {
+  if (!date) return undefined;
+  const dateValue = date instanceof Date ? date.toISOString() : date;
+
+  return { lt: dateValue };
+};

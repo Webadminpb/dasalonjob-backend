@@ -47,6 +47,7 @@ import { SaveCourseModule } from './modules/save-course/save-course.module';
 import { CourseApplicationModule } from './modules/course-applications/course-application.module';
 import { UserLanguagesModule } from './modules/user-languages/user-languages.module';
 import { PartnerPersonalDataModule } from './modules/partner-personal-data/partner-personal-data.module';
+import { ActivityModule } from './modules/activity/activity.module';
 
 @Module({
   imports: [
@@ -96,6 +97,7 @@ import { PartnerPersonalDataModule } from './modules/partner-personal-data/partn
     CourseApplicationModule,
     UserLanguagesModule,
     PartnerPersonalDataModule,
+    ActivityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

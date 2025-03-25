@@ -164,19 +164,38 @@ export class PartnerPersonalDataService {
   }
 
   async getPartnerVenuesByPartnerId(partnerId: string) {
-    const partnerBusinessData = await this.prismaService.auth.findUnique({
-      where: { id: partnerId },
-      include: {
-        partnerVenues: true,
-      },
+    const partnerVenuesData = await this.prismaService.partnerVenue.findMany({
+      where: { userId: partnerId },
     });
-    if (!partnerBusinessData) {
+    if (!partnerVenuesData) {
+      throw new NotFoundException('Venues Not Found');
+    }
+    return new ApiSuccessResponse(true, 'partner Venues data', {
+      partnerVenuesData,
+    });
+  }
+
+  async getPartnerJobsByPartnerId(partnerId: string) {
+    const partnerJobsData = await this.prismaService.jobPost.findMany({
+      where: { userId: partnerId },
+    });
+    if (!partnerJobsData) {
+      throw new NotFoundException('Jobs Data Not Found');
+    }
+    return new ApiSuccessResponse(true, 'partner Jobs data', {
+      partnerJobsData,
+    });
+  }
+
+  async getPartnerCoursesByPartnerId(partnerId: string) {
+    const partnerCoursesData = await this.prismaService.partnerCourse.findMany({
+      where: { userId: partnerId },
+    });
+    if (!partnerCoursesData) {
       throw new NotFoundException('BusinessData Not Found');
     }
-    return new ApiSuccessResponse(
-      true,
-      'partner profile data',
-      partnerBusinessData,
-    );
+    return new ApiSuccessResponse(true, 'partner profile data', {
+      partnerCoursesData,
+    });
   }
 }

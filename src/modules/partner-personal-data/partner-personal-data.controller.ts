@@ -104,12 +104,19 @@ export class PartnerPersonalDataController {
     );
   }
 
-  // @Get('admin/:partnerId/venues')
-  // @HttpCode(HttpStatus.OK)
-  // @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
-  // getPartnerVenusByPartnerId(@Param('partnerId') partnerId: string) {
-  //   return this.partnerPersonalDataService.getPartnerVenuesByPartnerId(
-  //     partnerId,
-  //   );
-  // }
+  @Get('admin/:partnerId/jobs')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  getPartnerJobsByPartnerId(@Param('partnerId') partnerId: string) {
+    return this.partnerPersonalDataService.getPartnerJobsByPartnerId(partnerId);
+  }
+
+  @Get('admin/:partnerId/courses')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  getPartnerCoursesByPartnerId(@Param('partnerId') partnerId: string) {
+    return this.partnerPersonalDataService.getPartnerCoursesByPartnerId(
+      partnerId,
+    );
+  }
 }

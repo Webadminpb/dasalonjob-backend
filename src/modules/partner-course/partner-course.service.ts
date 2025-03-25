@@ -69,28 +69,41 @@ export class PartnerCourseService {
       ];
     }
 
-    const [partnerCourses, total] = await Promise.all([
-      this.prismaService.partnerCourse.findMany({
-        where,
-        include: {
-          courseDetails: true,
-          courseContent: true,
-          courseAcademy: false,
-          courseTypeAndLocation: true,
-        },
-        skip: getPaginationSkip(query.page, query.limit),
-        take: getPaginationTake(query.limit),
-      }),
-      this.prismaService.partnerCourse.count({
-        where,
-      }),
-    ]);
+    const [partnerCourses, total, openTotal, fullfieldTotal] =
+      await Promise.all([
+        this.prismaService.partnerCourse.findMany({
+          where,
+          include: {
+            courseDetails: true,
+            courseContent: true,
+            courseAcademy: false,
+            courseTypeAndLocation: true,
+          },
+          skip: getPaginationSkip(query.page, query.limit),
+          take: getPaginationTake(query.limit),
+        }),
+        this.prismaService.partnerCourse.count({
+          where,
+        }),
+        this.prismaService.partnerCourse.count({
+          where: {
+            isOpen: true,
+          },
+        }),
+        this.prismaService.partnerCourse.count({
+          where: {
+            isOpen: false,
+          },
+        }),
+      ]);
     if (!partnerCourses) {
       throw new BadRequestException('No partner courses found');
     }
     return new ApiSuccessResponse(true, 'Partner courses found', {
       partnerCourses,
       total,
+      openTotal,
+      fullfieldTotal,
     });
   }
 
