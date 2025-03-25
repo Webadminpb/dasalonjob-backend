@@ -75,7 +75,7 @@ export class PartnerCourseService {
         include: {
           courseDetails: true,
           courseContent: true,
-          courseAcademy: true,
+          courseAcademy: false,
           courseTypeAndLocation: true,
         },
         skip: getPaginationSkip(query.page, query.limit),

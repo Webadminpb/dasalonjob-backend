@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ContactdetailsService } from './contactdetails.service';
-import { ContactdetailsController } from './contactdetails.controller';
+import { ContactdetailsService } from './contact-details.service';
+import { ContactdetailsController } from './contact-details.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 

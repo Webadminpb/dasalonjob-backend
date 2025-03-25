@@ -9,9 +9,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ContactdetailsService } from './contactdetails.service';
-import { UpdateContactdetailDto } from './dto/update-contactdetail.dto';
-import { CreateContactDetailsDto } from './dto/create-contactdetail.dto';
+import { ContactdetailsService } from './contact-details.service';
+import { UpdateContactdetailDto } from './dto/update-contact-detail.dto';
+import { CreateContactDetailsDto } from './dto/create-contact-detail.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';

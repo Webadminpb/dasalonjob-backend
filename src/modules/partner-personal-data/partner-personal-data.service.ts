@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { Auth } from '@prisma/client';
@@ -126,6 +130,53 @@ export class PartnerPersonalDataService {
       true,
       'Partner personal data deleted successfully',
       partnerPersonalData,
+    );
+  }
+
+  async getBusinessDetailsByPartnerId(partnerId: string) {
+    const partnerBusinessData = await this.prismaService.auth.findUnique({
+      where: { id: partnerId },
+      include: {
+        partnerSocialLinks: true,
+        partnerPersonalData: true,
+      },
+    });
+    if (!partnerBusinessData) {
+      throw new NotFoundException('BusinessData Not Found');
+    }
+  }
+
+  async getPartnerDetailsByPartnerId(partnerId: string) {
+    const partnerBusinessData = await this.prismaService.auth.findUnique({
+      where: { id: partnerId },
+      include: {
+        partnerPersonalData: true,
+      },
+    });
+    if (!partnerBusinessData) {
+      throw new NotFoundException('BusinessData Not Found');
+    }
+    return new ApiSuccessResponse(
+      true,
+      'partner profile data',
+      partnerBusinessData,
+    );
+  }
+
+  async getPartnerVenuesByPartnerId(partnerId: string) {
+    const partnerBusinessData = await this.prismaService.auth.findUnique({
+      where: { id: partnerId },
+      include: {
+        partnerVenues: true,
+      },
+    });
+    if (!partnerBusinessData) {
+      throw new NotFoundException('BusinessData Not Found');
+    }
+    return new ApiSuccessResponse(
+      true,
+      'partner profile data',
+      partnerBusinessData,
     );
   }
 }

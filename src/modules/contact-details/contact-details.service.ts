@@ -4,11 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { UpdateContactdetailDto } from './dto/update-contactdetail.dto';
+import { UpdateContactdetailDto } from './dto/update-contact-detail.dto';
 import { Auth } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { CreateContactDetailsDto } from './dto/create-contactdetail.dto';
+import { CreateContactDetailsDto } from './dto/create-contact-detail.dto';
 
 @Injectable()
 export class ContactdetailsService {

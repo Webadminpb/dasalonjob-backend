@@ -76,4 +76,40 @@ export class PartnerPersonalDataController {
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerPersonalDataService.remove(id, user);
   }
+
+  @Get('admin/:partnerId/business-details')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  getBusinessDetailsByPartnerId(@Param('partnerId') partnerId: string) {
+    return this.partnerPersonalDataService.getBusinessDetailsByPartnerId(
+      partnerId,
+    );
+  }
+
+  @Get('admin/:partnerId/profile')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  getPartnerProfileByPartnerId(@Param('partnerId') partnerId: string) {
+    return this.partnerPersonalDataService.getPartnerDetailsByPartnerId(
+      partnerId,
+    );
+  }
+
+  @Get('admin/:partnerId/venues')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  getPartnerVenusByPartnerId(@Param('partnerId') partnerId: string) {
+    return this.partnerPersonalDataService.getPartnerVenuesByPartnerId(
+      partnerId,
+    );
+  }
+
+  // @Get('admin/:partnerId/venues')
+  // @HttpCode(HttpStatus.OK)
+  // @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  // getPartnerVenusByPartnerId(@Param('partnerId') partnerId: string) {
+  //   return this.partnerPersonalDataService.getPartnerVenuesByPartnerId(
+  //     partnerId,
+  //   );
+  // }
 }

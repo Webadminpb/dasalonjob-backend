@@ -335,9 +335,8 @@ export class JobPostService {
         jobBasicInfo: true,
       },
     });
-    console.log('data ', expiringJobs);
     if (!expiringJobs) {
-      throw new BadRequestException('expired jobs not found');
+      throw new NotFoundException('expired jobs not found');
     }
 
     return new ApiSuccessResponse(true, 'partner jobs', {
