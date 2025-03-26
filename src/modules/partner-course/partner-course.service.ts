@@ -144,6 +144,15 @@ export class PartnerCourseService {
         where: {
           id: id,
         },
+        include: {
+          courseDetails: {
+            include: {
+              file: true,
+            },
+          },
+          courseContent: true,
+          courseTypeAndLocation: true,
+        },
       }),
       await this.prismaService.courseApplication.count({
         where: {
