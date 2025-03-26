@@ -16,6 +16,7 @@ import {
   getSortOrder,
 } from 'src/common/common';
 import { addDays } from 'date-fns';
+import { CreateJobStatusDto } from './dto/status-job-post.dto';
 @Injectable()
 export class JobPostService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -342,6 +343,161 @@ export class JobPostService {
     return new ApiSuccessResponse(true, 'partner jobs', {
       expiringJobs,
       total,
+    });
+  }
+
+  async updateJobPostStatusByIdForAdmin(body: CreateJobStatusDto) {
+    const existingJobPost = await this.prismaService.jobPost.findUnique({
+      where: {
+        id: body.id,
+      },
+    });
+    if (!existingJobPost) {
+      throw new NotFoundException('Job Post Not Found');
+    }
+
+    const updateJobPost = await this.prismaService.jobPost.update({
+      where: {
+        id: existingJobPost.id,
+      },
+      data: {
+        status: body.status,
+      },
+    });
+    return new ApiSuccessResponse(
+      true,
+      'Job Status Updated Successfully',
+      updateJobPost,
+    );
+  }
+
+  async findAllForAdmin(query: QueryJobPostDto) {
+    const where: Prisma.JobPostWhereInput = {};
+    if (query.partnerId) {
+      where.userId = query.partnerId;
+    }
+
+    if (query.job_profile || query.search || query.job_type) {
+      where.jobBasicInfo = {};
+
+      if (query.job_profile?.length) {
+        where.jobBasicInfo.profile = {
+          in: query.job_profile,
+        };
+      }
+
+      if (query.search) {
+        where.jobBasicInfo.title = {
+          contains: query.search,
+          mode: 'insensitive',
+        };
+      }
+
+      if (query.job_type?.length) {
+        where.jobBasicInfo.jobType = {
+          in: query.job_type,
+        };
+      }
+
+      if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+        const salaryFilter: any = {};
+
+        if (query.minSalary !== undefined) {
+          salaryFilter.start = { gte: query.minSalary };
+        }
+
+        if (query.maxSalary !== undefined) {
+          salaryFilter.end = { lte: query.maxSalary };
+        }
+
+        where.jobBasicInfo.salaryRange = salaryFilter;
+      }
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    if (query.date) {
+      where.createdAt = {
+        gte: new Date(query.date).toISOString(),
+      };
+    }
+
+    if (query.countryId) {
+      where.countryId = query.countryId;
+    }
+
+    if (query.experience) {
+      where.jobQualification = {
+        minExperience: query.experience,
+      };
+    }
+
+    if (query.locations && query.locations.length > 0) {
+      where.venue = {
+        venueBasicDetails: {
+          city: { in: query.locations },
+        },
+      };
+    }
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
+    const sortOrder = getSortOrder(query.order);
+    const orderBy = getSortBy(query.sort);
+
+    const [totalOpenJobs, totalFulfilledJobs] = await Promise.all([
+      this.prismaService.jobPost.count({ where: { isOpen: true } }),
+      this.prismaService.jobPost.count({ where: { isOpen: false } }),
+    ]);
+
+    const [jobPost, total] = await Promise.all([
+      await this.prismaService.jobPost.findMany({
+        where,
+        include: {
+          jobBasicInfo: {
+            include: {
+              venue: {
+                include: {
+                  venueBasicDetails: true,
+                },
+              },
+            },
+          },
+          jobBenefits: true,
+          jobDescription: true,
+          jobQualification: {
+            include: {
+              skills: true,
+            },
+          },
+          jobApplications: true,
+          saveJobPosts: true,
+        },
+
+        skip,
+        take,
+        orderBy: {
+          [orderBy]: sortOrder,
+        },
+      }),
+      this.prismaService.jobPost.count({ where, skip, take }),
+    ]);
+
+    if (!jobPost) {
+      throw new NotFoundException('Job post not found');
+    }
+    const jobPostWithCounts = jobPost.map((job: any) => ({
+      ...job,
+      totalApplicants: job.jobApplications.length,
+      totalSaved: job.saveJobPosts.length,
+    }));
+    return new ApiSuccessResponse(true, 'Job post found', {
+      total,
+      totalOpenJobs,
+      totalFulfilledJobs,
+      jobPosts: jobPostWithCounts,
     });
   }
 }

@@ -6,6 +6,7 @@ import {
   UserExperience,
 } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
+import { zDateOptional } from 'src/common/validation';
 import { z } from 'zod';
 
 export const QueryJobPostSchema = z.object({
@@ -20,6 +21,8 @@ export const QueryJobPostSchema = z.object({
   maxSalary: z.string().transform(Number).optional(),
   experience: z.nativeEnum(UserExperience).optional(),
   locations: z.array(z.string()).optional(),
+  date: zDateOptional,
+  partnerId: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z
     .enum(['createdAt', 'updatedAt', 'order', 'status'])

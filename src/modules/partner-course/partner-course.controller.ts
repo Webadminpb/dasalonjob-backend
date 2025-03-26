@@ -17,11 +17,13 @@ import { UpdatePartnerCourseDto } from './dto/update-partner-course.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
+import { CreateCourseStatusDto } from './dto/status-partner-course.dto';
 
 @Controller('partner-course')
 export class PartnerCourseController {
   constructor(private readonly partnerCourseService: PartnerCourseService) {}
 
+  // Partner
   @Post()
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.CREATED)
@@ -32,6 +34,7 @@ export class PartnerCourseController {
     return this.partnerCourseService.create(createPartnerCourseDto, user);
   }
 
+  // Partner
   @Get('partner')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.OK)
@@ -39,6 +42,7 @@ export class PartnerCourseController {
     return this.partnerCourseService.findAll(query, user);
   }
 
+  // Partner
   @Get('partner/:id')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.OK)
@@ -46,6 +50,7 @@ export class PartnerCourseController {
     return this.partnerCourseService.findOneForPartner(id, user);
   }
 
+  // Partner, Admin, Applicant
   @Get('user/:id')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.OK)
@@ -53,6 +58,7 @@ export class PartnerCourseController {
     return this.partnerCourseService.findOneForApplicant(id);
   }
 
+  // Partner
   @Put(':id')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.CREATED)
@@ -64,6 +70,7 @@ export class PartnerCourseController {
     return this.partnerCourseService.update(id, updatePartnerCourseDto, user);
   }
 
+  // Partner
   @Delete(':id')
   @AllowAuthenticated('PARTNER')
   @HttpCode(HttpStatus.CREATED)
@@ -71,10 +78,32 @@ export class PartnerCourseController {
     return this.partnerCourseService.remove(id);
   }
 
+  // For Admin
   @Get('admin/total/course-status')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
   getJobStatusTotal() {
     return this.partnerCourseService.getCourseStatusTotal();
+  }
+
+  @Patch('admin/status')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  updateJobPostStatusByIdForAdmin(@Body() body: CreateCourseStatusDto) {
+    return this.partnerCourseService.updateCourseStatusByIdForAdmin(body);
+  }
+
+  @Get('admin/courses')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getAllCoursesForAdmin(@Query() query: QueryPartnerCourseDto) {
+    return this.partnerCourseService.findAllForAdmin(query);
+  }
+
+  @Get('courses')
+  @HttpCode(HttpStatus.OK)
+  // @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getAllCoursesForApplicant(@Query() query: QueryPartnerCourseDto) {
+    return this.partnerCourseService.findAllForAdmin(query);
   }
 }

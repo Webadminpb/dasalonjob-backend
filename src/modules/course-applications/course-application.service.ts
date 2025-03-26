@@ -80,13 +80,134 @@ export class CourseApplicationService {
 
   async findAllCourseApplicationsForPartner(
     query: QueryCourseApplicationDto,
-    user: Auth,
+    user?: Auth,
   ) {
     const where: Prisma.CourseApplicationWhereInput = {
       course: {
         userId: user.id,
       },
     };
+    if (query.courseId) {
+      where.courseId = query.courseId;
+    }
+    if (query.search) {
+      where.user = {
+        basicDetails: {
+          OR: [
+            {
+              firstName: {
+                contains: query.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              lastName: {
+                contains: query.search,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      };
+    }
+    if (query.location) {
+      where.user = where.user || {};
+      where.user.contactDetails = where.user.contactDetails || {};
+      where.user.contactDetails.city = query.location;
+    }
+    if (query.customDate) {
+      const date = new Date(query.customDate);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)).toISOString(),
+        lt: new Date(date.setHours(23, 59, 59, 999)).toISOString(),
+      };
+    }
+
+    if (query.customerYear) {
+      where.createdAt = {
+        gte: new Date(query.customerYear, 0, 1).toISOString(),
+        lt: new Date(query.customerYear + 1, 0, 1).toISOString(),
+      };
+    }
+    if (query.languageId) {
+      where.user.languages = { some: { languageId: query.languageId } };
+    }
+    if (query.search) {
+      where.OR = [
+        {
+          user: {
+            basicDetails: {
+              firstName: { contains: query.search, mode: 'insensitive' },
+            },
+          },
+        },
+        {
+          user: {
+            basicDetails: {
+              lastName: { contains: query.search, mode: 'insensitive' },
+            },
+          },
+        },
+        {
+          user: {
+            contactDetails: {
+              phoneNumber: {
+                contains: query.search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ];
+    }
+
+    const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
+    const sortBy = query.sort || 'createdAt';
+
+    const existingCourse = await this.prismaService.partnerCourse.findUnique({
+      where: { id: query.courseId },
+    });
+
+    if (!existingCourse) {
+      throw new NotFoundException('Course Not Found');
+    }
+    const [courseApplications, total] = await Promise.all([
+      this.prismaService.courseApplication.findMany({
+        where,
+        skip: getPaginationSkip(query.page, query.limit),
+        take: getPaginationTake(query.limit),
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+        include: {
+          course: true,
+          user: {
+            include: {
+              basicDetails: true,
+              contactDetails: true,
+              languages: true,
+            },
+          },
+        },
+      }),
+      this.prismaService.courseApplication.count(),
+    ]);
+    if (!courseApplications) {
+      throw new NotFoundException('Course Applications Not Found');
+    }
+    return new ApiSuccessResponse(true, 'Course Applications', {
+      courseApplications,
+      total,
+    });
+  }
+
+  async findAllCourseApplicationsForAdmin(query: QueryCourseApplicationDto) {
+    const where: Prisma.CourseApplicationWhereInput = {};
+    if (query.partnerId) {
+      where.course = {
+        userId: query.partnerId,
+      };
+    }
     if (query.courseId) {
       where.courseId = query.courseId;
     }

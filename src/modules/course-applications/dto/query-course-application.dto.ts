@@ -11,6 +11,7 @@ export const QueryCourseApplicationSchema = z.object({
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
   courseId: z.string().optional(),
+  partnerId: z.string().optional(),
   location: z.string().optional(),
   languageId: z.string().optional(),
   customDate: zDateOptional,

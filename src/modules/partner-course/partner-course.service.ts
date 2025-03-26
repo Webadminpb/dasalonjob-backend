@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePartnerCourseDto } from './dto/create-partner-course.dto';
 import { UpdatePartnerCourseDto } from './dto/update-partner-course.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,6 +10,7 @@ import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { Auth, Prisma } from '@prisma/client';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
 import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { CreateCourseStatusDto } from './dto/status-partner-course.dto';
 
 @Injectable()
 export class PartnerCourseService {
@@ -74,7 +79,11 @@ export class PartnerCourseService {
         this.prismaService.partnerCourse.findMany({
           where,
           include: {
-            courseDetails: true,
+            courseDetails: {
+              include: {
+                file: true,
+              },
+            },
             courseContent: true,
             courseAcademy: false,
             courseTypeAndLocation: true,
@@ -228,6 +237,118 @@ export class PartnerCourseService {
       totalActives,
       totalPendings,
       totalFullfields,
+    });
+  }
+
+  async updateCourseStatusByIdForAdmin(body: CreateCourseStatusDto) {
+    const existingCourse = await this.prismaService.partnerCourse.findUnique({
+      where: {
+        id: body.id,
+      },
+    });
+    if (!existingCourse) {
+      throw new NotFoundException('Course Not Found');
+    }
+
+    const updateCourse = await this.prismaService.partnerCourse.update({
+      where: {
+        id: existingCourse.id,
+      },
+      data: {
+        status: body.status,
+      },
+    });
+    return new ApiSuccessResponse(
+      true,
+      'Course Updated Successfully',
+      updateCourse,
+    );
+  }
+
+  async findAllForAdmin(query: QueryPartnerCourseDto) {
+    const where: Prisma.PartnerCourseWhereInput = {};
+    if (query.partnerId) {
+      where.userId = query.partnerId;
+    }
+    if (query.type) {
+      where.courseTypeAndLocation.courseType = query.type;
+    }
+    if (query.location) {
+      where.courseTypeAndLocation.city = query.location;
+    }
+    if (query.status) {
+      where.status = query.status;
+    }
+    if (query.customDate) {
+      where.createdAt = {
+        gte: new Date(query.customDate).toISOString(),
+      };
+    }
+    if (query.search) {
+      where.OR = [
+        {
+          courseDetails: {
+            courseName: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          courseContent: {
+            description: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+    if (query.customDate) {
+      where.createdAt = {
+        gte: new Date(query.customDate).toISOString(),
+      };
+    }
+
+    const [partnerCourses, total, openTotal, fullfieldTotal] =
+      await Promise.all([
+        this.prismaService.partnerCourse.findMany({
+          where,
+          include: {
+            courseDetails: {
+              include: {
+                file: true,
+              },
+            },
+            courseContent: true,
+            courseAcademy: false,
+            courseTypeAndLocation: true,
+          },
+          skip: getPaginationSkip(query.page, query.limit),
+          take: getPaginationTake(query.limit),
+        }),
+        this.prismaService.partnerCourse.count({
+          where,
+        }),
+        this.prismaService.partnerCourse.count({
+          where: {
+            isOpen: true,
+          },
+        }),
+        this.prismaService.partnerCourse.count({
+          where: {
+            isOpen: false,
+          },
+        }),
+      ]);
+    if (!partnerCourses) {
+      throw new BadRequestException('No partner courses found');
+    }
+    return new ApiSuccessResponse(true, 'Partner courses found', {
+      partnerCourses,
+      total,
+      openTotal,
+      fullfieldTotal,
     });
   }
 }

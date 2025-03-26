@@ -10,16 +10,15 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 import { QueryJobApplicationDto } from './dto/query-job-application.dto';
+import { StatusJobApplicationDto } from './dto/status-job.dto';
 import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { JobApplicationService } from './job-applications.service';
-import { StatusJobApplicationDto } from './dto/status-job.dto';
 
 @ApiTags('applicant')
 @ApiBearerAuth()
@@ -42,6 +41,13 @@ export class JobApplicationController {
     @GetUser() user: Auth,
   ) {
     return this.jobApplicationService.findAllForPartner(query, user);
+  }
+
+  @Get('/admin')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  findAllForAdmin(@Query() query: QueryJobApplicationDto) {
+    return this.jobApplicationService.findAllForAdmin(query);
   }
 
   @Get('/user')

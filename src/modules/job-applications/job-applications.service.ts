@@ -234,6 +234,172 @@ export class JobApplicationService {
     });
   }
 
+  async findAllForAdmin(query: QueryJobApplicationDto) {
+    const where: any = {};
+    if (query.partnerId) {
+      where.jobPost = where.jobPost || {};
+
+      where.jobPost.userId = query.partnerId;
+    }
+    if (query.jobPostId) {
+      where.jobPostId = query.jobPostId;
+    }
+    if (query.status) {
+      where.status = query.status;
+    }
+    if (query.location) {
+      where.user = where.user || {};
+      where.user.contactDetails = where.user.contactDetails || {};
+      where.user.contactDetails.city = query.location;
+    }
+
+    if (query.languageId) {
+      where.user = {
+        languages: {
+          languageId: query.languageId,
+        },
+      };
+    }
+
+    if (query.skillId) {
+      where.user = where.user || {};
+      where.user.jobPreference = {
+        some: {
+          skillsIds: {
+            hasSome: query.skillId,
+          },
+        },
+      };
+    }
+
+    if (query.education) {
+      where.user = where.user || {};
+      where.user.educations = {
+        some: {
+          education: query.education,
+        },
+      };
+    }
+
+    if (query.isTrained) {
+      where.user = where.user || {};
+      where.user.isProfessional = Boolean(query.isTrained);
+    }
+
+    if (query.search) {
+      where.OR = [
+        {
+          user: {
+            contactDetails: {
+              phoneNumber: {
+                contains: query.search.trim(),
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ];
+    }
+
+    if (query.customDate) {
+      const date = new Date(query.customDate);
+      where.createdAt = {
+        gte: new Date(date.setHours(0, 0, 0, 0)),
+        lt: new Date(date.setHours(23, 59, 59, 999)),
+      };
+    }
+
+    if (query.customerYear) {
+      const year = new Date(query.customerYear).getFullYear();
+      where.createdAt = {
+        gte: new Date(year, 0, 1),
+        lt: new Date(year + 1, 0, 1),
+      };
+    }
+
+    const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
+    const sortBy = query.sort || 'createdAt';
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
+
+    const [
+      jobApplications,
+      appliedTotal,
+      acceptedTotal,
+      shortlistedTotal,
+      rejectedTotal,
+    ] = await Promise.all([
+      this.prismaService.jobApplication.findMany({
+        where,
+        include: {
+          user: {
+            include: {
+              jobPreference: true,
+              profileImage: true,
+              languages: true,
+              educations: true,
+              basicDetails: true,
+              contactDetails: true,
+              jobApplicationApplicantMessage: true,
+            },
+          },
+          jobPost: {
+            include: {
+              user: true,
+              jobBasicInfo: true,
+            },
+          },
+        },
+        skip,
+        take,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: query.partnerId,
+          },
+          status: JobApplicationStatus.Applied,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: query.partnerId,
+          },
+          status: JobApplicationStatus.Accepted,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: query.partnerId,
+          },
+          status: JobApplicationStatus.Shortlisted,
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: query.partnerId,
+          },
+          status: JobApplicationStatus.Rejected,
+        },
+      }),
+    ]);
+
+    return new ApiSuccessResponse(true, 'Job applications found', {
+      jobApplications,
+      appliedTotal,
+      acceptedTotal,
+      shortlistedTotal,
+      rejectedTotal,
+    });
+  }
+
   async findAllForApplicant(query: QueryJobApplicationDto, user?: Auth) {
     const where: any = {};
     if (user.id) {

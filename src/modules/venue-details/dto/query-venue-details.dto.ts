@@ -1,9 +1,4 @@
-import {
-  Gender,
-  JobBasicInfoProfileType,
-  JobPostStatus,
-  JobType,
-} from '@prisma/client';
+import { Gender } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional, zYearOptional } from 'src/common/validation';
 import { z } from 'zod';

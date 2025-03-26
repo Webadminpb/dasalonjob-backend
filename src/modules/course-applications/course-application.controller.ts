@@ -43,6 +43,19 @@ export class CourseApplicationController {
     );
   }
 
+  @Get('admin')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('PARTNER')
+  findAllForAdmin(
+    @Query() query: QueryCourseApplicationDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.courseApplicationService.findAllCourseApplicationsForPartner(
+      query,
+      user,
+    );
+  }
+
   @Get('user')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')

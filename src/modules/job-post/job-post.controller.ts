@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -17,12 +18,14 @@ import { JobPostService } from './job-post.service';
 import { CreateJobPostDto } from './dto/create-job-post.dto';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
 import { QueryJobPostDto } from './dto/query-job-post.dto';
+import { CreateJobStatusDto } from './dto/status-job-post.dto';
 
 @ApiTags('partner')
 @Controller('job-post')
 export class JobPostController {
   constructor(private readonly jobPostService: JobPostService) {}
 
+  // For Partner
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @AllowAuthenticated('PARTNER')
@@ -30,6 +33,7 @@ export class JobPostController {
     return this.jobPostService.create(body, user);
   }
 
+  // For Partner
   @Get('p-query')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
@@ -37,6 +41,7 @@ export class JobPostController {
     return this.jobPostService.findAll(query, user);
   }
 
+  // For Applicant
   @Get('u-query')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('USER')
@@ -44,13 +49,7 @@ export class JobPostController {
     return this.jobPostService.findAll(query);
   }
 
-  @Get('admin/total/job-status')
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
-  getJobStatusTotal() {
-    return this.jobPostService.getJobStatusTotal();
-  }
-
+  // For Partner
   @Get('deadline-jobs')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
@@ -89,5 +88,28 @@ export class JobPostController {
   @AllowAuthenticated('PARTNER')
   remove(@GetUser() user: Auth, @Param('id') id: string) {
     return this.jobPostService.remove(id, user);
+  }
+
+  // For Admin
+  @Get('admin/total/job-status')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getJobStatusTotal() {
+    return this.jobPostService.getJobStatusTotal();
+  }
+
+  @Patch('admin/status')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  updateJobPostStatusByIdForAdmin(@Body() body: CreateJobStatusDto) {
+    return this.jobPostService.updateJobPostStatusByIdForAdmin(body);
+  }
+
+  // For Applicant
+  @Get('admin-query')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  findJobPostsForAdmin(@Query() query: QueryJobPostDto) {
+    return this.jobPostService.findAllForAdmin(query);
   }
 }

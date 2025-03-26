@@ -15,6 +15,7 @@ export const QueryPartnerCourseSchema = z.object({
   limit: z.string().optional().transform(Number).optional(),
   type: z.nativeEnum(CourseType).optional(),
   location: z.string().optional(),
+  partnerId: z.string().optional(),
   search: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),

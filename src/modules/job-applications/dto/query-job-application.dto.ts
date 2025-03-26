@@ -14,6 +14,7 @@ export const QueryJobApplicationSchema = z.object({
   limit: z.string().optional().transform(Number).optional(),
   location: z.string().optional(),
   jobPostId: z.string().optional(),
+  partnerId: z.string().optional(),
   languageId: z.string().optional(),
   education: z.nativeEnum(HighestEducation).optional(),
   skillId: z.string().optional(),

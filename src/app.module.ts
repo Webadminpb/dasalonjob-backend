@@ -14,9 +14,9 @@ import { CertificateModule } from './modules/certificate/certificate.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
 import { SalondetailsModule } from './modules/salondetails/salondetails.module';
 import { VenuedetailsModule } from './modules/venue-details/venue-details.module';
-import { VenuebusinesstypeModule } from './modules/venuebusinesstype/venuebusinesstype.module';
-import { VenuebusinessdaysModule } from './modules/venuebusinessdays/venuebusinessdays.module';
-import { VenuebusinessservicesModule } from './modules/venuebusinessservices/venuebusinessservices.module';
+import { VenuebusinesstypeModule } from './modules/venue-business-type/venuebusinesstype.module';
+import { VenuebusinessdaysModule } from './modules/venue-business-days/venuebusinessdays.module';
+import { VenuebusinessservicesModule } from './modules/venue-business-services/venuebusinessservices.module';
 import { JobbasicinfoModule } from './modules/jobbasicinfo/jobbasicinfo.module';
 import { JobdescriptionModule } from './modules/jobdescription/jobdescription.module';
 import { JobqualificationModule } from './modules/jobqualification/jobqualification.module';
@@ -48,6 +48,7 @@ import { CourseApplicationModule } from './modules/course-applications/course-ap
 import { UserLanguagesModule } from './modules/user-languages/user-languages.module';
 import { PartnerPersonalDataModule } from './modules/partner-personal-data/partner-personal-data.module';
 import { ActivityModule } from './modules/activity/activity.module';
+import { WhatsappGroupsModule } from './modules/whatsapp-groups/whatsapp-groups.module';
 
 @Module({
   imports: [
@@ -98,6 +99,7 @@ import { ActivityModule } from './modules/activity/activity.module';
     UserLanguagesModule,
     PartnerPersonalDataModule,
     ActivityModule,
+    WhatsappGroupsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

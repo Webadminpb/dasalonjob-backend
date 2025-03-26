@@ -1,16 +1,6 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  AccountStatus,
-  HighestEducation,
-  JobBasicInfoProfileType,
-  JobPostStatus,
-  JobType,
-  Role,
-  UserExperience,
-} from '@prisma/client';
+import { AccountStatus, HighestEducation, Role } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional, zYearOptional } from 'src/common/validation';
-import { Education } from 'src/modules/education/entities/education.entity';
 import { z } from 'zod';
 
 export const QueryAuthSchema = z.object({
