@@ -1078,7 +1078,6 @@ model Country {
 
   auth Auth[]
   jobPosts JobPost[]
-  courseTypeAndLocation CourseTypeAndLocation[]
   venueDetails VenueDetails[]
 
   createdAt DateTime @default(now())
@@ -1136,7 +1135,6 @@ model PartnerVenue {
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
 
-  courseDetails CourseDetails[]
   courseAcademy CourseAcademy[]
   jobBasicInfo JobBasicInfo[]
   jobPosts JobPost[]
@@ -1208,9 +1206,8 @@ model CourseDetails {
 
   isPlacement Boolean @default(false)
 
-  // VenueId
-  providerId String? @db.ObjectId
-  provider PartnerVenue? @relation(fields: [providerId], references: [id])
+  // VenueI
+  provider String?
 
   // fileId
   fileId String? @db.ObjectId
@@ -1265,9 +1262,7 @@ model CourseAcademy {
 model CourseTypeAndLocation {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  
-  countryId String? @db.ObjectId
-  country Country? @relation(fields: [countryId], references: [id])
+  country String?
 
   city String?
   state String?
@@ -1337,7 +1332,7 @@ model WhatsAppGroup {
   link String
   city String?
   description String?
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

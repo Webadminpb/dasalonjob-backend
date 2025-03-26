@@ -87,6 +87,22 @@ export class PartnerCourseService {
             courseContent: true,
             courseAcademy: false,
             courseTypeAndLocation: true,
+            _count: {
+              select: {
+                saveCourses: true,
+                courseApplications: true,
+              },
+
+              // saveCourses: {
+              //   select: {
+              //     id: true,
+              //   },
+              // },
+              // courseApplications: {
+              //   select: {
+              //     id: true,
+              //   },
+            },
           },
           skip: getPaginationSkip(query.page, query.limit),
           take: getPaginationTake(query.limit),
@@ -108,8 +124,14 @@ export class PartnerCourseService {
     if (!partnerCourses) {
       throw new BadRequestException('No partner courses found');
     }
+    // const formattedCourses = partnerCourses.map((course) => ({
+    //   ...course,
+    //   totalSaves: course.saveCourses.length,
+    //   totalApplications: course.courseApplications.length,
+    // }));
+
     return new ApiSuccessResponse(true, 'Partner courses found', {
-      partnerCourses,
+      partnerCourses: partnerCourses,
       total,
       openTotal,
       fullfieldTotal,

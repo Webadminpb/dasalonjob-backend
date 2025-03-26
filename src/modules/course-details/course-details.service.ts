@@ -10,8 +10,6 @@ export class CourseDetailsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateCourseDetailsDto, user: Auth) {
-    console.log('user', user);
-    console.log('body', body);
     const courseDetails = await this.prismaService.courseDetails.create({
       data: {
         jobProfile: body.jobProfile,
@@ -22,7 +20,7 @@ export class CourseDetailsService {
         price: body.price,
         offerPrice: body.offerPrice,
         isPlacement: body.isPlacement || false,
-        providerId: body.providerId,
+        provider: body.provider,
         fileId: body.fileId,
         // userId: body.userId,
         userId: user.id,
@@ -89,7 +87,7 @@ export class CourseDetailsService {
         price: body.price,
         offerPrice: body.offerPrice,
         isPlacement: body.isPlacement,
-        providerId: body.providerId,
+        provider: body.provider,
         fileId: body.fileId,
         userId: user.id,
       },

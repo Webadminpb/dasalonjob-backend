@@ -6,7 +6,7 @@ export const CourseTypeSchema = z.nativeEnum(CourseType);
 export const CoursePlatformSchema = z.nativeEnum(CoursePlatform).optional();
 
 export const CreateCourseTypeAndLocationSchema = z.object({
-  countryId: z.string().optional(),
+  country: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
   pincode: z.string().optional(),

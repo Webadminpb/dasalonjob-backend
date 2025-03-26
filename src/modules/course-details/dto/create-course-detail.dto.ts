@@ -12,7 +12,7 @@ export const CreateCourseDetailsSchema = z.object({
   price: z.number(),
   offerPrice: z.number(),
   isPlacement: z.boolean().optional(),
-  providerId: z.string().optional(),
+  provider: z.string().optional(),
   fileId: z.string().optional(),
   userId: z.string(),
 });

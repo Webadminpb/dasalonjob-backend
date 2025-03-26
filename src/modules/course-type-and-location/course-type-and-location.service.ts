@@ -13,7 +13,7 @@ export class CourseTypeAndLocationService {
     const courseTypeAndLocation =
       await this.prismaService.courseTypeAndLocation.create({
         data: {
-          countryId: body.countryId,
+          country: body.country,
           city: body.city,
           state: body.state,
           pincode: body.pincode,
@@ -75,7 +75,7 @@ export class CourseTypeAndLocationService {
           id: id,
         },
         data: {
-          countryId: body.countryId,
+          country: body.country,
           city: body.city,
           state: body.state,
           pincode: body.pincode,
