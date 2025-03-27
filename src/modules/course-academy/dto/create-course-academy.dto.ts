@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 export const CreateCourseAcademySchema = z.object({
   providerId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export class CreateCourseAcademyDto extends createZodDto(

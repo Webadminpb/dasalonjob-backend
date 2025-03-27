@@ -10,7 +10,7 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common';
-import { BasicdetailsService } from './basicdetails.service';
+import { BasicdetailsService } from './basic-details.service';
 import { CreateBasicdetailDto } from './dto/create-basicdetail.dto';
 import { UpdateBasicdetailDto } from './dto/update-basicdetail.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
@@ -18,7 +18,7 @@ import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('applicant')
-@Controller('basicdetails')
+@Controller('basic-details')
 export class BasicdetailsController {
   constructor(private readonly basicdetailsService: BasicdetailsService) {}
 

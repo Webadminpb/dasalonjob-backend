@@ -26,18 +26,21 @@ import { QueryAuthDto } from './dto/query-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // Create Account Api
   @Post('signup')
   @HttpCode(201)
   signup(@Body() body: CreateAuthDto) {
     return this.authService.signup(body);
   }
 
+  // Login Api
   @Post('login')
   @HttpCode(200)
   login(@Body() body: CreateAuthDto) {
     return this.authService.login(body);
   }
 
+  // Get Applicant Profile
   @Get('partner/profile')
   @HttpCode(200)
   @AllowAuthenticated('USER', 'PARTNER')
@@ -45,6 +48,7 @@ export class AuthController {
     return this.authService.getMyPartnerProfile(user);
   }
 
+  // Get Applicant Profile
   @Get('applicant/profile')
   @HttpCode(200)
   @AllowAuthenticated('USER')
@@ -52,6 +56,7 @@ export class AuthController {
     return this.authService.myApplicantProfile(user);
   }
 
+  // Change Password For All Users
   @Put('change-password')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
@@ -59,6 +64,7 @@ export class AuthController {
     return this.authService.changePassword(body, user);
   }
 
+  // Update Applicant Profile
   @Patch('account-status')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')
@@ -69,6 +75,7 @@ export class AuthController {
     return this.authService.updateAccountStatus(body, user);
   }
 
+  // Update Applicant Profile
   @Put('applicant')
   @AllowAuthenticated('USER')
   updateApplicantProfile(
@@ -78,11 +85,14 @@ export class AuthController {
     return this.authService.updateApplicantProfile(body, user);
   }
 
+  // Upload Profile Image For Admin Applicant And Partner
   @Put('/profile-image')
   @AllowAuthenticated()
   updateProfileImage(@Body() body: CreateAuthFileDto, @GetUser() user: Auth) {
     return this.authService.updateProfileImage(body, user);
   }
+
+  // Upload Verification File
   @Put('/verification-file')
   @AllowAuthenticated()
   updateVerificationFile(
@@ -99,6 +109,7 @@ export class AuthController {
     return this.authService.getAllUsersForAdmin(query);
   }
 
+  // Get All Users(Applicant Admin Partners)
   @Get('admin/all/users')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
@@ -106,6 +117,7 @@ export class AuthController {
     return this.authService.getAllUsersForAdmin(query);
   }
 
+  // Update Account (Applicant, Partner, User) Status By Id
   @Patch('admin/user/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
@@ -116,12 +128,15 @@ export class AuthController {
     return this.authService.updateAccountStatusByAdmin(body, id);
   }
 
+  // Find One Applicant By Id
   @Get('admin/applicant/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
   getApplicantById(@Param('id') id: string) {
     return this.authService.findOneApplicant(id);
   }
+
+  // Find One Admin By Id
   @Get('admin/admin/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')

@@ -205,6 +205,11 @@ enum Amenities {
   Custom
 }
 
+enum AdminActivity {
+    ADDED_APPLICANT
+    ADDED_PARTNER
+}
+
 
 
 
@@ -1337,6 +1342,13 @@ model WhatsAppGroup {
   updatedAt DateTime @updatedAt
 }
 
+
+model Activity {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 
 

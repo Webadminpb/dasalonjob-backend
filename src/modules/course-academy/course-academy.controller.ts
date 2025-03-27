@@ -24,7 +24,7 @@ export class CourseAcademyController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   create(@Body() body: CreateCourseAcademyDto, @GetUser() user: Auth) {
     return this.courseAcademyService.create(body, user);
   }
@@ -45,7 +45,7 @@ export class CourseAcademyController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   update(
     @Param('id') id: string,
     @Body() body: UpdateCourseAcademyDto,
@@ -56,7 +56,7 @@ export class CourseAcademyController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.courseAcademyService.remove(id, user);
   }

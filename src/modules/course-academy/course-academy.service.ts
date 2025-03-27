@@ -10,6 +10,19 @@ export class CourseAcademyService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateCourseAcademyDto, user: Auth) {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      const courseAcademy = await this.prismaService.courseAcademy.create({
+        data: {
+          providerId: body.providerId,
+          userId: body.userId,
+        },
+      });
+      return new ApiSuccessResponse(
+        true,
+        'Course Academy created successfully',
+        courseAcademy,
+      );
+    }
     const courseAcademy = await this.prismaService.courseAcademy.create({
       data: {
         providerId: body.providerId,
@@ -18,7 +31,7 @@ export class CourseAcademyService {
     });
     return new ApiSuccessResponse(
       true,
-      'CourseAcademy created successfully',
+      'Course Academy created successfully',
       courseAcademy,
     );
   }
@@ -54,7 +67,6 @@ export class CourseAcademyService {
       await this.prismaService.courseAcademy.findUnique({
         where: {
           id: id,
-          userId: user.id,
         },
       });
     if (!existingCourseAcademy) {
@@ -81,7 +93,6 @@ export class CourseAcademyService {
       await this.prismaService.courseAcademy.findUnique({
         where: {
           id: id,
-          userId: user.id,
         },
       });
     if (!existingCourseAcademy) {
