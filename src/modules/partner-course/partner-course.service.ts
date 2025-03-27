@@ -139,7 +139,7 @@ export class PartnerCourseService {
   }
 
   async findOneForPartner(id: string, user: Auth) {
-    const [partnerCourse, totalSaved] = await Promise.all([
+    const [partnerCourse, totalSaved, totalApplicant] = await Promise.all([
       await this.prismaService.partnerCourse.findUnique({
         where: {
           id: id,
@@ -161,6 +161,13 @@ export class PartnerCourseService {
           },
         },
       }),
+      await this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+        },
+      }),
     ]);
     if (!partnerCourse) {
       throw new BadRequestException('Partner course not found');
@@ -168,6 +175,7 @@ export class PartnerCourseService {
     return new ApiSuccessResponse(true, 'Partner course found', {
       partnerCourse,
       totalSaved,
+      totalApplicant,
     });
   }
 
