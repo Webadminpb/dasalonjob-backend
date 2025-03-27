@@ -104,14 +104,19 @@ export class PartnerCourseService {
             },
             courseContent: true,
             courseAcademy: {
-              include: {
+              select: {
                 provider: {
-                  include: {
-                    venueBasicDetails: true,
+                  select: {
+                    venueBasicDetails: {
+                      select: {
+                        name: true,
+                      },
+                    },
                   },
                 },
               },
             },
+
             courseTypeAndLocation: true,
             _count: {
               select: {
