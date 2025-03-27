@@ -103,7 +103,15 @@ export class PartnerCourseService {
               },
             },
             courseContent: true,
-            courseAcademy: false,
+            courseAcademy: {
+              include: {
+                provider: {
+                  include: {
+                    venueBasicDetails: true,
+                  },
+                },
+              },
+            },
             courseTypeAndLocation: true,
             _count: {
               select: {
