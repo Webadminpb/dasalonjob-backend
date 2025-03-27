@@ -22,6 +22,20 @@ export class JobPostService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateJobPostDto, user: Auth) {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      const jobPost = await this.prismaService.jobPost.create({
+        data: {
+          jobBasicInfoId: body.jobBasicInfoId,
+          jobBenefitsId: body.jobBenefitsId,
+          jobQualificationId: body.jobQualificationId,
+          jobDescriptionId: body.jobDescriptionId,
+          venueId: body.venueId,
+          countryId: body.countryId,
+          userId: body.userId,
+        },
+      });
+      return new ApiSuccessResponse(true, 'Job post added', jobPost);
+    }
     const jobPost = await this.prismaService.jobPost.create({
       data: {
         jobBasicInfoId: body.jobBasicInfoId,
@@ -285,7 +299,7 @@ export class JobPostService {
 
   async update(id: string, user: Auth, body: UpdateJobPostDto) {
     const existingJobPost = await this.prismaService.jobPost.findUnique({
-      where: { userId: user.id, id },
+      where: { id },
     });
     if (!existingJobPost) {
       throw new NotFoundException('Job post not found');
@@ -301,7 +315,7 @@ export class JobPostService {
 
   async remove(id: string, user: Auth) {
     const existingJobPost = await this.prismaService.jobPost.findUnique({
-      where: { userId: user.id, id },
+      where: { id },
     });
     if (!existingJobPost) {
       throw new NotFoundException('Job post not found');

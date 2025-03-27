@@ -10,6 +10,20 @@ export class CourseContentService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateCourseContentDto, user: Auth) {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      const courseContent = await this.prismaService.courseContent.create({
+        data: {
+          content: body.content,
+          description: body.description,
+          userId: body.userId,
+        },
+      });
+      return new ApiSuccessResponse(
+        true,
+        'Course Content created successfully',
+        courseContent,
+      );
+    }
     const courseContent = await this.prismaService.courseContent.create({
       data: {
         content: body.content,
@@ -19,7 +33,7 @@ export class CourseContentService {
     });
     return new ApiSuccessResponse(
       true,
-      'CourseContent created successfully',
+      'Course Content created successfully',
       courseContent,
     );
   }
@@ -55,7 +69,6 @@ export class CourseContentService {
       await this.prismaService.courseContent.findUnique({
         where: {
           id: id,
-          userId: user.id,
         },
       });
     if (!existingCourseContent) {
@@ -72,7 +85,6 @@ export class CourseContentService {
           // list: item.list,
         })),
         description: body.description,
-        userId: body.userId,
       },
     });
     return new ApiSuccessResponse(
@@ -87,7 +99,6 @@ export class CourseContentService {
       await this.prismaService.courseContent.findUnique({
         where: {
           id: id,
-          userId: user.id,
         },
       });
     if (!existingCourseContent) {

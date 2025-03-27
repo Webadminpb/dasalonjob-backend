@@ -17,6 +17,24 @@ export class PartnerCourseService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreatePartnerCourseDto, user: Auth) {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      const partnerCourse = await this.prismaService.partnerCourse.create({
+        data: {
+          userId: body.userId,
+          courseDetailsId: body.courseDetailsId,
+          courseContentId: body.courseContentId,
+          courseAcademyId: body.courseAcademyId,
+          courseTypeAndLocationId: body.courseTypeAndLocationId,
+          status: body.status,
+          isOpen: body.isOpen,
+        },
+      });
+      return new ApiSuccessResponse(
+        true,
+        'Partner Course created successfully',
+        partnerCourse,
+      );
+    }
     const partnerCourse = await this.prismaService.partnerCourse.create({
       data: {
         userId: user.id,
@@ -30,7 +48,7 @@ export class PartnerCourseService {
     });
     return new ApiSuccessResponse(
       true,
-      'PartnerCourse created successfully',
+      'Partner Course created successfully',
       partnerCourse,
     );
   }
@@ -150,6 +168,25 @@ export class PartnerCourseService {
               file: true,
             },
           },
+          courseAcademy: {
+            include: {
+              provider: {
+                include: {
+                  venueBasicDetails: {
+                    select: {
+                      streetAddress: true,
+                      name: true,
+                      city: true,
+                      country: true,
+                      state: true,
+                      id: true,
+                      zipCode: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           courseContent: true,
           courseTypeAndLocation: true,
         },
@@ -220,7 +257,6 @@ export class PartnerCourseService {
         id: id,
       },
       data: {
-        userId: user.id,
         courseDetailsId: body.courseDetailsId,
         courseContentId: body.courseContentId,
         courseAcademyId: body.courseAcademyId,

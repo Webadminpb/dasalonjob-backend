@@ -14,7 +14,7 @@ export const CreateCourseDetailsSchema = z.object({
   isPlacement: z.boolean().optional(),
   provider: z.string().optional(),
   fileId: z.string().optional(),
-  userId: z.string(),
+  userId: z.string().optional(),
 });
 
 export class CreateCourseDetailsDto extends createZodDto(

@@ -10,6 +10,27 @@ export class CourseTypeAndLocationService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateCourseTypeAndLocationDto, user: Auth) {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      const courseTypeAndLocation =
+        await this.prismaService.courseTypeAndLocation.create({
+          data: {
+            country: body.country,
+            city: body.city,
+            state: body.state,
+            pincode: body.pincode,
+            address: body.address,
+            courseType: body.courseType,
+            platform: body.platform,
+            link: body.link,
+            userId: body.userId,
+          },
+        });
+      return new ApiSuccessResponse(
+        true,
+        'CourseTypeAndLocation created successfully',
+        courseTypeAndLocation,
+      );
+    }
     const courseTypeAndLocation =
       await this.prismaService.courseTypeAndLocation.create({
         data: {

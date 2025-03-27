@@ -22,9 +22,10 @@ import { CourseContentService } from './course-content.service';
 export class CourseContentController {
   constructor(private readonly courseContentService: CourseContentService) {}
 
+  // For Admin Partner
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   create(@Body() body: CreateCourseContentDto, @GetUser() user: Auth) {
     return this.courseContentService.create(body, user);
   }
@@ -43,9 +44,10 @@ export class CourseContentController {
     return this.courseContentService.findOne(id);
   }
 
+  // For Admin Partner
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   update(
     @Param('id') id: string,
     @Body() body: UpdateCourseContentDto,
@@ -54,9 +56,10 @@ export class CourseContentController {
     return this.courseContentService.update(id, body, user);
   }
 
+  // For Admin Partner
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.courseContentService.remove(id, user);
   }

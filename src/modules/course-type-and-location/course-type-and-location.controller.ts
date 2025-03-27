@@ -23,9 +23,10 @@ export class CourseTypeAndLocationController {
     private readonly courseTypeAndLocationService: CourseTypeAndLocationService,
   ) {}
 
+  // For Admin Partner
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   create(@Body() body: CreateCourseTypeAndLocationDto, @GetUser() user: Auth) {
     return this.courseTypeAndLocationService.create(body, user);
   }
@@ -44,9 +45,10 @@ export class CourseTypeAndLocationController {
     return this.courseTypeAndLocationService.findOne(id);
   }
 
+  // For Admin Partner
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   update(
     @Param('id') id: string,
     @Body() body: UpdateCourseTypeAndLocationDto,
@@ -54,9 +56,10 @@ export class CourseTypeAndLocationController {
     return this.courseTypeAndLocationService.update(id, body);
   }
 
+  // For Admin Partner
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   remove(@Param('id') id: string) {
     return this.courseTypeAndLocationService.remove(id);
   }

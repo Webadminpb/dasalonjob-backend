@@ -22,9 +22,10 @@ import { Auth } from '@prisma/client';
 export class CourseDetailsController {
   constructor(private readonly courseDetailsService: CourseDetailsService) {}
 
+  // For Admin Partner
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   create(@Body() body: CreateCourseDetailsDto, @GetUser() user: Auth) {
     return this.courseDetailsService.create(body, user);
   }
@@ -43,9 +44,10 @@ export class CourseDetailsController {
     return this.courseDetailsService.findOne(id);
   }
 
+  // For Admin Partner
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   update(
     @Param('id') id: string,
     @Body() body: UpdateCourseDetailsDto,
@@ -54,9 +56,10 @@ export class CourseDetailsController {
     return this.courseDetailsService.update(id, body, user);
   }
 
+  // For Admin Partner
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.courseDetailsService.remove(id, user);
   }

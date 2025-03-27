@@ -10,7 +10,7 @@ const ContentSchema = z.object({
 export const CreateCourseContentSchema = z.object({
   content: z.array(ContentSchema),
   description: z.string().optional(),
-  userId: z.string(),
+  userId: z.string().optional(),
 });
 
 export class CreateCourseContentDto extends createZodDto(

@@ -14,7 +14,7 @@ export const CreateCourseTypeAndLocationSchema = z.object({
   courseType: CourseTypeSchema,
   platform: CoursePlatformSchema,
   link: z.string().optional(),
-  userId: z.string(),
+  userId: z.string().optional(),
 });
 
 export class CreateCourseTypeAndLocationDto extends createZodDto(

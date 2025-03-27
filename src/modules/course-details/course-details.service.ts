@@ -9,7 +9,31 @@ import { Auth } from '@prisma/client';
 export class CourseDetailsService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  // For Partner
   async create(body: CreateCourseDetailsDto, user: Auth) {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      const courseDetails = await this.prismaService.courseDetails.create({
+        data: {
+          jobProfile: body.jobProfile,
+          courseName: body.courseName,
+          courseType: body.courseType,
+          startDate: new Date(body.startDate).toISOString(),
+          endDate: new Date(body.endDate).toISOString(),
+          price: body.price,
+          offerPrice: body.offerPrice,
+          isPlacement: body.isPlacement || false,
+          provider: body.provider,
+          fileId: body.fileId,
+          userId: body.userId,
+          // userId: user.id,
+        },
+      });
+      return new ApiSuccessResponse(
+        true,
+        'CourseDetails created successfully',
+        courseDetails,
+      );
+    }
     const courseDetails = await this.prismaService.courseDetails.create({
       data: {
         jobProfile: body.jobProfile,
@@ -33,6 +57,7 @@ export class CourseDetailsService {
     );
   }
 
+  // For Partner
   async findAll(user: Auth) {
     const courseDetails = await this.prismaService.courseDetails.findMany({
       where: {
@@ -47,6 +72,7 @@ export class CourseDetailsService {
     });
   }
 
+  //  For All Users
   async findOne(id: string) {
     const courseDetails = await this.prismaService.courseDetails.findUnique({
       where: {
@@ -59,12 +85,12 @@ export class CourseDetailsService {
     return new ApiSuccessResponse(true, 'CourseDetails found', courseDetails);
   }
 
+  // For Partner
   async update(id: string, body: UpdateCourseDetailsDto, user: Auth) {
     const existingCourseDetails =
       await this.prismaService.courseDetails.findUnique({
         where: {
           id: id,
-          userId: user.id,
         },
       });
     if (!existingCourseDetails) {
@@ -89,7 +115,6 @@ export class CourseDetailsService {
         isPlacement: body.isPlacement,
         provider: body.provider,
         fileId: body.fileId,
-        userId: user.id,
       },
     });
     return new ApiSuccessResponse(
@@ -99,12 +124,12 @@ export class CourseDetailsService {
     );
   }
 
+  // For Partner
   async remove(id: string, user: Auth) {
     const existingCourseDetails =
       await this.prismaService.courseDetails.findUnique({
         where: {
           id: id,
-          userId: user.id,
         },
       });
     if (!existingCourseDetails) {

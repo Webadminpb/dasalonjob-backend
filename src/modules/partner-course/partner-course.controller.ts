@@ -25,13 +25,10 @@ export class PartnerCourseController {
 
   // Partner
   @Post()
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.CREATED)
-  create(
-    @Body() createPartnerCourseDto: CreatePartnerCourseDto,
-    @GetUser() user: Auth,
-  ) {
-    return this.partnerCourseService.create(createPartnerCourseDto, user);
+  create(@Body() body: CreatePartnerCourseDto, @GetUser() user: Auth) {
+    return this.partnerCourseService.create(body, user);
   }
 
   // Partner
@@ -60,19 +57,19 @@ export class PartnerCourseController {
 
   // Partner
   @Put(':id')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.CREATED)
   update(
     @Param('id') id: string,
-    @Body() updatePartnerCourseDto: UpdatePartnerCourseDto,
+    @Body() body: UpdatePartnerCourseDto,
     @GetUser() user: Auth,
   ) {
-    return this.partnerCourseService.update(id, updatePartnerCourseDto, user);
+    return this.partnerCourseService.update(id, body, user);
   }
 
   // Partner
   @Delete(':id')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.CREATED)
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerCourseService.remove(id);

@@ -28,7 +28,7 @@ export class JobPostController {
   // For Partner
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   create(@Body() body: CreateJobPostDto, @GetUser() user: Auth) {
     return this.jobPostService.create(body, user);
   }
@@ -74,7 +74,7 @@ export class JobPostController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   update(
     @Body() body: UpdateJobPostDto,
     @GetUser() user: Auth,
@@ -85,7 +85,7 @@ export class JobPostController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   remove(@GetUser() user: Auth, @Param('id') id: string) {
     return this.jobPostService.remove(id, user);
   }

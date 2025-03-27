@@ -9,6 +9,7 @@ export const CreatePartnerCourseSchema = z.object({
   courseTypeAndLocationId: z.string(),
   status: z.nativeEnum(CourseStatus).optional(),
   isOpen: z.boolean().optional(),
+  userId: z.string().optional(),
 });
 
 export class CreatePartnerCourseDto extends createZodDto(
