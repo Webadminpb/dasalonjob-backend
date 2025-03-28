@@ -6,6 +6,7 @@ import {
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { generateJwtToken } from 'src/common/auth/auth-common';
 import {
+  generateRandomPassword,
   generateSixDigitOTP,
   getPaginationSkip,
   getPaginationTake,
@@ -16,11 +17,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { CreateApplicantDto } from './dto/applicant.profile';
-import { Auth, BusinessType, Prisma } from '@prisma/client';
+import { ActivityType, Auth, BusinessType, Prisma, Role } from '@prisma/client';
 import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
 import { QueryAuthDto } from './dto/query-auth.dto';
+import { CreateAdminAuthDto } from './dto/admin-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -240,6 +242,45 @@ export class AuthService {
         status: body.status,
       },
     });
+    if (body.status == 'ACTIVE') {
+      let type: ActivityType;
+      if (existingUser.role == 'ADMIN') {
+        type = 'ACTIVATE_ADMIN';
+      } else if (existingUser.role == 'USER') {
+        type = 'ACTIVATE_APPLICANT';
+      } else if (existingUser.role == 'PARTNER') {
+        type = 'ACTIVATE_PARTNER';
+      } else if (existingUser.role == 'AGENCY') {
+        type = 'ACTIVATE_AGENCY';
+      }
+
+      await this.prismaService.activity.create({
+        data: {
+          userId: user.id,
+          type,
+        },
+      });
+    }
+    if (body.status == 'INACTIVE') {
+      let type: ActivityType;
+      if (existingUser.role == 'ADMIN') {
+        type = 'DEACTIVATE_ADMIN';
+      } else if (existingUser.role == 'USER') {
+        type = 'DEACTIVATE_APPLICANT';
+      } else if (existingUser.role == 'PARTNER') {
+        type = 'DEACTIVATE_PARTNER';
+      } else if (existingUser.role == 'AGENCY') {
+        type = 'DEACTIVATE_AGENCY';
+      }
+
+      await this.prismaService.activity.create({
+        data: {
+          userId: user.id,
+          type,
+        },
+      });
+    }
+
     return new ApiSuccessResponse(true, 'Account activated', updatedUser);
   }
   async updateProfileImage(body: CreateAuthFileDto, user: Auth) {
@@ -492,5 +533,29 @@ export class AuthService {
       throw new NotFoundException('Admin not found');
     }
     return new ApiSuccessResponse(true, 'Admin found', user);
+  }
+
+  async createUserByAdmin(body: CreateAdminAuthDto) {
+    const userMap = new Map(body.users.map((user) => [user.email, user]));
+    const existingUsers = await this.prismaService.auth.findMany({
+      where: { email: { in: Array.from(userMap.keys()) } },
+      select: { email: true },
+    });
+    for (const { email } of existingUsers) {
+      userMap.delete(email);
+    }
+    const newUsers = Array.from(userMap.values()).map((user) => ({
+      email: user.email,
+      password: generateRandomPassword(),
+      phone: user.phone,
+    }));
+
+    if (!newUsers.length) {
+      throw new BadRequestException('All users already exist');
+    }
+    const users = await this.prismaService.auth.createMany({
+      data: newUsers,
+    });
+    return new ApiSuccessResponse(true, 'User Created Successfully', { users });
   }
 }

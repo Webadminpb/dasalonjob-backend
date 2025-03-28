@@ -28,6 +28,13 @@ export class CourseApplicationService {
         },
       },
     );
+
+    await this.prismaService.activity.create({
+      data: {
+        userId: user.id,
+        type: 'APPLIED_COURSE',
+      },
+    });
     return new ApiSuccessResponse(
       true,
       'course application created ',

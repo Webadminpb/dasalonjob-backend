@@ -33,6 +33,12 @@ export class JobApplicationService {
         jobPostId: body.jobPostId,
       },
     });
+    await this.prismaService.activity.create({
+      data: {
+        userId: user.id,
+        type: 'APPLIED_JOB',
+      },
+    });
     return new ApiSuccessResponse(
       true,
       'Job application created',

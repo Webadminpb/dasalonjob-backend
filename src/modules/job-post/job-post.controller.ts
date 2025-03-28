@@ -101,8 +101,11 @@ export class JobPostController {
   @Patch('admin/status')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
-  updateJobPostStatusByIdForAdmin(@Body() body: CreateJobStatusDto) {
-    return this.jobPostService.updateJobPostStatusByIdForAdmin(body);
+  updateJobPostStatusByIdForAdmin(
+    @Body() body: CreateJobStatusDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobPostService.updateJobPostStatusByIdForAdmin(body, user);
   }
 
   // For Applicant

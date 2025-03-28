@@ -86,8 +86,11 @@ export class PartnerCourseController {
   @Patch('admin/status')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
-  updateJobPostStatusByIdForAdmin(@Body() body: CreateCourseStatusDto) {
-    return this.partnerCourseService.updateCourseStatusByIdForAdmin(body);
+  updateJobPostStatusByIdForAdmin(
+    @Body() body: CreateCourseStatusDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.partnerCourseService.updateCourseStatusByIdForAdmin(body, user);
   }
 
   @Get('admin/courses')

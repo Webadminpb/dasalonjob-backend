@@ -47,6 +47,12 @@ export class JobPostService {
         userId: user.id,
       },
     });
+    await this.prismaService.activity.create({
+      data: {
+        userId: user.id,
+        type: 'POSTED_JOB',
+      },
+    });
     return new ApiSuccessResponse(true, 'Job post added', jobPost);
   }
 
@@ -360,7 +366,7 @@ export class JobPostService {
     });
   }
 
-  async updateJobPostStatusByIdForAdmin(body: CreateJobStatusDto) {
+  async updateJobPostStatusByIdForAdmin(body: CreateJobStatusDto, user: Auth) {
     const existingJobPost = await this.prismaService.jobPost.findUnique({
       where: {
         id: body.id,
@@ -378,6 +384,21 @@ export class JobPostService {
         status: body.status,
       },
     });
+    if (body.status == 'Approved') {
+      await this.prismaService.activity.create({
+        data: {
+          userId: user.id,
+          type: 'APPROVE_JOB',
+        },
+      });
+    } else if (body.status == 'Canceled') {
+      await this.prismaService.activity.create({
+        data: {
+          userId: user.id,
+          type: 'REJECT_JOB',
+        },
+      });
+    }
     return new ApiSuccessResponse(
       true,
       'Job Status Updated Successfully',

@@ -205,9 +205,40 @@ enum Amenities {
   Custom
 }
 
-enum AdminActivity {
+enum ActivityType {
+    // Admin
     ADDED_APPLICANT
     ADDED_PARTNER
+    ADDED_AGENCY
+
+    ACTIVATE_APPLICANT
+    ACTIVATE_PARTNER
+    ACTIVATE_AGENCY
+    ACTIVATE_ADMIN
+
+    APPROVE_COURSE
+    REJECT_COURSE
+    
+    APPROVE_JOB
+    REJECT_JOB
+
+
+    DEACTIVATE_APPLICANT
+    DEACTIVATE_PARTNER
+    DEACTIVATE_AGENCY
+    DEACTIVATE_ADMIN
+
+  // Applicant
+    APPLIED_JOB
+    APPLIED_COURSE
+
+  // Partner
+    POSTED_JOB
+    POSTED_COURSE
+
+    BUY_TOKEN
+
+
 }
 
 
@@ -350,6 +381,7 @@ model Auth {
   jobApplicationApplicantMessage JobApplicationApplicantMessage?
 
   loginHistories LoginHistory[]
+  activities Activity[]
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -1345,6 +1377,11 @@ model WhatsAppGroup {
 
 model Activity {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  type ActivityType
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

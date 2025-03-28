@@ -46,6 +46,12 @@ export class PartnerCourseService {
         isOpen: body.isOpen,
       },
     });
+    await this.prismaService.activity.create({
+      data: {
+        userId: user.id,
+        type: 'POSTED_COURSE',
+      },
+    });
     return new ApiSuccessResponse(
       true,
       'Partner Course created successfully',
@@ -328,7 +334,10 @@ export class PartnerCourseService {
     });
   }
 
-  async updateCourseStatusByIdForAdmin(body: CreateCourseStatusDto) {
+  async updateCourseStatusByIdForAdmin(
+    body: CreateCourseStatusDto,
+    user: Auth,
+  ) {
     const existingCourse = await this.prismaService.partnerCourse.findUnique({
       where: {
         id: body.id,
@@ -346,6 +355,21 @@ export class PartnerCourseService {
         status: body.status,
       },
     });
+    if (body.status == 'Approved') {
+      await this.prismaService.activity.create({
+        data: {
+          userId: user.id,
+          type: 'APPROVE_COURSE',
+        },
+      });
+    } else if (body.status == 'Canceled') {
+      await this.prismaService.activity.create({
+        data: {
+          userId: user.id,
+          type: 'REJECT_COURSE',
+        },
+      });
+    }
     return new ApiSuccessResponse(
       true,
       'Course Updated Successfully',

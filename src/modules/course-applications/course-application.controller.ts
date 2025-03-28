@@ -1,20 +1,16 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
   HttpCode,
   HttpStatus,
-  Put,
+  Post,
   Query,
 } from '@nestjs/common';
+import { Auth } from '@prisma/client';
+import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CourseApplicationService } from './course-application.service';
 import { CreateCourseApplicationDto } from './dto/create-course-application.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
-import { Auth } from '@prisma/client';
 import { QueryCourseApplicationDto } from './dto/query-course-application.dto';
 
 @Controller('course-application')
