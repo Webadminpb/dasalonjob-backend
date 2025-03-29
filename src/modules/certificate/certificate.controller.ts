@@ -8,6 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CertificateService } from './certificate.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
@@ -15,6 +16,7 @@ import { UpdateCertificateDto } from './dto/update-certificate.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
+import { QueryCertificateDto } from './dto/query-certificate.dto';
 
 @ApiTags('applicant')
 @Controller('certificate')
@@ -40,6 +42,13 @@ export class CertificateController {
   @AllowAuthenticated('USER')
   findOne(@Param('id') id: string) {
     return this.certificateService.findOne(id);
+  }
+
+  @Get('admin/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  findOneForAdmin(@Query() query: QueryCertificateDto) {
+    return this.certificateService.findOneForAdmin(query);
   }
 
   @Put(':id')

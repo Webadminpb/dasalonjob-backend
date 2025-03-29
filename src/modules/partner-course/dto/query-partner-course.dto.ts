@@ -1,10 +1,4 @@
-import {
-  CourseStatus,
-  CourseType,
-  HighestEducation,
-  JobApplicationStatus,
-  Language,
-} from '@prisma/client';
+import { CourseStatus, CourseType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional, zYearOptional } from 'src/common/validation';
 import { z } from 'zod';

@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Auth } from '@prisma/client';
+import { Auth, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { QueryExperienceDto } from './dto/query-experience.dto';
+import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 
 @Injectable()
 export class ExperienceService {
@@ -47,6 +49,21 @@ export class ExperienceService {
       throw new NotFoundException('experience not found');
     }
     return new ApiSuccessResponse(true, 'experience data', experience);
+  }
+  async findOneForAdmin(query: QueryExperienceDto) {
+    const where: Prisma.ExperienceWhereInput = {};
+    if (query.userId) {
+      where.userId = query.userId;
+    }
+    const experience = await this.prismaService.experience.findMany({
+      where,
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+    });
+    if (!experience) {
+      throw new NotFoundException('experience not found');
+    }
+    return new ApiSuccessResponse(true, 'experience data', { experience });
   }
 
   async update(id: string, body: UpdateExperienceDto, user: Auth) {

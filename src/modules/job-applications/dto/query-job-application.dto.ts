@@ -1,9 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  HighestEducation,
-  JobApplicationStatus,
-  Language,
-} from '@prisma/client';
+import { HighestEducation, JobApplicationStatus } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional } from 'src/common/validation';
 import { z } from 'zod';
@@ -22,7 +18,7 @@ export const QueryJobApplicationSchema = z.object({
   search: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
-  customDate: zDateOptional, // New field for custom date filter
+  customDate: zDateOptional,
   customerYear: zDateOptional,
 });
 

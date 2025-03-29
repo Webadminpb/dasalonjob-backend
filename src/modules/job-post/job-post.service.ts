@@ -356,9 +356,6 @@ export class JobPostService {
         jobBasicInfo: true,
       },
     });
-    if (!expiringJobs) {
-      throw new NotFoundException('expired jobs not found');
-    }
 
     return new ApiSuccessResponse(true, 'partner jobs', {
       expiringJobs,

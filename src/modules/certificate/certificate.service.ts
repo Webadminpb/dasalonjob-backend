@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Auth } from '@prisma/client';
+import { Auth, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
+import { QueryExperienceDto } from '../experience/dto/query-experience.dto';
+import { getPaginationSkip, getPaginationTake } from 'src/common/common';
 
 @Injectable()
 export class CertificateService {
@@ -42,7 +44,23 @@ export class CertificateService {
     if (!certificate) {
       throw new NotFoundException(`certificate not found`);
     }
-    return certificate;
+    return new ApiSuccessResponse(true, 'certificate date', certificate);
+  }
+
+  async findOneForAdmin(query: QueryExperienceDto) {
+    const where: Prisma.CertificateWhereInput = {};
+    if (query.userId) {
+      where.userId = query.userId;
+    }
+    const certificates = await this.prismaService.certificate.findMany({
+      where,
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+    });
+    if (!certificates) {
+      throw new NotFoundException(`certificate not found`);
+    }
+    return new ApiSuccessResponse(true, 'certificate data', { certificates });
   }
 
   // Update a certificate by ID

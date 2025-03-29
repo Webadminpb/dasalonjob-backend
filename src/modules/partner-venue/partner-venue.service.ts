@@ -30,9 +30,10 @@ export class PartnerVenueService {
   }
 
   async findAll(user: Auth, query: QueryPartnerVenueDto) {
-    const where: Prisma.PartnerVenueWhereInput = {
-      userId: user.id,
-    };
+    const where: Prisma.PartnerVenueWhereInput = {};
+    if (query.userId) {
+      where.userId = query.userId;
+    }
     if (query.search) {
       where.venueBasicDetails = {
         OR: [

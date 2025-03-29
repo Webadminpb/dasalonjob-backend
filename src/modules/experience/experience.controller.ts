@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { ExperienceService } from './experience.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
@@ -15,6 +16,7 @@ import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
+import { QueryExperienceDto } from './dto/query-experience.dto';
 
 @ApiTags('applicant')
 @Controller('experience')
@@ -40,6 +42,13 @@ export class ExperienceController {
   @AllowAuthenticated('USER')
   findOne(@Param('id') id: string) {
     return this.experienceService.findOne(id);
+  }
+
+  @Get('/admin')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  findOneForAdmin(@Query() query: QueryExperienceDto) {
+    return this.experienceService.findOneForAdmin(query);
   }
 
   @Patch(':id')

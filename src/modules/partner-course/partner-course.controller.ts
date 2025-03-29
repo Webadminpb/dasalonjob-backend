@@ -49,7 +49,7 @@ export class PartnerCourseController {
 
   // Partner, Admin, Applicant
   @Get('user/:id')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated()
   @HttpCode(HttpStatus.OK)
   findOneForApplicant(@Param('id') id: string) {
     return this.partnerCourseService.findOneForApplicant(id);
