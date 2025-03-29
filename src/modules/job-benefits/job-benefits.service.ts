@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Auth } from '@prisma/client';
 import { CreateJobBenefitsDto } from './dto/create-jobbenefit.dto';
@@ -10,7 +14,13 @@ export class JobBenefitsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateJobBenefitsDto, user: Auth) {
-    if (user.role == 'ADMIN' || user.role || 'SUPER_ADMIN') {
+    console.log('body ', body);
+    console.log('user ', user);
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+      console.log('user.role ', user.role);
+      if (!body.userId) {
+        throw new BadRequestException('User Id is required');
+      }
       const jobBenefits = await this.prismaService.jobBenefits.create({
         data: {
           benefits: body.benefits,
