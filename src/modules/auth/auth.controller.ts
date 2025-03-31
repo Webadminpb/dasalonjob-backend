@@ -144,6 +144,13 @@ export class AuthController {
     return this.authService.createUserByAdmin(body);
   }
 
+  @Post('agency/add-user')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  createUserByAgency(@Body() body: CreateAdminAuthDto) {
+    return this.authService.createUserByAdmin(body);
+  }
+
   // Update User Status
   @Patch('admin/status')
   @HttpCode(HttpStatus.OK)

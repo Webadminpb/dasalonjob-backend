@@ -36,6 +36,18 @@ export class AgencyDetailsService {
     }
     return new ApiSuccessResponse(true, 'Agency details found', agencyDetails);
   }
+  async findAgencyDetailsById(id: string) {
+    const agencyDetails = await this.prismaService.agencyDetails.findUnique({
+      where: { id },
+      include: {
+        file: true,
+      },
+    });
+    if (!agencyDetails) {
+      throw new NotFoundException('Agency details not found');
+    }
+    return new ApiSuccessResponse(true, 'Agency details found', agencyDetails);
+  }
 
   async update(user: Auth, body: UpdateAgencyDetailsDto) {
     const existingAgencyDetails =

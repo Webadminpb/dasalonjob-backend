@@ -7,6 +7,7 @@ import {
   HttpStatus,
   HttpCode,
   Put,
+  Param,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { AgencyDetailsService } from './agency-details.service';
@@ -32,6 +33,13 @@ export class AgencyDetailsController {
   @AllowAuthenticated('AGENCY')
   findMyAgencyDetails(@GetUser() user: Auth) {
     return this.agencyDetailsService.findMyAgencyDetails(user);
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('AGENCY')
+  findAgencyDetailsById(@Param('id') id: string) {
+    return this.agencyDetailsService.findAgencyDetailsById(id);
   }
 
   @Put()

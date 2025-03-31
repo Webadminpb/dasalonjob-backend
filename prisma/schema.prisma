@@ -20,6 +20,8 @@ enum Role {
   SUPER_ADMIN
   PARTNER // Owner Staff Manager
   AGENCY
+  MANAGER 
+  STAFF
 }
 
 enum Gender {
@@ -301,7 +303,7 @@ model Auth {
   email                       String   @unique
   password                    String
   role                        Role     @default(USER)
-  phone                       String
+  phone                       String?
   isPhoneVerified             Boolean  @default(false)
   isEmailVerified             Boolean  @default(false)
   phoneVerificationCode       String?
@@ -382,6 +384,10 @@ model Auth {
 
   loginHistories LoginHistory[]
   activities Activity[]
+  agencyPersonalDetails AgencyPersonalDetails?
+
+  agencyOwners AgencyTeam[] @relation("Agency")
+  agencyTeamMembers AgencyTeam[] @relation("TeamMember")
   
   isEducation    Boolean?
   isProfessional Boolean?
@@ -858,6 +864,22 @@ model JobPost {
 
 // Business
 
+model AgencyPersonalDetails {
+  id String @id @map("_id") @default(auto()) @db.ObjectId
+
+  firstName String
+  lastName String
+
+  gender Gender
+  dob DateTime
+
+  userId String @db.ObjectId @unique
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model AgencyDetails {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -873,6 +895,19 @@ model AgencyDetails {
 
   userId String @unique @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgencyTeam {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  agencyId String @db.ObjectId
+  agency Auth @relation("Agency",fields: [agencyId], references: [id])
+
+  memberId String @db.ObjectId 
+  member Auth @relation("TeamMember",fields: [memberId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

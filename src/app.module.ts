@@ -49,6 +49,8 @@ import { UserLanguagesModule } from './modules/user-languages/user-languages.mod
 import { PartnerPersonalDataModule } from './modules/partner-personal-data/partner-personal-data.module';
 import { ActivityModule } from './modules/activity/activity.module';
 import { WhatsappGroupsModule } from './modules/whatsapp-groups/whatsapp-groups.module';
+import { AgencyPersonalDetailsModule } from './modules/agency-personal-details/agency-personal-details.module';
+import { AgencyTeamMembersModule } from './modules/agency-team-members/agency-team-members.module';
 
 @Module({
   imports: [
@@ -100,6 +102,8 @@ import { WhatsappGroupsModule } from './modules/whatsapp-groups/whatsapp-groups.
     PartnerPersonalDataModule,
     ActivityModule,
     WhatsappGroupsModule,
+    AgencyPersonalDetailsModule,
+    AgencyTeamMembersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
