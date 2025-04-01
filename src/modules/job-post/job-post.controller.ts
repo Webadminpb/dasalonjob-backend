@@ -44,7 +44,6 @@ export class JobPostController {
   // For Applicant
   @Get('u-query')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
   findJobPosts(@Query() query: QueryJobPostDto) {
     return this.jobPostService.findAll(query);
   }

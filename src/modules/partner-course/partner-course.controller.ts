@@ -49,7 +49,6 @@ export class PartnerCourseController {
 
   // Partner, Admin, Applicant
   @Get('user/:id')
-  @AllowAuthenticated()
   @HttpCode(HttpStatus.OK)
   findOneForApplicant(@Param('id') id: string) {
     return this.partnerCourseService.findOneForApplicant(id);
@@ -102,7 +101,6 @@ export class PartnerCourseController {
 
   @Get('courses')
   @HttpCode(HttpStatus.OK)
-  // @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
   getAllCoursesForApplicant(@Query() query: QueryPartnerCourseDto) {
     return this.partnerCourseService.findAllForAdmin(query);
   }
