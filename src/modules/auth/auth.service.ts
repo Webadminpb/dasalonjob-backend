@@ -29,10 +29,14 @@ export class AuthService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async signup(body: CreateAuthDto) {
-    const phoneVerificationCode = await generateSixDigitOTP();
-    const phoneVerificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
-    const emailVerificationCode = await generateSixDigitOTP();
-    const emailVerificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    // const phoneVerificationCode = await generateSixDigitOTP();
+    // const phoneVerificationCodeExpiry = new Date(
+    //   Date.now() + 10 * 60 * 1000,
+    // ).toISOString();
+    // const emailVerificationCode = await generateSixDigitOTP();
+    // const emailVerificationCodeExpiry = new Date(
+    //   Date.now() + 10 * 60 * 1000,
+    // ).toISOString();
     const user = await this.prismaService.auth.create({
       data: {
         email: body.email,
@@ -44,12 +48,8 @@ export class AuthService {
         isEmailVerified: body.isEmailVerified,
         phoneVerificationCode: body.phoneVerificationCode,
         emailVerificationCode: body.emailVerificationCode,
-        phoneVerificationCodeExpiry: new Date(
-          body.phoneVerificationCodeExpiry,
-        ).toISOString(),
-        emailVerificationCodeExpiry: new Date(
-          body.emailVerificationCodeExpiry,
-        ).toISOString(),
+        // phoneVerificationCodeExpiry: phoneVerificationCodeExpiry,
+        // emailVerificationCodeExpiry: emailVerificationCodeExpiry,
       },
     });
     const updateUser = await this.prismaService.auth.update({
@@ -57,14 +57,14 @@ export class AuthService {
         id: user.id,
       },
       data: {
-        phoneVerificationCode,
-        emailVerificationCode,
-        phoneVerificationCodeExpiry: new Date(
-          body.phoneVerificationCodeExpiry,
-        ).toISOString(),
-        emailVerificationCodeExpiry: new Date(
-          body.emailVerificationCodeExpiry,
-        ).toISOString(),
+        // phoneVerificationCode,
+        // emailVerificationCode,
+        // phoneVerificationCodeExpiry: new Date(
+        //   body.phoneVerificationCodeExpiry,
+        // ).toISOString(),
+        // emailVerificationCodeExpiry: new Date(
+        //   body.emailVerificationCodeExpiry,
+        // ).toISOString(),
       },
     });
     return new ApiSuccessResponse(

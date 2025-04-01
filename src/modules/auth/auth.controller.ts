@@ -105,7 +105,7 @@ export class AuthController {
   // Get All Users(Applicant Admin Partners)
   @Get('admin/all/users')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
   fetchAllUsers(@Query() query: QueryAuthDto) {
     return this.authService.getAllUsersForAdmin(query);
   }
@@ -124,9 +124,16 @@ export class AuthController {
   // Find One Applicant By Id
   @Get('admin/applicant/:id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
   fetchApplicantDetails(@Param('id') id: string) {
     return this.authService.findOneApplicant(id);
+  }
+
+  @Get('admin/partner/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
+  fetchPartnerDetails(@Param('id') id: string) {
+    return this.authService.findOnePartner(id);
   }
 
   // Find One Admin By Id

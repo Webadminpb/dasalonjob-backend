@@ -1,4 +1,9 @@
-import { AccountStatus, HighestEducation, Role } from '@prisma/client';
+import {
+  AccountStatus,
+  BusinessType,
+  HighestEducation,
+  Role,
+} from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional, zYearOptional } from 'src/common/validation';
 import { z } from 'zod';
@@ -15,7 +20,7 @@ export const QueryAuthSchema = z.object({
   countryId: z.string().optional(),
   date: zDateOptional.optional(),
   year: zYearOptional.optional(),
-  businessType: z.string().optional(),
+  businessType: z.nativeEnum(BusinessType).optional(),
 
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z
