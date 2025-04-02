@@ -275,6 +275,15 @@ export class JobPostService {
               skills: true,
             },
           },
+          venue: {
+            include: {
+              venueBasicDetails: {
+                include: {
+                  files: true,
+                },
+              },
+            },
+          },
           jobApplications: true,
           saveJobPosts: true,
         },
