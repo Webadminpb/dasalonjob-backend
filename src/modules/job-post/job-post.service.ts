@@ -259,15 +259,7 @@ export class JobPostService {
       await this.prismaService.jobPost.findMany({
         where,
         include: {
-          jobBasicInfo: {
-            include: {
-              venue: {
-                include: {
-                  venueBasicDetails: true,
-                },
-              },
-            },
-          },
+          jobBasicInfo: true,
           jobBenefits: true,
           jobDescription: true,
           jobQualification: {
