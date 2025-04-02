@@ -23,7 +23,7 @@ export class JobBasicInfoController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN', 'AGENCY')
   create(@Body() body: CreateJobBasicInfoDto, @GetUser() user: Auth) {
     return this.jobBasicInfoService.create(body, user);
   }

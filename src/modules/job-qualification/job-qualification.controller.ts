@@ -26,7 +26,7 @@ export class JobQualificationController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN', 'AGENCY')
   create(@Body() body: CreateJobQualificationDto, @GetUser() user: Auth) {
     return this.jobQualificationService.create(body, user);
   }

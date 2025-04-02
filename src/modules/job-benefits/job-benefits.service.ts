@@ -16,7 +16,11 @@ export class JobBenefitsService {
   async create(body: CreateJobBenefitsDto, user: Auth) {
     console.log('body ', body);
     console.log('user ', user);
-    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+    if (
+      user.role == 'ADMIN' ||
+      user.role == 'SUPER_ADMIN' ||
+      user.role == 'AGENCY'
+    ) {
       console.log('user.role ', user.role);
       if (!body.userId) {
         throw new BadRequestException('User Id is required');

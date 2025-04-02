@@ -10,7 +10,11 @@ export class JobBasicInfoService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateJobBasicInfoDto, user: Auth) {
-    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+    if (
+      user.role == 'ADMIN' ||
+      user.role == 'SUPER_ADMIN' ||
+      user.role == 'AGENCY'
+    ) {
       const jobBasicInfo = await this.prismaService.jobBasicInfo.create({
         data: {
           title: body.title,

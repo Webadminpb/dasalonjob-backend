@@ -17,12 +17,16 @@ import {
 } from 'src/common/common';
 import { addDays } from 'date-fns';
 import { CreateJobStatusDto } from './dto/status-job-post.dto';
+import { PartnerAgencyPermissionService } from '../partner-agency-job-permission/partner-agency-job-permission.service';
 @Injectable()
 export class JobPostService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly partnerAgencyJobPermissionService: PartnerAgencyPermissionService,
+  ) {}
 
   async create(body: CreateJobPostDto, user: Auth) {
-    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN' || user.role == "AGENCY") {
       const jobPost = await this.prismaService.jobPost.create({
         data: {
           jobBasicInfoId: body.jobBasicInfoId,
@@ -533,4 +537,112 @@ export class JobPostService {
       jobPosts: jobPostWithCounts,
     });
   }
+
+  async findJobsForAgency(query: QueryJobPostDto, user: Auth) {
+    if (query.partnerId) {
+      const hasPermission =
+        await this.partnerAgencyJobPermissionService.checkPermission(
+          query.partnerId,
+          user.id,
+        );
+
+      if (hasPermission === false) {
+        throw new NotFoundException(
+          'You do not have permission to view these jobs',
+        );
+      }
+    }
+
+    const where: Prisma.JobPostWhereInput = {};
+
+    if (query.partnerId) {
+      where.userId = query.partnerId;
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    if (query.search) {
+      where.OR = [
+        {
+          jobBasicInfo: {
+            title: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          jobDescription: {
+            description: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
+    const sortOrder = getSortOrder(query.order);
+    const orderBy = getSortBy(query.sort);
+
+    const [jobs, total] = await Promise.all([
+      this.prismaService.jobPost.findMany({
+        where,
+        include: {
+          jobBasicInfo: true,
+          jobDescription: true,
+          jobBenefits: true,
+          jobQualification: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+              phone: true,
+              basicDetails: true,
+            },
+          },
+          venue: {
+            include: {
+              venueBasicDetails: true,
+            },
+          },
+          jobApplications: true,
+        },
+        skip,
+        take,
+        orderBy: {
+          [orderBy]: sortOrder,
+        },
+      }),
+      this.prismaService.jobPost.count({ where }),
+    ]);
+
+    const jobsWithStats = jobs.map((job) => ({
+      ...job,
+      totalApplications: job.jobApplications.length,
+    }));
+
+    return new ApiSuccessResponse(true, 'Jobs fetched successfully', {
+      total,
+      jobs: jobsWithStats,
+    });
+  }
+
+  // private async checkPermission(partnerId: string, agencyId: string) {
+  //   const permission =
+  //     await this.prismaService.partnerAgencyJobPermission.findUnique({
+  //       where: {
+  //         agencyId_partnerId: {
+  //           agencyId,
+  //           partnerId,
+  //         },
+  //       },
+  //     });
+
+  //   return permission?.hasAccess || false;
+  // }
 }

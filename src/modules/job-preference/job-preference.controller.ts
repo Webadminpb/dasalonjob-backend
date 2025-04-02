@@ -1,21 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  HttpStatus,
+  Get,
   HttpCode,
+  HttpStatus,
+  Post,
   Put,
 } from '@nestjs/common';
-import { JobpreferenceService } from './job-preference.service';
+import { ApiTags } from '@nestjs/swagger';
+import { Auth } from '@prisma/client';
+import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
 import { CreateJobpreferenceDto } from './dto/create-jobpreference.dto';
 import { UpdateJobpreferenceDto } from './dto/update-jobpreference.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
-import { Auth } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
+import { JobpreferenceService } from './job-preference.service';
 
 @ApiTags('partner')
 @Controller('jobpreference')

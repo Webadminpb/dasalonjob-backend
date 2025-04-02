@@ -23,7 +23,7 @@ export class JobBenefitsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN', 'AGENCY')
   create(@Body() body: CreateJobBenefitsDto, @GetUser() user: Auth) {
     return this.jobBenefitsService.create(body, user);
   }

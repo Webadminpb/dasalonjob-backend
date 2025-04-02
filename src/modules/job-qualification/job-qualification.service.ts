@@ -10,7 +10,11 @@ export class JobQualificationService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateJobQualificationDto, user: Auth) {
-    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
+    if (
+      user.role == 'ADMIN' ||
+      user.role == 'SUPER_ADMIN' ||
+      user.role == 'AGENCY'
+    ) {
       const jobQualification = await this.prismaService.jobQualification.create(
         {
           data: {

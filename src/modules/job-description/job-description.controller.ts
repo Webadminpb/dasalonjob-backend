@@ -24,7 +24,7 @@ export class JobDescriptionController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN' , "AGENCY")
   create(@Body() body: CreateJobDescriptionDto, @GetUser() user: Auth) {
     return this.jobDescriptionService.create(body, user);
   }

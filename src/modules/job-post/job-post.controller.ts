@@ -28,7 +28,7 @@ export class JobPostController {
   // For Partner
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN', 'AGENCY')
   create(@Body() body: CreateJobPostDto, @GetUser() user: Auth) {
     return this.jobPostService.create(body, user);
   }
@@ -107,11 +107,19 @@ export class JobPostController {
     return this.jobPostService.updateJobPostStatusByIdForAdmin(body, user);
   }
 
-  // For Applicant
+  // For Admin
   @Get('admin-query')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
   findJobPostsForAdmin(@Query() query: QueryJobPostDto) {
+    return this.jobPostService.findAllForAdmin(query);
+  }
+
+  // For Agency
+  @Get('agency-query')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  findJobPostsForAgency(@Query() query: QueryJobPostDto) {
     return this.jobPostService.findAllForAdmin(query);
   }
 }

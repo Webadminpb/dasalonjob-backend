@@ -51,6 +51,7 @@ import { ActivityModule } from './modules/activity/activity.module';
 import { WhatsappGroupsModule } from './modules/whatsapp-groups/whatsapp-groups.module';
 import { AgencyPersonalDetailsModule } from './modules/agency-personal-details/agency-personal-details.module';
 import { AgencyTeamMembersModule } from './modules/agency-team-members/agency-team-members.module';
+import { PartnerAgencyJobPermissionModule } from './modules/partner-agency-job-permission/partner-agency-job-permission.module';
 
 @Module({
   imports: [
@@ -104,6 +105,7 @@ import { AgencyTeamMembersModule } from './modules/agency-team-members/agency-te
     WhatsappGroupsModule,
     AgencyPersonalDetailsModule,
     AgencyTeamMembersModule,
+    PartnerAgencyJobPermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
