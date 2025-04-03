@@ -10,7 +10,7 @@ export const JobPostSchema = z.object({
   skillIds: z.array(z.string()).optional(),
   jobDescriptionId: z.string().optional(),
   languageIds: z.array(z.string()).optional(),
-  status: z.nativeEnum(JobPostStatus).optional(),
+  // status: z.nativeEnum(JobPostStatus).optional(),
   countryId: z.string().optional(),
   venueId: z.string().optional(),
   userId: z.string().optional(),
