@@ -171,7 +171,7 @@ enum Plan {
 
 enum JobPostStatus {
   Approved
-  Canceled
+  Rejected
   Pending
 }
 
