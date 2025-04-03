@@ -857,6 +857,7 @@ model JobPost {
 
   jobApplications JobApplication[]
   saveJobPosts SaveJobPost[]
+  featuredJobs FeaturedJob[]
 
   views Int @default(0)
 
@@ -1449,12 +1450,48 @@ model PartnerAgencyJobPermission {
 }
 
 
-// model FeaturedJob {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
+model FeaturedJob {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-//   jobPostId String @db.ObjectId
-//   jobPost JobPost @relation(fields: [jobPostId], references: [])
-// }
+  jobPostId String @db.ObjectId
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+  startDate DateTime @default(now())
+  endDate DateTime 
+
+  priority Int @default(1)
+
+  isActive Boolean @default(true)
+
+  impressions Int @default(0)
+  clicks Int @default(0)
+
+  @@index([jobPostId])
+  @@index([isActive, endDate, priority])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model CreditPlan {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  totalJobs Int @default(0)
+  totalCourses Int @default(0)
+
+  price Float @default(0)
+
+  isRecommended Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdAt])
+}
+
+
+
 
 
 

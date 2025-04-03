@@ -26,7 +26,11 @@ export class JobPostService {
   ) {}
 
   async create(body: CreateJobPostDto, user: Auth) {
-    if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN' || user.role == "AGENCY") {
+    if (
+      user.role == 'ADMIN' ||
+      user.role == 'SUPER_ADMIN' ||
+      user.role == 'AGENCY'
+    ) {
       const jobPost = await this.prismaService.jobPost.create({
         data: {
           jobBasicInfoId: body.jobBasicInfoId,
@@ -497,7 +501,11 @@ export class JobPostService {
             include: {
               venue: {
                 include: {
-                  venueBasicDetails: true,
+                  venueBasicDetails: {
+                    include: {
+                      files: true,
+                    },
+                  },
                 },
               },
             },
