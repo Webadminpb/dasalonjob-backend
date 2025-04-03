@@ -397,7 +397,7 @@ export class JobPostService {
           type: 'APPROVE_JOB',
         },
       });
-    } else if (body.status == 'Canceled') {
+    } else if (body.status == 'Rejected') {
       await this.prismaService.activity.create({
         data: {
           userId: user.id,
