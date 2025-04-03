@@ -865,6 +865,8 @@ model JobPost {
 
 }
 
+
+
 // Business
 
 model AgencyPersonalDetails {
@@ -1445,6 +1447,14 @@ model PartnerAgencyJobPermission {
   @@index([agencyId])
   @@unique([agencyId, partnerId])
 }
+
+
+// model FeaturedJob {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+//   jobPostId String @db.ObjectId
+//   jobPost JobPost @relation(fields: [jobPostId], references: [])
+// }
 
 
 

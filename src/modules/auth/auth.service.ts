@@ -422,6 +422,10 @@ export class AuthService {
 
     const orderBy = getSortOrder(query.order);
     const sortBy = getSortBy(query.sort);
+    // const orderBy = query.order
+    //   ? { [query.order]: query.sort || 'desc' }
+    //   : { createdAt: 'desc' };
+
     const [users, total] = await Promise.all([
       this.prismaService.auth.findMany({
         where,
@@ -441,7 +445,7 @@ export class AuthService {
           languages: true,
         },
         orderBy: {
-          [orderBy]: sortBy,
+          [sortBy]: orderBy,
         },
         skip: getPaginationSkip(query.page, query.limit),
         take: getPaginationTake(query.limit),
