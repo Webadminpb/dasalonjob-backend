@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreateASaveJobPostDto } from './dto/create-save-job-post.dto';
 import { UpdateSaveJobPostDto } from './dto/update-save-job-post.dto';
 import { SaveJobPostService } from './save-job-post.service';

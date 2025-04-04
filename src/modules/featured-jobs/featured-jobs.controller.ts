@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { CreateFeaturedJobDto } from './dto/create-featured-job.dto';
 import { UpdateFeaturedJobDto } from './dto/update-featured-job.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { QueryFeaturedJobDto } from './dto/query-featured-job.dto';

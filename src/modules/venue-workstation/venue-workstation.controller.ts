@@ -10,7 +10,10 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateVenueWorkStationDto } from './dto/create-venue-workstation.dto';
 import { UpdateVenueWorkStationDto } from './dto/update-venue-workstation.dto';

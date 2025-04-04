@@ -12,7 +12,10 @@ import {
 import { ContactdetailsService } from './contact-details.service';
 import { UpdateContactdetailDto } from './dto/update-contact-detail.dto';
 import { CreateContactDetailsDto } from './dto/create-contact-detail.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 

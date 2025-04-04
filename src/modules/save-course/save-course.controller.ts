@@ -11,7 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreateSaveCourseDto } from './dto/create-save-course.dto';
 import { QuerySaveCourseDto } from './dto/query-save-course.dto';
 import { SaveCourseService } from './save-course.service';

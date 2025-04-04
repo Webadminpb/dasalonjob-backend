@@ -13,7 +13,10 @@ import {
 import { PastworkService } from './pastwork.service';
 import { CreatePastworkDto } from './dto/create-pastwork.dto';
 import { UpdatePastworkDto } from './dto/update-pastwork.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 

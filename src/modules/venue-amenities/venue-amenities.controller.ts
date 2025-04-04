@@ -10,7 +10,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { VenueAmenitiesService } from './venue-amenities.service';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateVenueAmenitiesDto } from './dto/create-venue-amenity.dto';
 import { UpdateVenueAmenityDto } from './dto/update-venue-amenity.dto';

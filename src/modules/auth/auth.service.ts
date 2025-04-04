@@ -430,10 +430,16 @@ export class AuthService {
       this.prismaService.auth.findMany({
         where,
         include: {
+          profileImage: true,
+
           basicDetails: true,
           partnerVenues: {
             include: {
-              venueBasicDetails: true,
+              venueBasicDetails: {
+                include: {
+                  files: true,
+                },
+              },
             },
           },
           contactDetails: true,
@@ -540,7 +546,7 @@ export class AuthService {
   }
 
   async createUserByAdmin(body: CreateAdminAuthDto) {
-    const userMap = new Map(body.users.map((user) => [user.email, user]));
+    const userMap = new Map(body.users?.map((user) => [user.email, user]));
     const existingUsers = await this.prismaService.auth.findMany({
       where: { email: { in: Array.from(userMap.keys()) } },
       select: { email: true },
@@ -548,7 +554,7 @@ export class AuthService {
     for (const { email } of existingUsers) {
       userMap.delete(email);
     }
-    const newUsers = Array.from(userMap.values()).map((user) => ({
+    const newUsers = Array.from(userMap.values())?.map((user) => ({
       email: user.email,
       password: generateRandomPassword(),
       phone: user.phone,

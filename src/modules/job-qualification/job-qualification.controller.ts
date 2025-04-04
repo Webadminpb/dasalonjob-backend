@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { JobQualificationService } from './job-qualification.service';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreateJobQualificationDto } from './dto/create-jobqualification.dto';
 import { UpdateJobQualificationDto } from './dto/update-jobqualification.dto';
 import { ApiTags } from '@nestjs/swagger';

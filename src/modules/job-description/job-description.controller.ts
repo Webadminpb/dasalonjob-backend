@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
 import { JobDescriptionService } from './job-description.service';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreateJobDescriptionDto } from './dto/create-jobdescription.dto';
 import { UpdateJobDescriptionDto } from './dto/update-jobdescription.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -24,7 +27,7 @@ export class JobDescriptionController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN' , "AGENCY")
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN', 'AGENCY')
   create(@Body() body: CreateJobDescriptionDto, @GetUser() user: Auth) {
     return this.jobDescriptionService.create(body, user);
   }

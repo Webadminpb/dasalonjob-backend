@@ -8,7 +8,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CourseApplicationService } from './course-application.service';
 import { CreateCourseApplicationDto } from './dto/create-course-application.dto';
 import { QueryCourseApplicationDto } from './dto/query-course-application.dto';

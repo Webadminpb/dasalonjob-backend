@@ -10,7 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreateJobpreferenceDto } from './dto/create-jobpreference.dto';
 import { UpdateJobpreferenceDto } from './dto/update-jobpreference.dto';
 import { JobpreferenceService } from './job-preference.service';

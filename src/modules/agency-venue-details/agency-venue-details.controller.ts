@@ -10,7 +10,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { AgencyVenueDetailsService } from './agency-venue-details.service';
 import { CreateAgencyVenueDetailsDto } from './dto/create-agency-venue-detail.dto';
 import { UpdateAgencyVenueDetailsDto } from './dto/update-agency-venue-detail.dto';

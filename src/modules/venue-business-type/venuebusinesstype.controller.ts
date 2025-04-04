@@ -12,7 +12,10 @@ import {
 import { Auth } from '@prisma/client';
 import { VenueMainBusinessTypeService } from './venuebusinesstype.service';
 import { CreateVenueMainBusinessTypeDto } from './dto/create-venuebusinesstype.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { UpdateVenuebusinesstypeDto } from './dto/update-venuebusinesstype.dto';
 import {
   ApiTags,

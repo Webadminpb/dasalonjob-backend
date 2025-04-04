@@ -14,7 +14,10 @@ import {
 import { PartnerCourseService } from './partner-course.service';
 import { CreatePartnerCourseDto } from './dto/create-partner-course.dto';
 import { UpdatePartnerCourseDto } from './dto/update-partner-course.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
 import { CreateCourseStatusDto } from './dto/status-partner-course.dto';

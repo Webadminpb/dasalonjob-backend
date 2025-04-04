@@ -13,7 +13,10 @@ import {
 import { CourseAcademyService } from './course-academy.service';
 import { CreateCourseAcademyDto } from './dto/create-course-academy.dto';
 import { UpdateCourseAcademyDto } from './dto/update-course-academy.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
 

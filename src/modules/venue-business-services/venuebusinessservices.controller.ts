@@ -12,7 +12,10 @@ import {
 import { Auth } from '@prisma/client';
 import { VenueMainBusinessServicesService } from './venuebusinessservices.service';
 import { CreateVenueMainBusinessServicesDto } from './dto/create-venuebusinessservice.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { UpdateVenueMainBusinessServicesDto } from './dto/update-venuebusinessservice.dto';
 import { ApiTags } from '@nestjs/swagger';
 

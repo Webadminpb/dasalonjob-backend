@@ -11,7 +11,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { CourseDetailsService } from './course-details.service';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCourseDetailsDto } from './dto/create-course-detail.dto';
 import { UpdateCourseDetailsDto } from './dto/update-course-detail.dto';

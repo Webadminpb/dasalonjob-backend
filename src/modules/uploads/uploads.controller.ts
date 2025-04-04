@@ -13,7 +13,10 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Auth } from '@prisma/client';
 import { memoryStorage } from 'multer';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { UploadsService } from './uploads.service';
 import { ApiTags } from '@nestjs/swagger';
 

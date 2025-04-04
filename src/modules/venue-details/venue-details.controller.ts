@@ -13,7 +13,10 @@ import {
 import { Auth } from '@prisma/client';
 import { VenueDetailsService } from './venue-details.service';
 import { CreateVenueDetailsDto } from './dto/create-venue-detail.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { UpdateVenueDetailsDto } from './dto/update-venue-detail.dto';
 import {
   ApiTags,

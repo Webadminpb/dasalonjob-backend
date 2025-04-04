@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreateJobApplicationMessageDto } from './dto/create-job-application-message.dto';
 import { UpdateJobApplicationMessageDto } from './dto/update-job-application-message.dto';
 import { JobApplicationMessageService } from './job-application-message.service';

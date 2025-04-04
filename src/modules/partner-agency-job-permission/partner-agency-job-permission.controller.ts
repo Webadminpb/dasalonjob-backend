@@ -16,7 +16,10 @@ import { PartnerAgencyPermissionService } from './partner-agency-job-permission.
 import { CreatePartnerAgencyPermissionDto } from './dto/create-partner-agency-job-permission.dto';
 import { QueryPartnerAgencyPermissionDto } from './dto/query-partner-agency-job-permission.dto';
 import { UpdatePartnerAgencyPermissionDto } from './dto/update-partner-agency-job-permission.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 
 @ApiTags('partner-agency-permissions')
 @Controller('partner-agency-permissions')

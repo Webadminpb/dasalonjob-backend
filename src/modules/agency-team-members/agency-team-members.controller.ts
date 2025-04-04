@@ -11,7 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateAgencyTeamMemberDto } from './dto/create-agency-team-member.dto';
 import { UpdateAgencyTeamMemberDto } from './dto/update-agency-team-member.dto';

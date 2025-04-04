@@ -13,7 +13,10 @@ import {
 import { BasicdetailsService } from './basic-details.service';
 import { CreateBasicdetailDto } from './dto/create-basicdetail.dto';
 import { UpdateBasicdetailDto } from './dto/update-basicdetail.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 

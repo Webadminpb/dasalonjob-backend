@@ -4,7 +4,7 @@ import { UpdatePastworkDto } from './dto/update-pastwork.dto';
 import { Auth } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { GetUser } from 'src/common/auth/auth-decorator';
+import { GetUser } from 'src/common/decorators/auth-decorator';
 
 @Injectable()
 export class PastworkService {

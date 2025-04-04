@@ -10,7 +10,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { Auth } from '@prisma/client';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { CreatePartnerPersonalDataDto } from './dto/create-partner-personal-datum.dto';
 import { UpdatePartnerPersonalDataDto } from './dto/update-partner-personal-datum.dto';
 import { PartnerPersonalDataService } from './partner-personal-data.service';

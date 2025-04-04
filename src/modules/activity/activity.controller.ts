@@ -1,7 +1,7 @@
 import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { QueryActivityDto } from './dto/query-activity.dto';
-import { AllowAuthenticated } from 'src/common/auth/auth-decorator';
+import { AllowAuthenticated } from 'src/common/decorators/auth-decorator';
 
 @Controller('activity')
 export class ActivityController {

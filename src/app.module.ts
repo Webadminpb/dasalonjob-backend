@@ -54,6 +54,7 @@ import { AgencyTeamMembersModule } from './modules/agency-team-members/agency-te
 import { PartnerAgencyJobPermissionModule } from './modules/partner-agency-job-permission/partner-agency-job-permission.module';
 import { FeaturedJobsModule } from './modules/featured-jobs/featured-jobs.module';
 import { CreditPlansModule } from './modules/credit-plans/credit-plans.module';
+import { CreditsModule } from './modules/credits/credits.module';
 
 @Module({
   imports: [
@@ -110,6 +111,7 @@ import { CreditPlansModule } from './modules/credit-plans/credit-plans.module';
     PartnerAgencyJobPermissionModule,
     FeaturedJobsModule,
     CreditPlansModule,
+    CreditsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

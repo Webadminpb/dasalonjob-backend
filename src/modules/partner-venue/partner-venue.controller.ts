@@ -14,7 +14,10 @@ import {
 import { PartnerVenueService } from './partner-venue.service';
 import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
 import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
 import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';

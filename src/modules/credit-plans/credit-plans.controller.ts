@@ -13,7 +13,7 @@ import {
 import { CreditPlansService } from './credit-plans.service';
 import { CreateCreditPlanDto } from './dto/create-credit-plan.dto';
 import { UpdateCreditPlanDto } from './dto/update-credit-plan.dto';
-import { AllowAuthenticated } from 'src/common/auth/auth-decorator';
+import { AllowAuthenticated } from 'src/common/decorators/auth-decorator';
 import { QueryCreditPlanbDto } from './dto/query-credit-plan.dto';
 
 @Controller('credit-plans')

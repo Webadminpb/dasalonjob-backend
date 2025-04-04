@@ -11,7 +11,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { PartnerSocialLinksService } from './partner-social-links.service';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { CreatePartnerSocialLinksDto } from './dto/create-partner-social-link.dto';

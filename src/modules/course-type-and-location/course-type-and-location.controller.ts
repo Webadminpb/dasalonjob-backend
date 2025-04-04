@@ -12,7 +12,10 @@ import {
 import { CourseTypeAndLocationService } from './course-type-and-location.service';
 import { CreateCourseTypeAndLocationDto } from './dto/create-course-type-and-location.dto';
 import { UpdateCourseTypeAndLocationDto } from './dto/update-course-type-and-location.dto';
-import { AllowAuthenticated, GetUser } from 'src/common/auth/auth-decorator';
+import {
+  AllowAuthenticated,
+  GetUser,
+} from 'src/common/decorators/auth-decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '@prisma/client';
 

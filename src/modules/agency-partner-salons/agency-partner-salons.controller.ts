@@ -12,7 +12,7 @@ import {
 import { AgencyPartnerSalonsService } from './agency-partner-salons.service';
 import { CreateAgencyPartnerSalonDto } from './dto/create-agency-partner-salon.dto';
 import { UpdateAgencyPartnerSalonDto } from './dto/update-agency-partner-salon.dto';
-import { AllowAuthenticated } from 'src/common/auth/auth-decorator';
+import { AllowAuthenticated } from 'src/common/decorators/auth-decorator';
 import { Auth } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 
