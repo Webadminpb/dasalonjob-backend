@@ -177,7 +177,7 @@ enum JobPostStatus {
 
 enum CourseStatus {
   Approved
-  Canceled
+  Rejected
   Pending
 }
 
