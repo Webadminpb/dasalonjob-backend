@@ -5,7 +5,7 @@ model Auth {
   name                        String?
   password                    String
   role                        Role     @default(USER)
-  phonCode                    String?
+  phoneCode                    String?
   phone                       String?
   isPhoneVerified             Boolean  @default(false)
   isEmailVerified             Boolean  @default(false)

@@ -119,7 +119,7 @@ export class AuthService {
     return new ApiSuccessResponse(true, 'user updated', updatedUser);
   }
   async updateAdminProfile(
-    body: { phone?: string; name?: string },
+    body: { phone?: string; name?: string; phoneCode?: string },
     user: Auth,
   ) {
     const existingUser = await this.prismaService.auth.findUnique({

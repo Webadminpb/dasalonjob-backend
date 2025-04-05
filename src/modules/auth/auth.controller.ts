@@ -66,7 +66,7 @@ export class AuthController {
   @AllowAuthenticated('USER', 'ADMIN', 'SUPER_ADMIN')
   modifyAuthenticatedAdminProfile(
     @GetUser() user: Auth,
-    @Body() body: { phone?: string; name?: string },
+    @Body() body: { phone?: string; name?: string; phoneCode?: string },
   ) {
     return this.authService.updateAdminProfile(body, user);
   }
