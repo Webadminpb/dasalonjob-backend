@@ -1,0 +1,18 @@
+model CreditSpending {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  jobApplicantionId String? @db.ObjectId
+  jobApplication JobApplication? @relation(fields: [jobApplicantionId], references: [id])
+
+  courseApplicationId String? @db.ObjectId
+  courseApplication CourseApplication? @relation(fields: [jobApplicantionId], references: [id])
+
+  creditType CreditType
+  creditSpent Float @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

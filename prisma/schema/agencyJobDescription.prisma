@@ -1,0 +1,11 @@
+model AgencyJobDescription {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  description String
+  
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

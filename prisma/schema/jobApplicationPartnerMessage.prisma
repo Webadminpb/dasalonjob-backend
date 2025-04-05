@@ -1,0 +1,18 @@
+model JobApplicationPartnerMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  applicantId String @db.ObjectId
+  applicant Auth @relation("ApplicantMessage", fields: [applicantId], references: [id])
+
+  partnerId String @db.ObjectId
+  partner Auth @relation("PartnerMessage", fields: [partnerId], references: [id])
+
+  jobApplicationId String @db.ObjectId
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id])
+
+
+  message String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

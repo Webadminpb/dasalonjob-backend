@@ -1,0 +1,10 @@
+model VenueMainBusinessServices {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  services AdditionalServices[]
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

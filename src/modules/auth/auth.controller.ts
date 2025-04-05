@@ -47,7 +47,7 @@ export class AuthController {
   // Get Applicant Profile
   @Get('partner/profile')
   @HttpCode(200)
-  @AllowAuthenticated('USER', 'PARTNER')
+  @AllowAuthenticated('USER', 'ADMIN', 'SUPER_ADMIN')
   getAuthenticatedPartnerProfile(@GetUser() user: Auth) {
     return this.authService.getMyPartnerProfile(user);
   }
@@ -55,7 +55,7 @@ export class AuthController {
   // Get Applicant Profile
   @Get('applicant/profile')
   @HttpCode(200)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'ADMIN', 'SUPER_ADMIN')
   getAuthenticatedApplicantProfile(@GetUser() user: Auth) {
     return this.authService.myApplicantProfile(user);
   }
@@ -159,7 +159,7 @@ export class AuthController {
   @AllowAuthenticated()
   createUserByAgency(@Body() body: CreateAdminAuthDto) {
     console.log('body', body);
-    // return { message: 'Agency User Created' }; 
+    // return { message: 'Agency User Created' };
     return this.authService.createUserByAdmin(body);
   }
 

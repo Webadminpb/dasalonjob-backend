@@ -1,0 +1,15 @@
+// Education Table for Applicant Education
+model Education {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  education HighestEducation
+  school String
+  attended DateTime
+  graduated DateTime
+
+  userId      String @db.ObjectId
+  user       Auth   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,18 @@
+// Experience Table for Applicant Experience
+model Experience {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  profile JobProfile
+  location String
+  longitude String
+  latitude String
+  startDate DateTime
+  endDate DateTime
+  description String?
+
+  userId      String  @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

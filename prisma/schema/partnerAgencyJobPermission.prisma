@@ -1,0 +1,19 @@
+model PartnerAgencyJobPermission {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  partnerId String @db.ObjectId
+  partner Auth @relation("PartnerCollaborations",fields: [partnerId], references: [id])
+
+  agencyId String @db.ObjectId
+  agency Auth @relation("AgencyCollaborations",fields: [agencyId], references: [id])
+
+  hasAccess Boolean @default(false)
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([partnerId])
+  @@index([agencyId])
+  @@unique([agencyId, partnerId])
+}

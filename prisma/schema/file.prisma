@@ -1,0 +1,35 @@
+model File {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  
+  publicId  String
+  url       String
+  format    String
+  folder    String
+
+  userId    String @db.ObjectId
+  user      Auth @relation(fields: [userId], references: [id])
+
+  pastWorkIds String[] @db.ObjectId
+  pastWorks PastWork[] @relation(fields: [pastWorkIds], references: [id])
+
+  venueDetailIds String[] @db.ObjectId
+  venueDetails VenueDetails[] @relation(fields: [venueDetailIds], references: [id])
+
+  salonDetailsIds String[] @db.ObjectId
+  salonDetails SalonDetails[] @relation(fields: [salonDetailsIds], references: [id])
+
+  basicDetails BasicDetails?
+  agencyDetails AgencyDetails?
+  agencyVenueDetails AgencyVenueDetails?
+  courseDetails CourseDetails[]
+  certificates Certificate[]
+  languages Language[]
+
+  profileImageAuth Auth[] @relation("ProfileImage")
+
+  verificationFileAuth Auth[] @relation("VerificationFile", fields: [verificationFileAuthId], references: [id])
+  verificationFileAuthId String[] @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

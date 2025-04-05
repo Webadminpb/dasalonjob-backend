@@ -1,0 +1,17 @@
+// Language Table for Language 
+model Language {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  name    String
+  
+  jobQualificationIds String[] @db.ObjectId
+  jobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
+
+  fileId String? @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  userLanguages UserLanguage[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

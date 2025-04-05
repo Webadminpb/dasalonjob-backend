@@ -1,0 +1,16 @@
+model CourseAcademy {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // VenueId
+  providerId String? @db.ObjectId
+  provider PartnerVenue? @relation(fields: [providerId], references: [id])
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerCourses PartnerCourse[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

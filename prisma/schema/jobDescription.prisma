@@ -1,0 +1,13 @@
+model JobDescription {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  description String
+  
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  jobPost JobPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

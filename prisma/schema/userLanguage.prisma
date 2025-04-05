@@ -1,0 +1,15 @@
+// User Language Table for User Language Proficiency For Applicant
+model UserLanguage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  proficiency Proficiency @default(Basic)
+
+  languageId String @db.ObjectId
+  language Language @relation(fields: [languageId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

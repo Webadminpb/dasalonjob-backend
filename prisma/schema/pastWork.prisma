@@ -1,0 +1,13 @@
+model PastWork {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId      String @unique @db.ObjectId
+  user        Auth   @relation(fields: [userId], references: [id])
+
+  videoLink String[] 
+  fileIds String[] @db.ObjectId
+  files File[] @relation(fields: [fileIds], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}

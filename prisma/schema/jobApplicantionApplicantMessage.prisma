@@ -1,0 +1,14 @@
+model JobApplicationApplicantMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  applicantId String @db.ObjectId @unique
+  applicant Auth @relation(fields: [applicantId], references: [id])
+
+  jobApplicationId String @db.ObjectId @unique
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id])
+
+  message String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

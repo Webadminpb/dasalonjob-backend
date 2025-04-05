@@ -1,0 +1,13 @@
+model AgencySalonRelation {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  agencyId  String   @db.ObjectId
+  agency    AgencyPartnerSalons @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  userId   String   @db.ObjectId
+  user     Auth @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}

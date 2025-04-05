@@ -1,0 +1,21 @@
+model Country {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name           String
+  code           String
+  currencyName   String
+  currencySymbol String
+
+  currencyCode      String @default("INR")
+  pincodeLength     Int
+  phoneNumberLength Int
+
+  status CountryStatus @default(ACTIVE)
+
+  auth Auth[]
+  jobPosts JobPost[]
+  venueDetails VenueDetails[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

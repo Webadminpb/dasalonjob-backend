@@ -1,0 +1,16 @@
+
+// Past Experience Table for Applicant Past Experience
+model PastExperience {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId      String @db.ObjectId
+  user       Auth   @relation(fields: [userId], references: [id])
+
+  certificateName String
+  certificateId String
+  instituteName String
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

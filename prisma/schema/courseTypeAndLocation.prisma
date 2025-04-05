@@ -1,0 +1,24 @@
+model CourseTypeAndLocation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  country String?
+
+  city String?
+  state String?
+  pincode String?
+  address String?
+
+  courseType CourseType 
+
+  platform CoursePlatform?
+  link String?
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerCourses PartnerCourse[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

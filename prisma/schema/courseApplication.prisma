@@ -1,0 +1,16 @@
+model CourseApplication {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  courseId String @db.ObjectId
+  course PartnerCourse @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creditSpendings CreditSpending[]
+
+  @@unique([userId, courseId])
+}

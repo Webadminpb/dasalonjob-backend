@@ -1,0 +1,110 @@
+// Auth Table For User Authentication (Admin, Partner, User, Agency, SuperAdmin, Staff, Manager etc.)
+model Auth {
+  id                          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email                       String   @unique
+  password                    String
+  role                        Role     @default(USER)
+  phonCode                    String?
+  phone                       String?
+  isPhoneVerified             Boolean  @default(false)
+  isEmailVerified             Boolean  @default(false)
+  phoneVerificationCode       String?
+  emailVerificationCode       String?
+  phoneVerificationCodeExpiry DateTime?
+  emailVerificationCodeExpiry DateTime?
+  isBlocked                   Boolean @default(false)
+  isVerified                  Boolean @default(false)
+  status                      AccountStatus @default(ACTIVE)
+
+  countryId String? @db.ObjectId
+  country Country? @relation(fields: [countryId], references: [id])
+
+  profileImageId String? @db.ObjectId 
+  profileImage File? @relation("ProfileImage", fields: [profileImageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  verificationFileId String[] @db.ObjectId 
+  verificationFile File[] @relation("VerificationFile", fields: [verificationFileId], references: [id])
+
+
+  basicDetails BasicDetails? 
+  contactDetails ContactDetails?
+  jobPreference JobPreference?
+  // skills Skills[]
+  PastWork PastWork?
+  partnerPersonalData PartnerPersonalData?
+  experiences Experience[]
+  educations Education[]
+  pastExperiences PastExperience[]
+  languages UserLanguage[]
+  certificates Certificate[]
+  files File[]
+
+  venueDetails VenueDetails[]
+  salonDetails SalonDetails[]
+  jobBasicInfo JobBasicInfo[]
+  jobDescription JobDescription[]
+  venueMainBusinessType VenueMainBusinessType[]
+  venueMainBusinessDays VenueMainBusinessDays[]
+  venueMainBusinessServices VenueMainBusinessServices[]
+  jobQualification JobQualification[]
+  jobBenefits JobBenefits[]
+  venueAmenities VenueAmenities[]
+  venueWorkStation VenueWorkStation[]
+  partnerVenues PartnerVenue[]
+  partnerCourses PartnerCourse[]
+
+  courseDetails CourseDetails[]
+  courseContent CourseContent[]
+  courseAcademy CourseAcademy[]
+  courseTypeAndLocation CourseTypeAndLocation[]
+  CourseApplications CourseApplication[]
+
+  agencyDetails AgencyDetails?
+  agencyJobBasicInfo AgencyJobBasicInfo?
+  
+
+  agencyJobDescription AgencyJobDescription[]
+  agencyJobQualification AgencyJobQualification?
+  agencyJobBenefits AgencyJobBenefits?
+  agencyPlan AgencyPlan?
+  agencySalonRelation AgencySalonRelation[]
+  agencyVenueDetails AgencyVenueDetails[]
+  agencyPartnerSalons AgencyPartnerSalons[]
+  agencyJobs AgencyJobPartner[]
+
+
+  jobPost JobPost[]
+  jobApplications JobApplication[]
+
+  saveJobPosts SaveJobPost[]
+  saveCourses SaveCourse[]
+  partnerSocialLinks PartnerSocialLinks?
+
+  ApplicantMessages JobApplicationPartnerMessage[] @relation("ApplicantMessage")
+  PartnerMessages JobApplicationPartnerMessage[] @relation("PartnerMessage")
+  jobApplicationApplicantMessage JobApplicationApplicantMessage?
+
+  loginHistories LoginHistory[]
+  activities Activity[]
+  userCredits UserCredit[]
+  creditPurchases CreditPurchase[]
+  creditSpendings CreditSpending[]
+  agencyPersonalDetails AgencyPersonalDetails?
+
+  agencyOwners AgencyTeam[] @relation("Agency")
+  agencyTeamMembers AgencyTeam[] @relation("TeamMember")
+
+  agencyCollaborations PartnerAgencyJobPermission[] @relation("AgencyCollaborations") 
+  partnerCollaborations PartnerAgencyJobPermission[] @relation("PartnerCollaborations") 
+  
+  isEducation    Boolean?
+  isProfessional Boolean?
+  isExperience   Boolean?
+  isPartner      Boolean?
+
+
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  // @@map("auth") // Optional: Map this model to a table named `auth`
+}

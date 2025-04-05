@@ -1,0 +1,23 @@
+model JobApplication {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Applicant Id
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  jobPostId String @db.ObjectId
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+  status JobApplicationStatus @default(Applied)
+
+  message String?
+
+  partnerMessages JobApplicationPartnerMessage[]
+  applicantMessage JobApplicationApplicantMessage[]
+  creditSpendings CreditSpending[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, jobPostId]) 
+}

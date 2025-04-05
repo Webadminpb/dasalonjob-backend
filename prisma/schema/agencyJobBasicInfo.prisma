@@ -1,0 +1,20 @@
+model AgencyJobBasicInfo {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title String
+  profile String
+  jobType JobType
+  totalOpening TotalOpening
+  gender Gender
+
+  salaryRange SalaryRange
+  deadline DateTime
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partners AgencyJobPartner[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

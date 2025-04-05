@@ -1,0 +1,21 @@
+model CreditPurchase {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  creditPlanId String @db.ObjectId
+  creditPlan CreditPlan @relation(fields: [creditPlanId], references: [id])
+
+  jobCredits Int @default(0)
+  courseCredits Int @default(0)
+
+  amountPaid Float @default(0)
+  // paymentStatus @default(PENDING)
+
+  // paymentMethod 
+  // transactionId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

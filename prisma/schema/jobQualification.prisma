@@ -1,0 +1,23 @@
+model JobQualification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  education HighestEducation
+  minExperience UserExperience
+  certification Boolean
+  isProfessional Boolean
+
+  skillIds String[] @db.ObjectId
+  skills Skills[] @relation(fields: [skillIds], references: [id])
+
+  languageIds String[] @db.ObjectId
+  languages Language[] @relation(fields: [languageIds], references: [id])
+
+  
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  jobPost JobPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

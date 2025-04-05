@@ -1,0 +1,37 @@
+model JobPost {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  jobBasicInfoId String? @db.ObjectId
+  jobBasicInfo JobBasicInfo? @relation(fields: [jobBasicInfoId], references: [id])
+
+  jobBenefitsId String?  @db.ObjectId
+  jobBenefits JobBenefits? @relation(fields: [jobBenefitsId], references: [id])
+
+  jobQualificationId String? @db.ObjectId
+  jobQualification JobQualification? @relation(fields: [jobQualificationId], references: [id])
+
+  jobDescriptionId String?  @db.ObjectId
+  jobDescription JobDescription? @relation(fields: [jobDescriptionId], references: [id])
+
+  venueId String? @db.ObjectId
+  venue PartnerVenue? @relation(fields: [venueId], references: [id])
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  countryId String? @db.ObjectId
+  country Country? @relation(fields: [countryId], references: [id])
+
+  status JobPostStatus @default(Approved)
+  isOpen Boolean @default(true) 
+
+  jobApplications JobApplication[]
+  saveJobPosts SaveJobPost[]
+  featuredJobs FeaturedJob[]
+
+  views Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}

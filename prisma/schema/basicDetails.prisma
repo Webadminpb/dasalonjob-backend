@@ -1,0 +1,20 @@
+// BasicDetails Table for Applicant Basic Details
+model BasicDetails {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  firstName String?
+  lastName String?
+
+  gender    Gender 
+  dob       DateTime
+
+  userId    String @unique @db.ObjectId
+  user      Auth   @relation(fields: [userId], references: [id])
+
+  fileId String? @unique @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  martialStatus MartialStatus? 
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+}

@@ -1,0 +1,14 @@
+model AgencyJobPartner {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  agencyJobId String @db.ObjectId
+  partnerId String @db.ObjectId
+
+  agencyJob AgencyJobBasicInfo @relation(fields: [agencyJobId], references: [id])
+  partner Auth @relation(fields: [partnerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([agencyJobId, partnerId]) 
+}

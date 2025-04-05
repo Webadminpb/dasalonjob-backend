@@ -1,0 +1,15 @@
+// Skills Table 
+model Skills {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+
+  jobQualificationIds String[] @db.ObjectId
+  JobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
+
+  jobPreferenceIds String[] @db.ObjectId
+  jobPreferences JobPreference[] @relation(fields: [jobPreferenceIds], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

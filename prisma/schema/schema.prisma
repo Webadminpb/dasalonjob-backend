@@ -1,0 +1,412 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Enum for Role
+enum Role {
+  ADMIN
+  USER
+  SUPER_ADMIN
+  PARTNER // Owner Staff Manager
+  AGENCY
+  MANAGER 
+  STAFF
+}
+
+enum Gender {
+  Male
+  Female
+  Everyone
+}
+
+enum MartialStatus {
+  Single
+  Married
+}
+
+enum JoiningAvailability {
+  OneWeek
+  TwoWeek
+  ThreeWeek
+  FourWeek
+  OneMonth
+  TwoMonth
+  ThreeMonth
+  AnyTime 
+}
+
+enum JobBasicInfoProfileType {
+  HairStyling
+  NailsSpecialist
+  Message
+  Medicure
+}
+
+enum JobProfile {
+  Barber
+  Stylist
+  Technician
+}
+
+enum HighestEducation {
+  Degree
+  Diploma
+  Certificate
+}
+
+
+enum Proficiency {
+  Native
+  Conversational
+  Fluent
+  Proficient
+  Basic
+  None
+}
+
+enum BusinessType {
+  HairSalon
+  NailSalon
+  AesthethicAndMedicalClinic
+  BodyTreatmentSPA
+  SPAService
+  TattoStudio
+  FacialAndSkinCareCenter
+  WaxingAndHairRemoval
+  MakeUpStudio
+  MessageParlor
+  EyeleshAndEyebrowStudio
+}
+
+enum AdditionalServices {
+  AdultsOnly
+  EcoFriendlyPractices
+  GiftCard
+  Hygiene
+  KidFriendly
+  KidsOnly
+  LoyaltyProgram
+  MagazinesReadingMaterial
+  NearBusStop
+  NearCityCenter
+  NearMetro
+  NearShoppingMall
+  Parking
+  PaymentFlexibleOptions
+  PetFriendly
+  PrivateTreatmentRooms
+  ProductNatural
+  ProductVegan
+  ProductOrganic
+  RefreshmentFree
+  Sauna
+  Toilet
+  RelaxationRooms
+  WaitingArea
+  Restaurant
+  Wifi
+  SteamRooms
+  WheelchairAccessible
+  Recycle
+  AirConditioning
+  AirPurifier
+  ChangingRooms
+}
+
+enum JobType {
+  FullTime
+  PartTime
+  Contract
+  Freelance
+}
+
+enum CourseType {
+  Online
+  Offline
+}
+
+enum CoursePlatform {
+  Zoom
+  GoogleMeet
+}
+
+// Benefits
+enum Incentive {
+  HealthInsurance
+  PaidTimeOff
+  FlexibleSchedule
+  EmployeeDiscount
+  Accomodation
+  ProfessionalDev
+}
+
+enum TotalOpening {
+  One
+  Two
+  Three 
+  Four
+}
+
+enum Plan {
+  ONE_MONTH
+  SIX_MONTH
+  YEARLY
+}
+
+enum JobPostStatus {
+  Approved
+  Rejected
+  Pending
+}
+
+enum CourseStatus {
+  Approved
+  Rejected
+  Pending
+}
+
+enum JobApplicationStatus {
+  Applied
+  Shortlisted
+  Accepted
+  Rejected
+}
+
+enum CountryStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum Amenities {
+  Facial
+  Lotion 
+  Wifi 
+  Towel
+  Slipper 
+  Custom
+}
+
+enum CreditType {
+  JOB
+  COURSE
+}
+
+enum ActivityType {
+    // Admin
+    ADDED_APPLICANT
+    ADDED_PARTNER
+    ADDED_AGENCY
+
+    ACTIVATE_APPLICANT
+    ACTIVATE_PARTNER
+    ACTIVATE_AGENCY
+    ACTIVATE_ADMIN
+
+    APPROVE_COURSE
+    REJECT_COURSE
+    
+    APPROVE_JOB
+    REJECT_JOB
+
+
+    DEACTIVATE_APPLICANT
+    DEACTIVATE_PARTNER
+    DEACTIVATE_AGENCY
+    DEACTIVATE_ADMIN
+
+  // Applicant
+    APPLIED_JOB
+    APPLIED_COURSE
+
+  // Partner
+    POSTED_JOB
+    POSTED_COURSE
+
+    BUY_TOKEN
+
+
+}
+
+
+
+
+type Days {
+  monday Day?
+  tuesday Day?
+  wednesday Day?
+  thursday Day?
+  friday  Day?
+  saturday  Day?
+  sunday  Day?
+}
+
+type Day {
+  isActive Boolean @default(false)
+  from DateTime?
+  to DateTime?
+  offPeakFrom DateTime?
+  offPeakTo DateTime?
+
+}
+
+enum Date {
+  Two
+  Three
+}
+
+type SalaryRange {
+  start Int @default(0)
+  end Int @default(0)
+}
+
+
+
+enum UserExperience {
+  FRESHER
+  ONE_YEAR
+  TWO_YEAR
+  THREE_YEAR
+  FOUR_YEAR
+  FIVE_PLUS_YEAR
+}
+
+type Content {
+  service HighestEducation
+  list String[]
+}
+
+
+
+
+
+// for User
+
+
+// for User
+
+
+// for User Partner
+
+
+// for Partner
+
+// for Partner
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

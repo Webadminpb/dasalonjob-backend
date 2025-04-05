@@ -1,0 +1,28 @@
+model PartnerVenue {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  venueBasicDetailsId String @db.ObjectId 
+  venueBasicDetails VenueDetails @relation(fields: [venueBasicDetailsId], references: [id])
+
+  salonBasicDetailsId String @db.ObjectId
+  salonBasicDetails SalonDetails @relation(fields: [salonBasicDetailsId], references: [id])
+
+  venueAmenityIds String @db.ObjectId
+  venueAmenities VenueAmenities @relation(fields: [venueAmenityIds], references: [id])
+
+  venueWorkStationIds String[] @db.ObjectId
+  venueWorkStations VenueWorkStation[] @relation(fields: [venueWorkStationIds], references: [id])
+
+  venueMainBusinessDaysId String? @db.ObjectId
+  venueMainBusinessDays VenueMainBusinessDays? @relation(fields: [venueMainBusinessDaysId], references: [id])
+
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  courseAcademy CourseAcademy[]
+  jobBasicInfo JobBasicInfo[]
+  jobPosts JobPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

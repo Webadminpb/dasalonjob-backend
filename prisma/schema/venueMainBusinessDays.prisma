@@ -1,0 +1,10 @@
+model VenueMainBusinessDays {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  days Json
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerVenue PartnerVenue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

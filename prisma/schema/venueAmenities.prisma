@@ -1,0 +1,14 @@
+model VenueAmenities {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  amenities Amenities[]
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerVenue PartnerVenue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}

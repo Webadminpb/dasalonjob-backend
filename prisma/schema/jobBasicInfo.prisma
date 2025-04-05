@@ -1,0 +1,24 @@
+model JobBasicInfo {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title String
+  profile JobBasicInfoProfileType 
+  jobType JobType
+  totalOpening Int @default(1)
+  gender Gender
+
+  salaryRange SalaryRange
+  deadline DateTime
+
+  
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  venueId String? @db.ObjectId 
+  venue PartnerVenue? @relation(fields: [venueId], references: [id])
+
+  jobPost JobPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

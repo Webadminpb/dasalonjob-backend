@@ -1,0 +1,12 @@
+model AgencyTeam {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  agencyId String @db.ObjectId
+  agency Auth @relation("Agency",fields: [agencyId], references: [id])
+
+  memberId String @db.ObjectId 
+  member Auth @relation("TeamMember",fields: [memberId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

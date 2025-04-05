@@ -1,0 +1,19 @@
+model AgencyDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  businessName String
+  ownerName String
+  email String
+
+  phoneCode String
+  phoneNumber String
+
+  fileId String? @unique @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  userId String @unique @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,23 @@
+model FeaturedJob {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  jobPostId String @db.ObjectId
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+  startDate DateTime @default(now())
+  endDate DateTime 
+
+  priority Int @default(1)
+
+  isActive Boolean @default(true)
+
+  impressions Int @default(0)
+  clicks Int @default(0)
+
+  @@index([jobPostId])
+  @@index([isActive, endDate, priority])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}

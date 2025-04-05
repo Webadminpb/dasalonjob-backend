@@ -1,0 +1,30 @@
+model PartnerCourse {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+// partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  courseDetailsId String @db.ObjectId
+  courseDetails CourseDetails @relation(fields: [courseDetailsId], references: [id])
+
+  courseContentId String @db.ObjectId
+  courseContent CourseContent @relation(fields: [courseContentId], references: [id])
+
+  courseAcademyId String @db.ObjectId
+  courseAcademy CourseAcademy @relation(fields: [courseAcademyId], references: [id])
+
+  courseTypeAndLocationId String @db.ObjectId
+  courseTypeAndLocation CourseTypeAndLocation @relation(fields: [courseTypeAndLocationId], references: [id])
+
+  status CourseStatus @default(Approved)
+  isOpen Boolean @default(true)
+
+  saveCourses SaveCourse[]
+  courseApplications CourseApplication[]
+
+  views Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

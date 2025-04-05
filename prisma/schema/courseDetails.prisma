@@ -1,0 +1,34 @@
+model CourseDetails {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  jobProfile JobProfile
+
+  courseName String
+  courseType String?
+
+  startDate DateTime
+  endDate DateTime
+
+  price Float
+  offerPrice Float
+
+  isPlacement Boolean @default(false)
+
+  // VenueI
+  provider String?
+
+  // fileId
+  fileId String? @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
+  // partnerId
+  userId String @db.ObjectId
+  user Auth @relation(fields: [userId], references: [id])
+
+  partnerCourses PartnerCourse[]
+
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
