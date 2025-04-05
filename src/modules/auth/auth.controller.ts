@@ -158,6 +158,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   createUserByAgency(@Body() body: CreateAdminAuthDto) {
+    console.log('body', body);
+    // return { message: 'Agency User Created' }; 
     return this.authService.createUserByAdmin(body);
   }
 

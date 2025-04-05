@@ -308,6 +308,7 @@ model Auth {
   email                       String   @unique
   password                    String
   role                        Role     @default(USER)
+  phonCode                    String?
   phone                       String?
   isPhoneVerified             Boolean  @default(false)
   isEmailVerified             Boolean  @default(false)

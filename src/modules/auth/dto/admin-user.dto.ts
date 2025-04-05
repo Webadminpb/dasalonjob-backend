@@ -8,6 +8,7 @@ const createAdminAuthSchema = z.object({
       email: z.string().email(),
       role: z.nativeEnum(Role),
       phone: z.string().min(10),
+      phoneCode: z.string().optional(),
     }),
   ),
 });

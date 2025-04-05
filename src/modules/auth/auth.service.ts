@@ -431,7 +431,12 @@ export class AuthService {
         where,
         include: {
           profileImage: true,
-
+          _count: {
+            select: {
+              jobPost: true,
+              partnerCourses: true,
+            },
+          },
           basicDetails: true,
           partnerVenues: {
             include: {
@@ -547,22 +552,29 @@ export class AuthService {
 
   async createUserByAdmin(body: CreateAdminAuthDto) {
     const userMap = new Map(body.users?.map((user) => [user.email, user]));
+    console.log('userMap', userMap);
     const existingUsers = await this.prismaService.auth.findMany({
       where: { email: { in: Array.from(userMap.keys()) } },
       select: { email: true },
     });
+    console.log('existingUsers', existingUsers);
     for (const { email } of existingUsers) {
+      console.log('email', email);
       userMap.delete(email);
     }
     const newUsers = Array.from(userMap.values())?.map((user) => ({
       email: user.email,
+      role: user.role,
       password: generateRandomPassword(),
       phone: user.phone,
+      phoneCode: user.phoneCode,
     }));
-
+    console.log('newUsers', newUsers);
     if (!newUsers.length) {
+      console.log('All users already exist');
       throw new BadRequestException('All users already exist');
     }
+    const userIds = newUsers.map((user) => user.email);
     const users = await this.prismaService.auth.createMany({
       data: newUsers,
     });
