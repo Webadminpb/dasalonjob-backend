@@ -97,6 +97,7 @@ export class CourseApplicationService {
     if (query.courseId) {
       where.courseId = query.courseId;
     }
+
     if (query.search) {
       where.user = {
         basicDetails: {
@@ -171,13 +172,14 @@ export class CourseApplicationService {
     const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
     const sortBy = query.sort || 'createdAt';
 
-    const existingCourse = await this.prismaService.partnerCourse.findUnique({
-      where: { id: query.courseId },
-    });
+    // const existingCourse = await this.prismaService.partnerCourse.findUnique({
+    //   where: { id: query?.courseId ?? undefined },
+    // });
 
-    if (!existingCourse) {
-      throw new NotFoundException('Course Not Found');
-    }
+    // if (!existingCourse) {
+    //   throw new NotFoundException('Course Not Found');
+    // }
+
     const [courseApplications, total] = await Promise.all([
       this.prismaService.courseApplication.findMany({
         where,

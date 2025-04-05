@@ -432,6 +432,11 @@ export class PartnerCourseService {
                 file: true,
               },
             },
+            _count: {
+              select: {
+                courseApplications: true,
+              },
+            },
             courseContent: true,
             courseAcademy: false,
             courseTypeAndLocation: true,

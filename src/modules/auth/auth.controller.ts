@@ -47,7 +47,7 @@ export class AuthController {
   // Get Applicant Profile
   @Get('partner/profile')
   @HttpCode(200)
-  @AllowAuthenticated('USER', 'ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('USER', 'PARTNER', 'ADMIN', 'SUPER_ADMIN')
   getAuthenticatedPartnerProfile(@GetUser() user: Auth) {
     return this.authService.getMyPartnerProfile(user);
   }

@@ -488,10 +488,12 @@ export class JobPostService {
     const sortOrder = getSortOrder(query.order);
     const orderBy = getSortBy(query.sort);
 
-    const [totalOpenJobs, totalFulfilledJobs] = await Promise.all([
-      this.prismaService.jobPost.count({ where: { isOpen: true } }),
-      this.prismaService.jobPost.count({ where: { isOpen: false } }),
-    ]);
+    const [totalOpenJobs, totalFulfilledJobs, totalPendingJobs] =
+      await Promise.all([
+        this.prismaService.jobPost.count({ where: { isOpen: true } }),
+        this.prismaService.jobPost.count({ where: { isOpen: false } }),
+        this.prismaService.jobPost.count({ where: { status: 'Pending' } }),
+      ]);
 
     const [jobPost, total] = await Promise.all([
       await this.prismaService.jobPost.findMany({
@@ -542,6 +544,7 @@ export class JobPostService {
       total,
       totalOpenJobs,
       totalFulfilledJobs,
+      totalPendingJobs,
       jobPosts: jobPostWithCounts,
     });
   }
