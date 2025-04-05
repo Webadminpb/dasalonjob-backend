@@ -118,6 +118,28 @@ export class AuthService {
     });
     return new ApiSuccessResponse(true, 'user updated', updatedUser);
   }
+  async updateAdminProfile(
+    body: { phone?: string; name?: string },
+    user: Auth,
+  ) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    const updatedUser = await this.prismaService.auth.update({
+      where: {
+        id: existingUser.id,
+      },
+      data: {
+        ...body,
+      },
+    });
+    return new ApiSuccessResponse(true, 'user updated', updatedUser);
+  }
 
   async myApplicantProfile(user: Auth) {
     const existingUser = await this.prismaService.auth.findUnique({

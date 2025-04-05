@@ -60,6 +60,17 @@ export class AuthController {
     return this.authService.myApplicantProfile(user);
   }
 
+  // Update Admin Profile
+  @Patch('admin/profile')
+  @HttpCode(200)
+  @AllowAuthenticated('USER', 'ADMIN', 'SUPER_ADMIN')
+  modifyAuthenticatedAdminProfile(
+    @GetUser() user: Auth,
+    @Body() body: { phone?: string; name?: string },
+  ) {
+    return this.authService.updateAdminProfile(body, user);
+  }
+
   // Change Password For All Users
   @Put('change-password')
   @HttpCode(HttpStatus.OK)
