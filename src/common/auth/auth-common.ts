@@ -12,6 +12,6 @@ export async function generateJwtToken(user: Auth) {
       countryId: user?.countryId,
     },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_SECRET ?? '12d' },
+    { expiresIn: process.env.JWT_Expiry ?? '1d' },
   );
 }
