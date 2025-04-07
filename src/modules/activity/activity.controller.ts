@@ -10,7 +10,14 @@ export class ActivityController {
   @Get('admin/')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
-  getAllActivitiesForApplicant(@Query() query: QueryActivityDto) {
+  getAllActivitiesForAdmin(@Query() query: QueryActivityDto) {
     return this.activityService.getAllActivities(query);
+  }
+
+  @Get('admin/weekly')
+  @HttpCode(HttpStatus.OK)
+  // @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  getWeeklyActivitiesForAdmin() {
+    return this.activityService.getWeeklyActivity();
   }
 }

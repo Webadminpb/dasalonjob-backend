@@ -9,7 +9,7 @@ import {
   Put,
   Param,
 } from '@nestjs/common';
-import { SalondetailsService } from './salondetails.service';
+import { SalondetailsService } from './salon-details.service';
 import { CreateSalonDetailsDto } from './dto/create-salondetail.dto';
 import { UpdateSalonDetailDto } from './dto/update-salondetail.dto';
 import { Auth } from '@prisma/client';

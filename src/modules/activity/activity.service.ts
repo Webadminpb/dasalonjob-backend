@@ -16,6 +16,8 @@ import {
   getSortBy,
   getSortOrder,
 } from 'src/common/common';
+import { startOfDay, subDays } from 'date-fns';
+import { format } from 'date-fns';
 
 @Injectable()
 export class ActivityService {
@@ -39,6 +41,47 @@ export class ActivityService {
       'Applicant activity fetched successfully',
       { activities },
     );
+  }
+
+  async getWeeklyActivity() {
+    const sevenDaysAgo = startOfDay(subDays(new Date(), 7));
+
+    // Fetch all logins with joined user info
+    const logins = await this.prismaService.loginHistory.findMany({
+      where: {
+        createdAt: {
+          gte: sevenDaysAgo as any,
+        },
+      },
+      select: {
+        createdAt: true,
+        userId: true,
+        user: {
+          select: {
+            role: true,
+          },
+        },
+      },
+    });
+
+    const seen = new Set<string>(); // day|role|userId
+    const result: Record<string, Record<string, number>> = {};
+
+    for (const login of logins) {
+      const day = format(new Date(login.createdAt), 'EEEE'); // e.g. "Monday"
+      const role = login.user?.role ?? 'unknown';
+      const userId = String(login.userId);
+      const key = `${day}|${role}|${userId}`;
+
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      if (!result[day]) result[day] = {};
+      if (!result[day][role]) result[day][role] = 0;
+      result[day][role]++;
+    }
+
+    return new ApiSuccessResponse(true, '', result);
   }
 
   private async queryBuilder(query: QueryActivityDto) {

@@ -12,7 +12,7 @@ import { PastworkModule } from './modules/past-work/pastwork.module';
 import { EducationModule } from './modules/education/education.module';
 import { CertificateModule } from './modules/certificate/certificate.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
-import { SalondetailsModule } from './modules/salondetails/salondetails.module';
+import { SalondetailsModule } from './modules/salon-details/salon-details.module';
 import { VenuedetailsModule } from './modules/venue-details/venue-details.module';
 import { VenuebusinesstypeModule } from './modules/venue-business-type/venuebusinesstype.module';
 import { VenuebusinessdaysModule } from './modules/venue-business-days/venuebusinessdays.module';
