@@ -21,7 +21,13 @@ async function bootstrap() {
   // app.use(cors());
   app.use(
     cors({
-      origin: ['*', 'http://localhost:3000', 'https://dasalon-chi.vercel.app'],
+      origin: [
+        '*',
+        'http://localhost:3000',
+        'https://dasalon-chi.vercel.app',
+        'https://connect.dasalon.com',
+        'https://test-connect.dasalon.com',
+      ],
     }),
   );
   // app.enableCors({
