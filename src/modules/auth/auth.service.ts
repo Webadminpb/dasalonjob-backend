@@ -2,9 +2,15 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { generateJwtToken } from 'src/common/auth/auth-common';
+import {
+  generateAccessToken,
+  generateJwtToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from 'src/common/auth/jwt';
 import {
   generateRandomPassword,
   generateSixDigitOTP,
@@ -87,7 +93,15 @@ export class AuthService {
     if (user.password !== body.password) {
       throw new BadRequestException('Invalid password');
     }
-    const token = await generateJwtToken(user);
+    const payload: any = {
+      id: user.id,
+      role: user.role,
+      email: user.email,
+    };
+    // const token = await generateJwtToken(user);
+    const accessToken = await generateAccessToken(payload);
+    const refreshToken = await generateRefreshToken(payload);
+    console.log('tokens ', accessToken, refreshToken);
     await this.prismaService.loginHistory.create({
       data: {
         userId: user.id,
@@ -95,7 +109,24 @@ export class AuthService {
     });
     return new ApiSuccessResponse(true, 'User logged in successfully', {
       user,
-      token,
+      accessToken,
+      refreshToken,
+    });
+  }
+
+  async refreshAccessToken(refreshToken: string) {
+    const decoded: any = await verifyRefreshToken(refreshToken);
+    if (!decoded) {
+      throw new UnauthorizedException('Token Invalid Or Expired');
+    }
+    const payload: any = {
+      id: decoded.id,
+      role: decoded.role,
+      email: decoded.email,
+    };
+    const newAccessToken: any = await generateAccessToken(payload);
+    return new ApiSuccessResponse(true, 'Access token refreshed', {
+      accessToken: newAccessToken,
     });
   }
 

@@ -44,6 +44,12 @@ export class AuthController {
     return this.authService.login(body);
   }
 
+  @Post('refresh-token')
+  @HttpCode(200)
+  refreshToken(@Body() body: { refreshToken: string }) {
+    return this.authService.refreshAccessToken(body.refreshToken);
+  }
+
   // Get Applicant Profile
   @Get('partner/profile')
   @HttpCode(200)
