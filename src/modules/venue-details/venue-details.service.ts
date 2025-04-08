@@ -5,7 +5,7 @@ import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { CreateVenueDetailsDto } from './dto/create-venue-detail.dto';
 import { UpdateVenueDetailsDto } from './dto/update-venue-detail.dto';
 import { QueryVenueDetailsDto } from './dto/query-venue-details.dto';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 
 @Injectable()
 export class VenueDetailsService {

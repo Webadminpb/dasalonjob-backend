@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { QueryWhatsAppDto } from './dto/query-whatsapp-group.dto';
 import { Prisma } from '@prisma/client';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 
 @Injectable()
 export class WhatsappGroupsService {

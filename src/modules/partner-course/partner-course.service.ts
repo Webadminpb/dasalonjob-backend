@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { Auth, Prisma } from '@prisma/client';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 import { CreateCourseStatusDto } from './dto/status-partner-course.dto';
 
 @Injectable()

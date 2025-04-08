@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, JobBasicInfoProfileType, JobType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional } from 'src/common/utils/validation';
 import { z } from 'zod';
 
 export const SalaryRangeSchema = z.object({

@@ -9,13 +9,13 @@ import { QueryActivityDto } from './dto/query-activity.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { createDateBeforeFilter } from 'src/common/validation';
+import { createDateBeforeFilter } from 'src/common/utils/validation';
 import {
   getPaginationSkip,
   getPaginationTake,
   getSortBy,
   getSortOrder,
-} from 'src/common/common';
+} from 'src/common/utils/common';
 import { startOfDay, subDays } from 'date-fns';
 import { format } from 'date-fns';
 

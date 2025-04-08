@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { HighestEducation, JobApplicationStatus } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional } from 'src/common/utils/validation';
 import { z } from 'zod';
 
 export const QueryJobApplicationSchema = z.object({

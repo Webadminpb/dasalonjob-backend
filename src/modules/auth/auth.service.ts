@@ -10,7 +10,7 @@ import {
   generateJwtToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from 'src/common/auth/jwt';
+} from 'src/common/utils/jwt';
 import {
   generateRandomPassword,
   generateSixDigitOTP,
@@ -18,7 +18,7 @@ import {
   getPaginationTake,
   getSortBy,
   getSortOrder,
-} from 'src/common/common';
+} from 'src/common/utils/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -29,6 +29,8 @@ import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
 import { QueryAuthDto } from './dto/query-auth.dto';
 import { CreateAdminAuthDto } from './dto/admin-user.dto';
+import { AuthBaseSchema, PublicUserSchema } from './dto/auth.dto';
+import { parseWithSchema } from 'src/common/utils/zod-parser';
 
 @Injectable()
 export class AuthService {
@@ -98,17 +100,18 @@ export class AuthService {
       role: user.role,
       email: user.email,
     };
-    // const token = await generateJwtToken(user);
+
     const accessToken = await generateAccessToken(payload);
     const refreshToken = await generateRefreshToken(payload);
-    console.log('tokens ', accessToken, refreshToken);
+
     await this.prismaService.loginHistory.create({
       data: {
         userId: user.id,
       },
     });
+
     return new ApiSuccessResponse(true, 'User logged in successfully', {
-      user,
+      user: parseWithSchema(PublicUserSchema, user),
       accessToken,
       refreshToken,
     });

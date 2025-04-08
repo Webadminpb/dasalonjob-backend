@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional } from 'src/common/utils/validation';
 import { z } from 'zod';
 
 export const QueryWhatsAppSchema = z.object({

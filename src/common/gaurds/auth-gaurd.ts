@@ -33,7 +33,7 @@ export class AuthGaurd implements CanActivate {
 
     try {
       const user = await this.jwtService.verify(token, {
-        secret: process.env.JWT_SECRET,
+        secret: process.env.JWT_ACCESS_SECRET || 'qazxswedcrfvbgtnhy',
       });
       req.user = user;
       console.log('req.user ', req.user);

@@ -5,7 +5,7 @@ import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateFeaturedJobDto } from './dto/create-featured-job.dto';
 import { UpdateFeaturedJobDto } from './dto/update-featured-job.dto';
 import { QueryFeaturedJobDto } from './dto/query-featured-job.dto';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 
 @Injectable()
 export class FeaturedJobService {

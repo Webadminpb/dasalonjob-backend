@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Auth, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
 import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';

@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Auth, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { QuerySaveCourseDto } from './dto/query-save-course.dto';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 
 @Injectable()
 export class SaveCourseService {

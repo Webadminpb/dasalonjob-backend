@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional } from 'src/common/utils/validation';
 import { HighestEducation } from '@prisma/client';
 
 export const createEducationSchema = z.object({

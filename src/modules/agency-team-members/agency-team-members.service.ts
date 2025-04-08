@@ -10,7 +10,7 @@ import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { CreateAgencyTeamMemberDto } from './dto/create-agency-team-member.dto';
 import { UpdateAgencyTeamMemberDto } from './dto/update-agency-team-member.dto';
 import { QueryAgencyTeamMembersDto } from './dto/query-agency-team-member.dto';
-import { getPaginationSkip, getPaginationTake } from 'src/common/common';
+import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 
 @Injectable()
 export class AgencyTeamService {

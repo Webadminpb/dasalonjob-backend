@@ -5,7 +5,7 @@ import {
   Role,
 } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional, zYearOptional } from 'src/common/validation';
+import { zDateOptional, zYearOptional } from 'src/common/utils/validation';
 import { z } from 'zod';
 
 export const QueryAuthSchema = z.object({

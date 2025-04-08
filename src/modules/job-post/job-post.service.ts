@@ -14,7 +14,7 @@ import {
   getPaginationTake,
   getSortBy,
   getSortOrder,
-} from 'src/common/common';
+} from 'src/common/utils/common';
 import { addDays } from 'date-fns';
 import { CreateJobStatusDto } from './dto/status-job-post.dto';
 import { PartnerAgencyPermissionService } from '../partner-agency-job-permission/partner-agency-job-permission.service';

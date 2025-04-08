@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
 import { JobProfile } from '@prisma/client';
-import { zDateOptional } from 'src/common/validation';
+import { zDateOptional } from 'src/common/utils/validation';
 
 export const createExperienceSchema = z.object({
   profile: z.nativeEnum(JobProfile),

@@ -13,7 +13,7 @@ import {
   getPaginationTake,
   getSortBy,
   getSortOrder,
-} from 'src/common/common';
+} from 'src/common/utils/common';
 import { UpdatePartnerAgencyPermissionDto } from './dto/update-partner-agency-job-permission.dto';
 
 @Injectable()
