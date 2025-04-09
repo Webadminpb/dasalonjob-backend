@@ -1,0 +1,20 @@
+model SubscriptionPaymentHistory {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    subscriptionId String @db.ObjectId
+    subscription Subscription @relation(fields: [subscriptionId], references: [id])
+
+
+    userId String @db.ObjectId
+    user Auth @relation(fields: [userId], references: [id])
+
+    amount Float
+    currency String
+
+    paymentDate DateTime @default(now())
+    paymentMethod PaymentMethod
+    paymentStatus PaymentStatus
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

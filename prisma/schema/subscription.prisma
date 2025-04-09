@@ -1,0 +1,20 @@
+model Subscription {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    userId String @db.ObjectId
+    user  Auth @relation(fields: [userId], references: [id])
+
+    planId String @db.ObjectId
+    plan SubscriptionPlan @relation(fields: [planId], references: [id])
+
+    startDate DateTime
+    endDate DateTime
+
+    status SubscriptionStatus @default(Active)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    subscriptionPaymentHistories SubscriptionPaymentHistory[]
+
+}

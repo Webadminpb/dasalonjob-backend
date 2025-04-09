@@ -121,7 +121,7 @@ export class JobPostController {
   // For Agency
   @Get('agency-query')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
   findJobPostsForAgency(@Query() query: QueryJobPostDto) {
     return this.jobPostService.findAllForAdmin(query);
   }

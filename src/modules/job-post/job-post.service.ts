@@ -1,23 +1,19 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Auth, JobApplicationStatus, Prisma } from '@prisma/client';
-import { CreateJobPostDto } from './dto/create-job-post.dto';
+import { addDays } from 'date-fns';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { UpdateJobPostDto } from './dto/update-job-post.dto';
-import { QueryJobPostDto } from './dto/query-job-post.dto';
 import {
   getPaginationSkip,
   getPaginationTake,
   getSortBy,
   getSortOrder,
 } from 'src/common/utils/common';
-import { addDays } from 'date-fns';
-import { CreateJobStatusDto } from './dto/status-job-post.dto';
 import { PartnerAgencyPermissionService } from '../partner-agency-job-permission/partner-agency-job-permission.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateJobPostDto } from './dto/create-job-post.dto';
+import { QueryJobPostDto } from './dto/query-job-post.dto';
+import { CreateJobStatusDto } from './dto/status-job-post.dto';
+import { UpdateJobPostDto } from './dto/update-job-post.dto';
 @Injectable()
 export class JobPostService {
   constructor(
@@ -175,7 +171,7 @@ export class JobPostService {
   async getJobStatusTotal() {
     const [totalApplicants, totalActives, totalPendings, totalFullfields] =
       await Promise.all([
-        this.prismaService.auth.count({ where: { role: 'USER' } }),
+        this.prismaService.jobApplication.count(),
         this.prismaService.jobPost.count({ where: { isOpen: true } }),
         this.prismaService.jobPost.count({ where: { status: 'Pending' } }),
         this.prismaService.jobPost.count({ where: { isOpen: false } }),

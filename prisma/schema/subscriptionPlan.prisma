@@ -1,0 +1,18 @@
+model SubscriptionPlan{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    name String
+    durationInDays Int @default(1)
+
+    price Float
+    currency String
+
+    isActive Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    subscriptions Subscription[]
+    
+
+}

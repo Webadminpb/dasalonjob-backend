@@ -62,7 +62,7 @@ export class PartnerVenueService {
     }
 
     const partnerVenues = await this.prismaService.partnerVenue.findMany({
-      where: { userId: user.id },
+      where,
       include: {
         venueBasicDetails: {
           include: {
@@ -78,6 +78,66 @@ export class PartnerVenueService {
       skip: getPaginationSkip(query.page, query.limit),
       take: getPaginationTake(query.limit),
     });
+    console.log('partner veneues ', partnerVenues);
+
+    if (!partnerVenues) {
+      throw new BadRequestException('No Partner Venues found');
+    }
+    return new ApiSuccessResponse(true, 'Partner Venues found', {
+      partnerVenues,
+    });
+  }
+
+  async findAllForAdmin(query: QueryPartnerVenueDto) {
+    const where: Prisma.PartnerVenueWhereInput = {};
+    // if (query.userId) {
+    //   where.userId = query.userId;
+    // }
+    if (query.search) {
+      where.venueBasicDetails = {
+        OR: [
+          {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      };
+    }
+
+    if (query.date) {
+      const year = query.date;
+      where.createdAt = {
+        gte: new Date(`${year}-01-01T00:00:00.000Z`).toISOString(),
+        lte: new Date(`${year}-12-61T23:59:59.999Z`).toISOString(),
+      };
+    }
+
+    if (query.gender) {
+      where.venueBasicDetails = {
+        gender: query.gender,
+      };
+    }
+
+    const partnerVenues = await this.prismaService.partnerVenue.findMany({
+      where,
+      include: {
+        venueBasicDetails: {
+          include: {
+            files: true,
+          },
+        },
+        salonBasicDetails: true,
+        venueAmenities: true,
+        venueWorkStations: true,
+        user: true,
+        venueMainBusinessDays: true,
+      },
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+    });
+    console.log('partner veneues ', partnerVenues);
 
     if (!partnerVenues) {
       throw new BadRequestException('No Partner Venues found');

@@ -216,6 +216,23 @@ export class AuthService {
     }
     return new ApiSuccessResponse(true, 'User data', existingUser);
   }
+
+  async getMyAgencyProfile(user: Auth) {
+    const existingUser = await this.prismaService.auth.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        profileImage: true,
+        agencyJobBasicInfo: true,
+        agencyDetails: true,
+      },
+    });
+    if (!existingUser) {
+      throw new NotFoundException('User not found');
+    }
+    return new ApiSuccessResponse(true, 'User data', existingUser);
+  }
   async getMyApplicantProfile(user: Auth) {
     const existingUser = await this.prismaService.auth.findUnique({
       where: {

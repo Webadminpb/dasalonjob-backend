@@ -41,6 +41,13 @@ export class PartnerVenueController {
     return this.partnerVenueService.findAll(user, query);
   }
 
+  @Get('/admin')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  findAllForAdmin(@GetUser() user: Auth, @Query() query: QueryPartnerVenueDto) {
+    return this.partnerVenueService.findAllForAdmin(query);
+  }
+
   @Get('job-application-total')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('PARTNER')

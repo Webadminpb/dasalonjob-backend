@@ -35,11 +35,11 @@ export class PartnerCourseController {
   }
 
   // Partner
-  @Get('partner')
-  @AllowAuthenticated('PARTNER')
+  @Get('users')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY')
   @HttpCode(HttpStatus.OK)
-  findAll(@Query() query: QueryPartnerCourseDto, @GetUser() user: Auth) {
-    return this.partnerCourseService.findAll(query, user);
+  findAll(@Query() query: QueryPartnerCourseDto) {
+    return this.partnerCourseService.findAll(query);
   }
 
   // Partner
@@ -51,7 +51,7 @@ export class PartnerCourseController {
   }
 
   // Partner, Admin, Applicant
-  @Get('user/:id')
+  @Get('user/:id/:partnerId')
   @HttpCode(HttpStatus.OK)
   findOneForApplicant(@Param('id') id: string) {
     return this.partnerCourseService.findOneForApplicant(id);

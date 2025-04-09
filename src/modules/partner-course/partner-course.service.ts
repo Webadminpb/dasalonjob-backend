@@ -59,10 +59,11 @@ export class PartnerCourseService {
     );
   }
 
-  async findAll(query: QueryPartnerCourseDto, user: Auth) {
-    const where: Prisma.PartnerCourseWhereInput = {
-      userId: user.id,
-    };
+  async findAll(query: QueryPartnerCourseDto) {
+    const where: Prisma.PartnerCourseWhereInput = {};
+    if (query.partnerId) {
+      where.userId = query.partnerId;
+    }
     if (query.type) {
       where.courseTypeAndLocation.courseType = query.type;
     }
@@ -316,7 +317,7 @@ export class PartnerCourseService {
   async getCourseStatusTotal() {
     const [totalApplicants, totalActives, totalPendings, totalFullfields] =
       await Promise.all([
-        this.prismaService.auth.count({ where: { role: 'USER' } }),
+        this.prismaService.courseApplication.count(),
         this.prismaService.partnerCourse.count({ where: { isOpen: true } }),
         this.prismaService.partnerCourse.count({
           where: { status: 'Pending' },

@@ -97,6 +97,9 @@ model Auth {
 
   agencyCollaborations PartnerAgencyJobPermission[] @relation("AgencyCollaborations") 
   partnerCollaborations PartnerAgencyJobPermission[] @relation("PartnerCollaborations") 
+
+  subscriptions Subscription[]
+  subscriptionPaymentHistories SubscriptionPaymentHistory[]
   
   isEducation    Boolean?
   isProfessional Boolean?

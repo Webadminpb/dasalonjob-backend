@@ -177,6 +177,14 @@ enum CourseStatus {
   Pending
 }
 
+
+enum SubscriptionStatus {
+  Active
+  Expired
+  Cancelled
+}
+
+
 enum JobApplicationStatus {
   Applied
   Shortlisted
@@ -244,8 +252,16 @@ enum ActivityType {
 
 }
 
+enum PaymentStatus {
+  Paid
+  Pending
+  Failed
+}
 
-
+enum PaymentMethod {
+  Stripe
+  Razorpay
+}
 
 type Days {
   monday Day?

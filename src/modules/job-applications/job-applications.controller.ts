@@ -38,7 +38,7 @@ export class JobApplicationController {
 
   @Get('/partner')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'AGENCY')
   findAllForPartner(
     @Query() query: QueryJobApplicationDto,
     @GetUser() user: Auth,

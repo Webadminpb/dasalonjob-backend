@@ -34,7 +34,7 @@ export class CourseAcademyController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
   findAll(@GetUser() user: Auth) {
     return this.courseAcademyService.findAll(user);
   }
