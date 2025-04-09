@@ -75,6 +75,9 @@ export class CreateJobPostDto extends createZodDto(JobPostSchema) {
   })
   countryId?: string;
 
+  @ApiProperty({ required: false })
+  userId?: string;
+
   @ApiProperty({
     description: 'Is job post open',
     example: true,

@@ -216,6 +216,7 @@ enum CreditType {
   COURSE
 }
 
+
 enum ActivityType {
     // Admin
     ADDED_APPLICANT

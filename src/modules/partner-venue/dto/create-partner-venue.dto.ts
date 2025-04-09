@@ -31,6 +31,6 @@ export class CreatePartnerVenueDto extends createZodDto(
   })
   venueMainBusinessDaysId: string;
 
-  @ApiProperty({ type: String, description: 'ID of the user' })
-  userId: string;
+  // @ApiProperty({ type: String, description: 'ID of the user' })
+  // userId: string;
 }

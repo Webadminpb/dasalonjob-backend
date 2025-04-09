@@ -48,4 +48,7 @@ export class CreateJobBasicInfoDto extends createZodDto(JobBasicInfoSchema) {
 
   @ApiProperty({ example: '2025-01-01T00:00:00.000Z', required: false })
   deadline?: Date;
+
+  @ApiProperty({ example: '', required: false })
+  userId?: string;
 }

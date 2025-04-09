@@ -14,4 +14,45 @@ export const QueryPartnerAgencyPermissionSchema = z.object({
 
 export class QueryPartnerAgencyPermissionDto extends createZodDto(
   QueryPartnerAgencyPermissionSchema,
-) {}
+) {
+  @ApiPropertyOptional({
+    example: 'partner_abc123',
+    description: 'Filter by partner ID',
+  })
+  partnerId?: string;
+
+  @ApiPropertyOptional({
+    example: 'agency_xyz456',
+    description: 'Filter by agency ID',
+  })
+  agencyId?: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Filter by access status',
+  })
+  hasAccess?: boolean;
+
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Page number for pagination',
+  })
+  page?: number;
+
+  @ApiPropertyOptional({ example: 10, description: 'Limit of items per page' })
+  limit?: number;
+
+  @ApiPropertyOptional({
+    example: 'desc',
+    enum: ['asc', 'desc'],
+    description: 'Sort order',
+  })
+  order?: 'asc' | 'desc';
+
+  @ApiPropertyOptional({
+    example: 'createdAt',
+    enum: ['createdAt', 'updatedAt'],
+    description: 'Field to sort by',
+  })
+  sort?: 'createdAt' | 'updatedAt';
+}

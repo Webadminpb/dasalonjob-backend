@@ -1,7 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { HighestEducation, JobApplicationStatus } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { zDateOptional } from 'src/common/utils/validation';
 import { z } from 'zod';
 
 export const QueryExperienceSchema = z.object({
@@ -10,4 +8,19 @@ export const QueryExperienceSchema = z.object({
   userId: z.string().optional(),
 });
 
-export class QueryExperienceDto extends createZodDto(QueryExperienceSchema) {}
+export class QueryExperienceDto extends createZodDto(QueryExperienceSchema) {
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Page number for pagination',
+  })
+  page?: number;
+
+  @ApiPropertyOptional({ example: 10, description: 'Items per page' })
+  limit?: number;
+
+  @ApiPropertyOptional({
+    example: 'user_abc123',
+    description: 'Filter by user ID',
+  })
+  userId?: string;
+}

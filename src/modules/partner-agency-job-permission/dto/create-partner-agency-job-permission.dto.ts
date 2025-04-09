@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -9,4 +10,23 @@ export const PartnerAgencyPermissionSchema = z.object({
 
 export class CreatePartnerAgencyPermissionDto extends createZodDto(
   PartnerAgencyPermissionSchema,
-) {}
+) {
+  @ApiProperty({
+    example: 'partner_abc123',
+    description: 'The ID of the partner',
+  })
+  partnerId: string;
+
+  @ApiProperty({
+    example: 'agency_xyz456',
+    description: 'The ID of the agency',
+  })
+  agencyId: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Whether the agency has access to the partner’s resources',
+    default: false,
+  })
+  hasAccess?: boolean;
+}

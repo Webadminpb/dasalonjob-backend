@@ -46,6 +46,13 @@ export class JobApplicationController {
     return this.jobApplicationService.findAllForPartner(query, user);
   }
 
+  @Get('/agency')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('AGENCY')
+  findAllForAgency(@Query() query: QueryJobApplicationDto) {
+    return this.jobApplicationService.findAllForPartner(query);
+  }
+
   @Get('/admin')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')

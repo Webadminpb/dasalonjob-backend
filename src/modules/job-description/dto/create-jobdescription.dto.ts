@@ -14,4 +14,7 @@ export class CreateJobDescriptionDto extends createZodDto(
     example: 'Responsible for developing and maintaining backend services.',
   })
   description: string;
+
+  @ApiProperty({ required: false })
+  userId?: string;
 }

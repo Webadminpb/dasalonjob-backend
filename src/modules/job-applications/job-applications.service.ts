@@ -76,7 +76,7 @@ export class JobApplicationService {
 
   async findAllForPartner(query: QueryJobApplicationDto, user?: Auth) {
     const where: any = {};
-    if (user.id) {
+    if (user?.id) {
       where.jobPost = where.jobPost || {};
 
       where.jobPost.userId = user.id;
@@ -200,7 +200,7 @@ export class JobApplicationService {
       this.prismaService.jobApplication.count({
         where: {
           jobPost: {
-            userId: user.id,
+            userId: user?.id ?? query.partnerId,
           },
           status: JobApplicationStatus.Applied,
         },
@@ -208,7 +208,7 @@ export class JobApplicationService {
       this.prismaService.jobApplication.count({
         where: {
           jobPost: {
-            userId: user.id,
+            userId: user?.id ?? query.partnerId,
           },
           status: JobApplicationStatus.Accepted,
         },
@@ -216,7 +216,7 @@ export class JobApplicationService {
       this.prismaService.jobApplication.count({
         where: {
           jobPost: {
-            userId: user.id,
+            userId: user?.id ?? query.partnerId,
           },
           status: JobApplicationStatus.Shortlisted,
         },
@@ -224,7 +224,7 @@ export class JobApplicationService {
       this.prismaService.jobApplication.count({
         where: {
           jobPost: {
-            userId: user.id,
+            userId: user?.id ?? query.partnerId,
           },
           status: JobApplicationStatus.Rejected,
         },

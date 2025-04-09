@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional } from 'src/common/utils/validation';
 import { HighestEducation } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export const createEducationSchema = z.object({
   school: z.string(),
@@ -10,4 +11,16 @@ export const createEducationSchema = z.object({
   education: z.nativeEnum(HighestEducation),
 });
 
-export class CreateEducationDto extends createZodDto(createEducationSchema) {}
+export class CreateEducationDto extends createZodDto(createEducationSchema) {
+  @ApiProperty({ example: 'XYZ High School' })
+  school: string;
+
+  @ApiProperty({ example: '2020-06-01', required: false })
+  attended?: any;
+
+  @ApiProperty({ example: '2023-06-01', required: false })
+  graduated?: any;
+
+  @ApiProperty({ enum: HighestEducation })
+  education: HighestEducation;
+}

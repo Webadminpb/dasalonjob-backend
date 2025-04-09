@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -10,4 +11,13 @@ export const QuerySaveJobPostSchema = z.object({
   //     .default('createdAt'),
 });
 
-export class QuerySaveJobPostDto extends createZodDto(QuerySaveJobPostSchema) {}
+export class QuerySaveJobPostDto extends createZodDto(QuerySaveJobPostSchema) {
+  @ApiPropertyOptional({ type: String, description: 'Search keyword' })
+  search?: string;
+
+  @ApiPropertyOptional({
+    type: Number,
+    description: 'Page number for pagination',
+  })
+  page?: number;
+}

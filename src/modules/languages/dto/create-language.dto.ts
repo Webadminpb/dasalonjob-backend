@@ -11,4 +11,7 @@ export const createLanguageSchema = z.object({
 export class CreateLanguageDto extends createZodDto(createLanguageSchema) {
   @ApiProperty({ description: 'Hindi' })
   name: string;
+
+  @ApiProperty({ required: false })
+  fileId: string;
 }

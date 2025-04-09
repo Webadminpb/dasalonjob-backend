@@ -17,4 +17,7 @@ export class CreateJobBenefitsDto extends createZodDto(JobBenefitsSchema) {
     example: [Incentive.EmployeeDiscount, Incentive.Accomodation],
   })
   benefits: Incentive[];
+
+  @ApiProperty({ required: false })
+  userId?: string;
 }
