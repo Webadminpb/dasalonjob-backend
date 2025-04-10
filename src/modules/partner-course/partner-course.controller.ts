@@ -51,7 +51,7 @@ export class PartnerCourseController {
   }
 
   // Partner, Admin, Applicant
-  @Get('user/:id/:partnerId')
+  @Get('user/:id')
   @HttpCode(HttpStatus.OK)
   findOneForApplicant(@Param('id') id: string) {
     return this.partnerCourseService.findOneForApplicant(id);
