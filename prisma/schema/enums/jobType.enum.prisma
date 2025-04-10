@@ -1,0 +1,6 @@
+enum JobType {
+  FullTime
+  PartTime
+  Contract
+  Freelance
+}

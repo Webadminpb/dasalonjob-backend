@@ -1,0 +1,8 @@
+enum Incentive {
+  HealthInsurance
+  PaidTimeOff
+  FlexibleSchedule
+  EmployeeDiscount
+  Accomodation
+  ProfessionalDev
+}

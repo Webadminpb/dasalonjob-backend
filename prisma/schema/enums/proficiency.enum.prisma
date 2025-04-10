@@ -1,0 +1,8 @@
+enum Proficiency {
+  Native
+  Conversational
+  Fluent
+  Proficient
+  Basic
+  None
+}

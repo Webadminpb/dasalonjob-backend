@@ -1,0 +1,6 @@
+enum JobBasicInfoProfileType {
+  HairStyling
+  NailsSpecialist
+  Message
+  Medicure
+}

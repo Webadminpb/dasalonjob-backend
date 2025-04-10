@@ -23,15 +23,15 @@ export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
   @Post()
-  @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  @HttpCode(HttpStatus.CREATED)
+  @AllowAuthenticated('AGENCY')
   async create(@Body() dto: CreateSubscriptionDto) {
     return this.subscriptionService.createSubscription(dto);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
   async findAll(@Query() query: QuerySubscriptionDto) {
     return this.subscriptionService.getAllSubscriptions(query);
   }

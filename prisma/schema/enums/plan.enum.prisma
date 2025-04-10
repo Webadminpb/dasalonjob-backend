@@ -1,0 +1,5 @@
+enum Plan {
+  ONE_MONTH
+  SIX_MONTH
+  YEARLY
+}

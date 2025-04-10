@@ -16,6 +16,7 @@ const queryPaymentSchema = z.object({
   limit: z.string().optional().transform(Number),
   status: z.string().optional(),
   search: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export class CreatePaymentDto extends createZodDto(createPaymentSchema) {}

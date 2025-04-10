@@ -5,8 +5,8 @@ import { PlanController } from './plans/plan.controller';
 import { PlanService } from './plans/plan.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { PaymentController } from './payments/payment.controller';
-import { PaymentService } from './payments/payment.service';
+import { PaymentController } from './payment-history/payment-history.controller';
+import { PaymentHistoryService } from './payment-history/payment-history.service';
 
 @Module({
   controllers: [SubscriptionController, PlanController, PaymentController],
@@ -15,7 +15,7 @@ import { PaymentService } from './payments/payment.service';
     PlanService,
     PrismaService,
     JwtService,
-    PaymentService,
+    PaymentHistoryService,
   ],
 })
 export class SubscriptionModule {}

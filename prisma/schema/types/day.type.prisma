@@ -1,0 +1,8 @@
+type Day {
+  isActive Boolean @default(false)
+  from DateTime?
+  to DateTime?
+  offPeakFrom DateTime?
+  offPeakTo DateTime?
+
+}

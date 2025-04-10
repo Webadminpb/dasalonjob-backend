@@ -9,6 +9,7 @@ import {
   QuerySubscriptionDto,
   UpdateSubscriptionDto,
 } from './dto/subscription.dto';
+import { PaymentHistoryService } from './payment-history/payment-history.service';
 
 @Injectable()
 export class SubscriptionService {

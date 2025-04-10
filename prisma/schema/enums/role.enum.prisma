@@ -1,0 +1,9 @@
+enum Role {
+  ADMIN
+  USER
+  SUPER_ADMIN
+  PARTNER 
+  AGENCY
+  MANAGER 
+  STAFF
+}

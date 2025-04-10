@@ -1,0 +1,34 @@
+enum AdditionalServices {
+  AdultsOnly
+  EcoFriendlyPractices
+  GiftCard
+  Hygiene
+  KidFriendly
+  KidsOnly
+  LoyaltyProgram
+  MagazinesReadingMaterial
+  NearBusStop
+  NearCityCenter
+  NearMetro
+  NearShoppingMall
+  Parking
+  PaymentFlexibleOptions
+  PetFriendly
+  PrivateTreatmentRooms
+  ProductNatural
+  ProductVegan
+  ProductOrganic
+  RefreshmentFree
+  Sauna
+  Toilet
+  RelaxationRooms
+  WaitingArea
+  Restaurant
+  Wifi
+  SteamRooms
+  WheelchairAccessible
+  Recycle
+  AirConditioning
+  AirPurifier
+  ChangingRooms
+}

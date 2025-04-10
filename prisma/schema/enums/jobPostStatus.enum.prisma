@@ -1,0 +1,5 @@
+enum JobPostStatus {
+  Approved
+  Rejected
+  Pending
+}

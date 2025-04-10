@@ -1,0 +1,4 @@
+type SalaryRange {
+  start Int @default(0)
+  end Int @default(0)
+}

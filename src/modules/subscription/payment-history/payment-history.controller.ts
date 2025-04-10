@@ -10,7 +10,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { PaymentService } from './payment.service';
+import { PaymentHistoryService } from './payment-history.service';
 import {
   CreatePaymentDto,
   QueryPaymentDto,
@@ -20,11 +20,11 @@ import { AllowAuthenticated } from 'src/common/decorators/auth-decorator';
 
 @Controller('subscription/payments')
 export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {}
+  constructor(private readonly paymentService: PaymentHistoryService) {}
 
-  @Post()
+  @Post('agency')
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated()
+  @AllowAuthenticated('AGENCY')
   createPayment(@Body() dto: CreatePaymentDto) {
     return this.paymentService.createPayment(dto);
   }
@@ -43,14 +43,14 @@ export class PaymentController {
     return this.paymentService.getPayment(id);
   }
 
-  @Patch(':id')
+  @Patch('/admin/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   updatePayment(@Param('id') id: string, @Body() dto: UpdatePaymentDto) {
     return this.paymentService.updatePayment(id, dto);
   }
 
-  @Delete(':id')
+  @Delete('/admin/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   deletePayment(@Param('id') id: string) {

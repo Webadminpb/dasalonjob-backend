@@ -1,0 +1,8 @@
+enum UserExperience {
+  FRESHER
+  ONE_YEAR
+  TWO_YEAR
+  THREE_YEAR
+  FOUR_YEAR
+  FIVE_PLUS_YEAR
+}

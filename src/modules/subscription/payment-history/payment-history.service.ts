@@ -10,7 +10,7 @@ import { Prisma } from '@prisma/client';
 import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 
 @Injectable()
-export class PaymentService {
+export class PaymentHistoryService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createPayment(dto: CreatePaymentDto) {
@@ -39,6 +39,9 @@ export class PaymentService {
 
   async getAllPayments(query: QueryPaymentDto) {
     const where: Prisma.SubscriptionPaymentHistoryWhereInput = {};
+    if (query.userId) {
+      where.userId = query.userId;
+    }
 
     const [payments, total] = await Promise.all([
       this.prisma.subscriptionPaymentHistory.findMany({

@@ -1,0 +1,10 @@
+enum JoiningAvailability {
+  OneWeek
+  TwoWeek
+  ThreeWeek
+  FourWeek
+  OneMonth
+  TwoMonth
+  ThreeMonth
+  AnyTime 
+}

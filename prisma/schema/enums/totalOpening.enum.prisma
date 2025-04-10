@@ -1,0 +1,6 @@
+enum TotalOpening {
+  One
+  Two
+  Three 
+  Four
+}

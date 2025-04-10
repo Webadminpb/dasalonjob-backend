@@ -1,0 +1,13 @@
+enum BusinessType {
+  HairSalon
+  NailSalon
+  AesthethicAndMedicalClinic
+  BodyTreatmentSPA
+  SPAService
+  TattoStudio
+  FacialAndSkinCareCenter
+  WaxingAndHairRemoval
+  MakeUpStudio
+  MessageParlor
+  EyeleshAndEyebrowStudio
+}

@@ -1,0 +1,8 @@
+enum Amenities {
+  Facial
+  Lotion 
+  Wifi 
+  Towel
+  Slipper 
+  Custom
+}

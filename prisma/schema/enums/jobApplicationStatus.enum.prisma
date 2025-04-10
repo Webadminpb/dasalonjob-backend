@@ -1,0 +1,6 @@
+enum JobApplicationStatus {
+  Applied
+  Shortlisted
+  Accepted
+  Rejected
+}
