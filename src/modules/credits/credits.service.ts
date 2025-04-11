@@ -3,6 +3,7 @@ import { CreditType } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSpendCreditDto } from './dto/create-credit.dto';
+import { getPaginationSkip } from 'src/common/utils/common';
 
 @Injectable()
 export class CreditsService {
@@ -158,5 +159,154 @@ export class CreditsService {
       purchases,
       spendings,
     });
+  }
+
+  async getUserCreditsSummary(userId: string) {
+    const purchases = await this.prisma.creditPurchase.aggregate({
+      where: { userId },
+      _sum: {
+        jobCredits: true,
+        courseCredits: true,
+      },
+    });
+
+    const totalPurchasedCredits =
+      (purchases._sum.jobCredits || 0) + (purchases._sum.courseCredits || 0);
+
+    const spendings = await this.prisma.creditSpending.aggregate({
+      where: { userId },
+      _sum: {
+        creditSpent: true,
+      },
+    });
+
+    const totalSpentCredits = spendings._sum.creditSpent || 0;
+    const remainingCredits = totalPurchasedCredits - totalSpentCredits;
+
+    return {
+      totalPurchasedCredits,
+      totalSpentCredits,
+      remainingCredits,
+    };
+  }
+
+  async getWalletTransactions(
+    userId: string,
+    page = 1,
+    limit = 10,
+    search?: string,
+    dateRange?: string,
+  ) {
+    const skip = getPaginationSkip(page, limit);
+    const dateFilter = this.#getDateFilter(dateRange);
+
+    const commonWhere = {
+      userId,
+      ...(dateFilter && {
+        createdAt: {
+          gte: dateFilter.$gte.toISOString(),
+          lt: dateFilter.$lt.toISOString(),
+        },
+      }),
+    };
+
+    const [purchases, spendings] = await Promise.all([
+      this.prisma.creditPurchase.findMany({
+        where: commonWhere,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          jobCredits: true,
+          courseCredits: true,
+          amountPaid: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.creditSpending.findMany({
+        where: commonWhere,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          creditType: true,
+          creditSpent: true,
+          jobApplicantionId: true,
+          courseApplicationId: true,
+          createdAt: true,
+        },
+      }),
+    ]);
+
+    const purchasesMapped = purchases.map((purchase) => ({
+      type: 'PURCHASE',
+      credit: purchase.jobCredits + purchase.courseCredits,
+      jobCredits: purchase.jobCredits,
+      courseCredits: purchase.courseCredits,
+      amount: purchase.amountPaid,
+      createdAt: purchase.createdAt,
+    }));
+
+    const spendingsMapped = spendings.map((spending) => ({
+      type: 'SPENDING',
+      creditType: spending.creditType,
+      creditSpent: spending.creditSpent,
+      appliedTo:
+        spending.jobApplicantionId || spending.courseApplicationId || null,
+      createdAt: spending.createdAt,
+    }));
+
+    const transactions = [...purchasesMapped, ...spendingsMapped].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    return new ApiSuccessResponse(true, 'Paginated Wallet Transactions', {
+      transactions,
+      page,
+      limit,
+      total: transactions.length,
+    });
+  }
+
+  #getDateFilter(range?: string): { $gte?: Date; $lt?: Date } | null {
+    if (!range) return null;
+
+    const now = new Date();
+    const start = new Date(now);
+    const end = new Date(now);
+
+    switch (range) {
+      case 'this_week':
+        start.setDate(now.getDate() - now.getDay());
+        start.setHours(0, 0, 0, 0);
+        end.setDate(start.getDate() + 7);
+        break;
+
+      case 'last_week':
+        start.setDate(now.getDate() - now.getDay() - 7);
+        start.setHours(0, 0, 0, 0);
+        end.setDate(start.getDate() + 7);
+        break;
+
+      case 'this_month':
+        start.setDate(1);
+        start.setHours(0, 0, 0, 0);
+        end.setMonth(start.getMonth() + 1);
+        end.setDate(1);
+        break;
+
+      case 'last_month':
+        start.setMonth(start.getMonth() - 1);
+        start.setDate(1);
+        start.setHours(0, 0, 0, 0);
+        end.setMonth(start.getMonth() + 1);
+        end.setDate(1);
+        break;
+
+      default:
+        return null;
+    }
+    return { $gte: start, $lt: end };
   }
 }

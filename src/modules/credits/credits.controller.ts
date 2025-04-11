@@ -1,20 +1,23 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Param,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { CreditsService } from './credits.service';
-import { CreateSpendCreditDto } from './dto/create-credit.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { Auth } from '@prisma/client';
 import {
   AllowAuthenticated,
   GetUser,
 } from 'src/common/decorators/auth-decorator';
-import { Auth } from '@prisma/client';
+import { CreditsService } from './credits.service';
+import { CreateSpendCreditDto } from './dto/create-credit.dto';
+import { query } from 'express';
+import { QueryCreditbDto } from './dto/query-credit.dto';
 
 @ApiTags('Credits')
 @Controller('credits')
@@ -56,10 +59,34 @@ export class CreditsController {
   }
 
   @Get('check-credits/:userId/:creditType')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
   async checkCredits(
     @Param('userId') userId: string,
     @Param('creditType') creditType: 'JOB' | 'COURSE',
   ) {
     return this.creditsService.checkCredits(userId, creditType);
+  }
+
+  @Get('summary')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('USER', 'PARTNER')
+  async getCreditSummary(@GetUser() user: Auth) {
+    return this.creditsService.getUserCreditsSummary(user.id);
+  }
+
+  @Get('transactions-history')
+  @AllowAuthenticated()
+  @HttpCode(HttpStatus.OK)
+  async getWalletTransactionHistory(@Query() query: QueryCreditbDto) {
+    const { userId, page, limit, search, dateRange } = query;
+
+    return this.creditsService.getWalletTransactions(
+      userId,
+      page,
+      limit,
+      search,
+      dateRange,
+    );
   }
 }
