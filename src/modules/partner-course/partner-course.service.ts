@@ -237,29 +237,58 @@ export class PartnerCourseService {
   }
 
   async findOneForApplicant(id: string) {
-    const [course, _] = await this.prismaService.$transaction([
-      this.prismaService.partnerCourse.findUnique({
-        where: {
-          id: id,
-        },
-        include: {
-          courseDetails: true,
-          courseContent: true,
-          courseAcademy: true,
-          courseTypeAndLocation: true,
-        },
-      }),
-      this.prismaService.partnerCourse.update({
-        data: { views: { increment: 1 } },
-        where: {
-          id: id,
-        },
-      }),
-    ]);
+    const [course, _, totalSaved, totalApplicant] =
+      await this.prismaService.$transaction([
+        this.prismaService.partnerCourse.findUnique({
+          where: {
+            id: id,
+          },
+          include: {
+            courseDetails: {
+              include: {
+                file: true,
+              },
+            },
+            courseContent: true,
+            courseAcademy: {
+              include: {
+                provider: {
+                  include: {
+                    venueBasicDetails: true,
+                  },
+                },
+              },
+            },
+            courseTypeAndLocation: true,
+          },
+        }),
+        this.prismaService.partnerCourse.update({
+          data: { views: { increment: 1 } },
+          where: {
+            id: id,
+          },
+        }),
+        this.prismaService.saveCourse.count({
+          where: {
+            courseId: id,
+          },
+        }),
+        this.prismaService.courseApplication.count({
+          where: {
+            course: {
+              id: id,
+            },
+          },
+        }),
+      ]);
     if (!course) {
       throw new BadRequestException('Course not found');
     }
-    return new ApiSuccessResponse(true, 'Course found', course);
+    return new ApiSuccessResponse(true, 'Course found', {
+      partnerCourse: course,
+      totalSaved,
+      totalApplicant,
+    });
   }
 
   async update(id: string, body: UpdatePartnerCourseDto, user: Auth) {
