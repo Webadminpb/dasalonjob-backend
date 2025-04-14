@@ -1,11 +1,12 @@
 // Auth Table For User Authentication (Admin, Partner, User, Agency, SuperAdmin, Staff, Manager etc.)
 model Auth {
+
   id                          String   @id @default(auto()) @map("_id") @db.ObjectId
   email                       String   @unique
   name                        String?
   password                    String
   role                        Role     @default(USER)
-  phoneCode                    String?
+  phoneCode                   String?
   phone                       String?
   isPhoneVerified             Boolean  @default(false)
   isEmailVerified             Boolean  @default(false)
@@ -25,14 +26,23 @@ model Auth {
 
   verificationFileId String[] @db.ObjectId 
   verificationFile File[] @relation("VerificationFile", fields: [verificationFileId], references: [id])
+  
+  isEducation    Boolean?
+  isProfessional Boolean?
+  isExperience   Boolean?
+  isPartner      Boolean?
+  isDeleted      Boolean @default(false)
 
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+  deletedAt                   DateTime?
 
   basicDetails BasicDetails? 
   contactDetails ContactDetails?
   jobPreference JobPreference?
-  // skills Skills[]
   PastWork PastWork?
   partnerPersonalData PartnerPersonalData?
+
   experiences Experience[]
   educations Education[]
   pastExperiences PastExperience[]
@@ -54,15 +64,16 @@ model Auth {
   partnerVenues PartnerVenue[]
   partnerCourses PartnerCourse[]
 
+
   courseDetails CourseDetails[]
   courseContent CourseContent[]
   courseAcademy CourseAcademy[]
   courseTypeAndLocation CourseTypeAndLocation[]
   CourseApplications CourseApplication[]
 
+
   agencyDetails AgencyDetails?
   agencyJobBasicInfo AgencyJobBasicInfo?
-  
 
   agencyJobDescription AgencyJobDescription[]
   agencyJobQualification AgencyJobQualification?
@@ -92,6 +103,7 @@ model Auth {
   creditSpendings CreditSpending[]
   agencyPersonalDetails AgencyPersonalDetails?
 
+
   agencyOwners AgencyTeam[] @relation("Agency")
   agencyTeamMembers AgencyTeam[] @relation("TeamMember")
 
@@ -100,15 +112,7 @@ model Auth {
 
   subscriptions Subscription[]
   subscriptionPaymentHistories SubscriptionPaymentHistory[]
-  
-  isEducation    Boolean?
-  isProfessional Boolean?
-  isExperience   Boolean?
-  isPartner      Boolean?
 
+  accountDeletion AccountDeletion?
 
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt
-
-  // @@map("auth") // Optional: Map this model to a table named `auth`
 }

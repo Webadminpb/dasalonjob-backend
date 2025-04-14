@@ -31,6 +31,7 @@ import { QueryAuthDto } from './dto/query-auth.dto';
 import { CreateAdminAuthDto } from './dto/admin-user.dto';
 import { AuthBaseSchema, PublicUserSchema } from './dto/auth.dto';
 import { parseWithSchema } from 'src/common/utils/zod-parser';
+import { CreateDeletionReasonDto } from './dto/deletion-reason.dto';
 
 @Injectable()
 export class AuthService {
@@ -625,16 +626,16 @@ export class AuthService {
 
   async createUserByAdmin(body: CreateAdminAuthDto) {
     const userMap = new Map(body.users?.map((user) => [user.email, user]));
-    console.log('userMap', userMap);
+
     const existingUsers = await this.prismaService.auth.findMany({
       where: { email: { in: Array.from(userMap.keys()) } },
       select: { email: true },
     });
-    console.log('existingUsers', existingUsers);
+
     for (const { email } of existingUsers) {
-      console.log('email', email);
       userMap.delete(email);
     }
+
     const newUsers = Array.from(userMap.values())?.map((user) => ({
       email: user.email,
       role: user.role,
@@ -642,15 +643,47 @@ export class AuthService {
       phone: user.phone,
       phoneCode: user.phoneCode,
     }));
-    console.log('newUsers', newUsers);
+
     if (!newUsers.length) {
-      console.log('All users already exist');
       throw new BadRequestException('All users already exist');
     }
-    const userIds = newUsers.map((user) => user.email);
+
     const users = await this.prismaService.auth.createMany({
       data: newUsers,
     });
+
     return new ApiSuccessResponse(true, 'User Created Successfully', { users });
+  }
+
+  async deleteAccount(body: CreateDeletionReasonDto, user: Auth) {
+    const existingDeletionReason =
+      await this.prismaService.accountDeletion.findUnique({
+        where: {
+          id: user.id,
+        },
+      });
+    if (existingDeletionReason) {
+      throw new BadRequestException('Account Deletion Reason Already Existed');
+    }
+    await this.prismaService.accountDeletion.create({
+      data: {
+        reason: body.reason,
+        other: body.other,
+        userId: user.id,
+      },
+    });
+
+    await this.prismaService.auth.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        isDeleted: true,
+        deletedAt: {
+          set: new Date().toISOString(),
+        },
+      },
+    });
+    return new ApiSuccessResponse(true, 'Account Deleted Successfully', null);
   }
 }

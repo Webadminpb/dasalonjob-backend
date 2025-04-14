@@ -6,6 +6,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
 import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
 import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
 
 @Injectable()
 export class PartnerVenueService {
@@ -246,22 +247,95 @@ export class PartnerVenueService {
   }
 
   async adminDashboardTotal() {
+    const todayStart = startOfDay(new Date()).toISOString();
+    const todayEnd = endOfDay(new Date()).toISOString();
+
+    const yesterdayStart = startOfDay(subDays(new Date(), 1)).toISOString();
+    const yesterdayEnd = endOfDay(subDays(new Date(), 1)).toISOString();
     const [
-      totalApplicants = 0,
-      totalPartners = 0,
-      totalJobs = 0,
-      totalCourses = 0,
+      totalApplicantsToday = 0,
+      totalApplicantsYesterday = 0,
+      totalPartnersToday = 0,
+      totalPartnersYesterday = 0,
+      totalJobsToday = 0,
+      totalJobsYesterday = 0,
+      totalCoursesToday = 0,
+      totalCoursesYesterday = 0,
     ] = await Promise.all([
-      this.prismaService.auth.count({ where: { role: 'USER' } }),
-      this.prismaService.auth.count({ where: { role: 'PARTNER' } }),
-      this.prismaService.jobPost.count(),
-      this.prismaService.partnerCourse.count(),
+      this.prismaService.auth.count({
+        where: {
+          role: 'USER',
+
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'USER',
+
+          createdAt: {
+            gte: yesterdayStart,
+            lte: yesterdayEnd,
+          },
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'PARTNER',
+          createdAt: { gte: todayStart, lte: todayEnd },
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'PARTNER',
+          createdAt: { gte: yesterdayStart, lte: yesterdayEnd },
+        },
+      }),
+      this.prismaService.jobPost.count({
+        where: {
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      this.prismaService.jobPost.count({
+        where: {
+          createdAt: {
+            gte: yesterdayStart,
+            lte: yesterdayEnd,
+          },
+        },
+      }),
+      this.prismaService.partnerCourse.count({
+        where: {
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      this.prismaService.partnerCourse.count({
+        where: {
+          createdAt: {
+            gte: yesterdayStart,
+            lte: yesterdayEnd,
+          },
+        },
+      }),
     ]);
     return new ApiSuccessResponse(true, 'total', {
-      totalApplicants,
-      totalPartners,
-      totalJobs,
-      totalCourses,
+      totalApplicantsToday,
+      totalApplicantsYesterday,
+      totalPartnersToday,
+      totalPartnersYesterday,
+      totalJobsToday,
+      totalJobsYesterday,
+      totalCoursesToday,
+      totalCoursesYesterday,
     });
   }
 

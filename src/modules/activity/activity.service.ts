@@ -81,7 +81,30 @@ export class ActivityService {
       result[day][role]++;
     }
 
-    return new ApiSuccessResponse(true, '', result);
+    const [totalApplicants, totalPartners, totalAdmins] = await Promise.all([
+      this.prismaService.auth.count({
+        where: {
+          role: 'USER',
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'PARTNER',
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'ADMIN',
+        },
+      }),
+    ]);
+
+    return new ApiSuccessResponse(true, '', {
+      result,
+      totalApplicants,
+      totalPartners,
+      totalAdmins,
+    });
   }
 
   private async queryBuilder(query: QueryActivityDto) {

@@ -24,6 +24,7 @@ import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
 import { QueryAuthDto } from './dto/query-auth.dto';
 import { CreateAdminAuthDto } from './dto/admin-user.dto';
+import { CreateDeletionReasonDto } from './dto/deletion-reason.dto';
 
 @ApiTags('users')
 @Controller('auth')
@@ -197,5 +198,12 @@ export class AuthController {
     @GetUser() user: Auth,
   ) {
     return this.authService.updateAccountStatus(body, user);
+  }
+
+  @Post('delete')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  deletionReason(@Body() body: CreateDeletionReasonDto, @GetUser() user: Auth) {
+    return this.authService.deleteAccount(body, user);
   }
 }

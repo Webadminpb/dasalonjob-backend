@@ -1,0 +1,19 @@
+enum DeletionReason {
+    CREATED_BY_MISTAKE
+    NOT_USING_ANYMORE
+    CANT_FIND_SERVICES
+    OTHER
+}
+
+model AccountDeletion {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    userId String @db.ObjectId @unique
+    user Auth @relation(fields: [userId], references: [id])
+
+    reason DeletionReason?
+    other String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

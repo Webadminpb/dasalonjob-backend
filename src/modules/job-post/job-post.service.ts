@@ -345,22 +345,35 @@ export class JobPostService {
         include: { jobBasicInfo: true },
       }),
     );
-    const [expiringJobs, total] = await this.prismaService.jobPost.findMany({
-      where: {
-        userId: user.id,
-        jobBasicInfo: {
-          deadline: {
-            gte: today,
-            lte: nextWeek,
+    const [expiringJobs, total] = await Promise.all([
+      this.prismaService.jobPost.findMany({
+        where: {
+          userId: user.id,
+          jobBasicInfo: {
+            deadline: {
+              gte: today,
+              lte: nextWeek,
+            },
           },
         },
-      },
-      // skip: getPaginationSkip(query.page, query.limit),
-      // take: getPaginationTake(query.limit),
-      include: {
-        jobBasicInfo: true,
-      },
-    });
+        skip: getPaginationSkip(query.page, query.limit),
+        take: getPaginationTake(query.limit),
+        include: {
+          jobBasicInfo: true,
+        },
+      }),
+      this.prismaService.jobPost.count({
+        where: {
+          userId: user.id,
+          jobBasicInfo: {
+            deadline: {
+              gte: today,
+              lte: nextWeek,
+            },
+          },
+        },
+      }),
+    ]);
 
     return new ApiSuccessResponse(true, 'partner jobs', {
       expiringJobs,

@@ -9,7 +9,7 @@ export class ActivityController {
 
   @Get('admin/')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
+  @AllowAuthenticated()
   getAllActivitiesForAdmin(@Query() query: QueryActivityDto) {
     return this.activityService.getAllActivities(query);
   }

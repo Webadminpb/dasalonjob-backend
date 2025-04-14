@@ -44,14 +44,13 @@ export class CourseApplicationController {
 
   @Get('admin')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('ADMIN')
   findAllForAdmin(
     @Query() query: QueryCourseApplicationDto,
     @GetUser() user: Auth,
   ) {
-    return this.courseApplicationService.findAllCourseApplicationsForPartner(
+    return this.courseApplicationService.findAllCourseApplicationsForAdmin(
       query,
-      user,
     );
   }
 
