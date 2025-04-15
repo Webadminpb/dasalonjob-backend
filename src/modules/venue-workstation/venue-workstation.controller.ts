@@ -1,24 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Auth } from '@prisma/client';
 import {
   AllowAuthenticated,
   GetUser,
 } from 'src/common/decorators/auth-decorator';
-import { ApiTags } from '@nestjs/swagger';
 import { CreateVenueWorkStationDto } from './dto/create-venue-workstation.dto';
 import { UpdateVenueWorkStationDto } from './dto/update-venue-workstation.dto';
 import { VenueWorkStationService } from './venue-workstation.service';
-import { Auth } from '@prisma/client';
 
 @ApiTags('venue-work-station')
 @Controller('venue-work-station')

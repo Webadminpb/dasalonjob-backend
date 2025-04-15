@@ -1,24 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Post,
   Put,
 } from '@nestjs/common';
-import { PartnerSocialLinksService } from './partner-social-links.service';
+import { ApiTags } from '@nestjs/swagger';
+import { Auth } from '@prisma/client';
 import {
   AllowAuthenticated,
   GetUser,
 } from 'src/common/decorators/auth-decorator';
-import { Auth } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
 import { CreatePartnerSocialLinksDto } from './dto/create-partner-social-link.dto';
 import { UpdatePartnerSocialLinksDto } from './dto/update-partner-social-link.dto';
+import { PartnerSocialLinksService } from './partner-social-links.service';
 
 @ApiTags('partner-social-links')
 @Controller('partner-social-links')

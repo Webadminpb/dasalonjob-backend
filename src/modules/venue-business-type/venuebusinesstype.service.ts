@@ -10,13 +10,6 @@ export class VenueMainBusinessTypeService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreateVenueMainBusinessTypeDto, user: Auth) {
-    // const existingVenueMainBusiness =
-    //   await this.prismaService.venueMainBusinessType.findUnique({
-    //     where: { userId: user.id },
-    //   });
-    // if (existingVenueMainBusiness) {
-    //   throw new BadRequestException('Venue business type already added');
-    // }
     const venueMainBusinessType =
       await this.prismaService.venueMainBusinessType.create({
         data: {

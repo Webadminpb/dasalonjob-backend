@@ -76,11 +76,13 @@ export class JobApplicationService {
 
   async findAllForPartner(query: QueryJobApplicationDto, user?: Auth) {
     const where: any = {};
+
     if (user?.id) {
       where.jobPost = where.jobPost || {};
 
       where.jobPost.userId = user.id;
     }
+
     if (query.jobPostId) {
       where.jobPostId = query.jobPostId;
     }
@@ -163,6 +165,13 @@ export class JobApplicationService {
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
 
+    const baseCountWhere = {
+      jobPost: {
+        userId: user?.id ?? query.partnerId,
+      },
+      ...(query.jobPostId && { jobPostId: query.jobPostId }),
+    };
+
     const [
       jobApplications,
       appliedTotal,
@@ -199,33 +208,25 @@ export class JobApplicationService {
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: user?.id ?? query.partnerId,
-          },
+          ...baseCountWhere,
           status: JobApplicationStatus.Applied,
         },
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: user?.id ?? query.partnerId,
-          },
+          ...baseCountWhere,
           status: JobApplicationStatus.Accepted,
         },
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: user?.id ?? query.partnerId,
-          },
+          ...baseCountWhere,
           status: JobApplicationStatus.Shortlisted,
         },
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: user?.id ?? query.partnerId,
-          },
+          ...baseCountWhere,
           status: JobApplicationStatus.Rejected,
         },
       }),
