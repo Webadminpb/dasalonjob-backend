@@ -663,17 +663,16 @@ export class AuthService {
         },
       });
     if (existingDeletionReason) {
+      console.log('account is already deleted reson');
       throw new BadRequestException('Account Deletion Reason Already Existed');
     }
-    await this.prismaService.accountDeletion.create({
+    const reason = await this.prismaService.accountDeletion.create({
       data: {
-        reason: body.reason,
-        other: body.other,
+        ...body,
         userId: user.id,
       },
     });
-
-    await this.prismaService.auth.update({
+    const updatedUser = await this.prismaService.auth.update({
       where: {
         id: user.id,
       },

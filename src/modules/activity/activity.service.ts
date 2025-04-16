@@ -67,6 +67,13 @@ export class ActivityService {
     const seen = new Set<string>(); // day|role|userId
     const result: Record<string, Record<string, number>> = {};
 
+    const roleUserMap: Record<string, Set<string>> = {
+      ADMIN: new Set(),
+      PARTNER: new Set(),
+      USER: new Set(),
+      AGENCY: new Set(),
+    };
+
     for (const login of logins) {
       const day = format(new Date(login.createdAt), 'EEEE'); // e.g. "Monday"
       const role = login.user?.role ?? 'unknown';
@@ -79,31 +86,40 @@ export class ActivityService {
       if (!result[day]) result[day] = {};
       if (!result[day][role]) result[day][role] = 0;
       result[day][role]++;
+
+      if (roleUserMap[role]) {
+        roleUserMap[role].add(userId);
+      }
     }
 
-    const [totalApplicants, totalPartners, totalAdmins] = await Promise.all([
-      this.prismaService.auth.count({
-        where: {
-          role: 'USER',
-        },
-      }),
-      this.prismaService.auth.count({
-        where: {
-          role: 'PARTNER',
-        },
-      }),
-      this.prismaService.auth.count({
-        where: {
-          role: 'ADMIN',
-        },
-      }),
-    ]);
+    // const [totalApplicants, totalPartners, totalAdmins] = await Promise.all([
+    //   this.prismaService.auth.count({
+    //     where: {
+    //       role: 'USER',
+    //     },
+    //   }),
+    //   this.prismaService.auth.count({
+    //     where: {
+    //       role: 'PARTNER',
+    //     },
+    //   }),
+    //   this.prismaService.auth.count({
+    //     where: {
+    //       role: 'ADMIN',
+    //     },
+    //   }),
+    // ]);
 
+    const totalApplicants = roleUserMap.USER.size;
+    const totalPartners = roleUserMap.PARTNER.size;
+    const totalAdmins = roleUserMap.ADMIN.size;
+    const totalAgencies = roleUserMap.AGENCY.size;
     return new ApiSuccessResponse(true, '', {
       result,
       totalApplicants,
       totalPartners,
       totalAdmins,
+      totalAgencies,
     });
   }
 

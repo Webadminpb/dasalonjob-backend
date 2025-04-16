@@ -10,6 +10,7 @@ import {
   HttpCode,
   Put,
   Query,
+  Version,
 } from '@nestjs/common';
 import { PartnerCourseService } from './partner-course.service';
 import { CreatePartnerCourseDto } from './dto/create-partner-course.dto';

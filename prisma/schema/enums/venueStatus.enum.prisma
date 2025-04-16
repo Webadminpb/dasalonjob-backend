@@ -1,0 +1,4 @@
+enum VenueStatus {
+    ACTIVE
+    INACTIVE
+}

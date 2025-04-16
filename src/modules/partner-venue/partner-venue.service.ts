@@ -1,7 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Auth, Prisma } from '@prisma/client';
+import { Auth, BusinessType, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
+import {
+  getPaginationSkip,
+  getPaginationTake,
+  getSortBy,
+  getSortOrder,
+} from 'src/common/utils/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
 import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
@@ -121,6 +126,21 @@ export class PartnerVenueService {
       };
     }
 
+    if (query.businessType) {
+      where.venueBasicDetails = {
+        businessType: {
+          has: query.businessType,
+        },
+      };
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    const orderBy = getSortOrder(query.order);
+    const sortBy = getSortBy(query.sort);
+
     const partnerVenues = await this.prismaService.partnerVenue.findMany({
       where,
       include: {
@@ -135,10 +155,12 @@ export class PartnerVenueService {
         user: true,
         venueMainBusinessDays: true,
       },
+      orderBy: {
+        [sortBy]: orderBy,
+      },
       skip: getPaginationSkip(query.page, query.limit),
       take: getPaginationTake(query.limit),
     });
-    console.log('partner veneues ', partnerVenues);
 
     if (!partnerVenues) {
       throw new BadRequestException('No Partner Venues found');
@@ -255,12 +277,16 @@ export class PartnerVenueService {
     const [
       totalApplicantsToday = 0,
       totalApplicantsYesterday = 0,
+      totalApplicants,
       totalPartnersToday = 0,
       totalPartnersYesterday = 0,
+      totalPartners,
       totalJobsToday = 0,
       totalJobsYesterday = 0,
+      totalJobs,
       totalCoursesToday = 0,
       totalCoursesYesterday = 0,
+      totalCourses,
     ] = await Promise.all([
       this.prismaService.auth.count({
         where: {
@@ -284,6 +310,11 @@ export class PartnerVenueService {
       }),
       this.prismaService.auth.count({
         where: {
+          role: 'USER',
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
           role: 'PARTNER',
           createdAt: { gte: todayStart, lte: todayEnd },
         },
@@ -294,6 +325,11 @@ export class PartnerVenueService {
           createdAt: { gte: yesterdayStart, lte: yesterdayEnd },
         },
       }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'PARTNER',
+        },
+      }),
       this.prismaService.jobPost.count({
         where: {
           createdAt: {
@@ -310,6 +346,7 @@ export class PartnerVenueService {
           },
         },
       }),
+      this.prismaService.jobPost.count({}),
       this.prismaService.partnerCourse.count({
         where: {
           createdAt: {
@@ -326,16 +363,21 @@ export class PartnerVenueService {
           },
         },
       }),
+      this.prismaService.partnerCourse.count({}),
     ]);
     return new ApiSuccessResponse(true, 'total', {
       totalApplicantsToday,
       totalApplicantsYesterday,
+      totalApplicants,
       totalPartnersToday,
       totalPartnersYesterday,
+      totalPartners,
       totalJobsToday,
       totalJobsYesterday,
+      totalJobs,
       totalCoursesToday,
       totalCoursesYesterday,
+      totalCourses,
     });
   }
 

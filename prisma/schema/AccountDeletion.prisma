@@ -12,7 +12,7 @@ model AccountDeletion {
     user Auth @relation(fields: [userId], references: [id])
 
     reason DeletionReason?
-    other String
+    other String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

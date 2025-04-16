@@ -23,6 +23,8 @@ model PartnerVenue {
   jobBasicInfo JobBasicInfo[]
   jobPosts JobPost[]
 
+  status VenueStatus @default(ACTIVE)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -36,7 +36,6 @@ export class AuthGaurd implements CanActivate {
         secret: process.env.JWT_ACCESS_SECRET || 'qazxswedcrfvbgtnhy',
       });
       req.user = user;
-      console.log('req.user ', req.user);
     } catch (error) {
       console.error('Token validation error: ', error);
     }
@@ -60,6 +59,7 @@ export class AuthGaurd implements CanActivate {
       const user = await this.prisma.auth.findFirst({
         where: {
           id: req.user.id,
+          isDeleted: false,
         },
       });
       if (!user) {
@@ -77,6 +77,9 @@ export class AuthGaurd implements CanActivate {
           id: req.user.id,
         },
       });
+      if (admin.isDeleted === true) {
+        throw new UnauthorizedException('Admin Account Not Found');
+      }
       if (!admin) {
         throw new UnauthorizedException('Invalid Admin id.');
       }
@@ -92,6 +95,9 @@ export class AuthGaurd implements CanActivate {
           id: req.user.id,
         },
       });
+      if (superAdmin.isDeleted === true) {
+        throw new UnauthorizedException('Admin Account Not Found');
+      }
       if (!superAdmin) {
         throw new UnauthorizedException('Invalid SuperAdmin id.');
       }
@@ -107,6 +113,9 @@ export class AuthGaurd implements CanActivate {
           id: req.user.id,
         },
       });
+      if (agency.isDeleted === true) {
+        throw new UnauthorizedException('Admin Account Not Found');
+      }
       if (!agency) {
         throw new UnauthorizedException('Invalid Agency id.');
       }
@@ -117,13 +126,14 @@ export class AuthGaurd implements CanActivate {
     }
 
     if (userRole === 'PARTNER') {
-      console.log('partner....');
       const partner = await this.prisma.auth.findUnique({
         where: {
           id: req.user.id,
         },
       });
-      console.log('partner... line 126');
+      if (partner.isDeleted === true) {
+        throw new UnauthorizedException('Admin Account Not Found');
+      }
       if (!partner) {
         throw new UnauthorizedException('Invalid Partner id.');
       }
@@ -131,7 +141,6 @@ export class AuthGaurd implements CanActivate {
         throw new UnauthorizedException('Inavlid partner role');
       }
       req.partner = partner;
-      console.log('req.partner ', req.partner);
     }
     return requiredRoles.includes(userRole);
   }

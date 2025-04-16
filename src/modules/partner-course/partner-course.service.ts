@@ -468,7 +468,7 @@ export class PartnerCourseService {
               },
             },
             courseContent: true,
-            courseAcademy: false,
+            courseAcademy: true,
             courseTypeAndLocation: true,
           },
           skip: getPaginationSkip(query.page, query.limit),
