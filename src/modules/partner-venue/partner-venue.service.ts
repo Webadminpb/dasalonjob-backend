@@ -245,26 +245,117 @@ export class PartnerVenueService {
   }
 
   async dashboardTotal(user: Auth) {
+    const todayStart = startOfDay(new Date()).toISOString();
+    const todayEnd = endOfDay(new Date()).toISOString();
+
+    const yesterdayStart = startOfDay(subDays(new Date(), 1)).toISOString();
+    const yesterdayEnd = endOfDay(subDays(new Date(), 1)).toISOString();
+
     const [
-      totalJobs = 0,
-      totalCourses = 0,
       totalJobApplicants = 0,
+      totalApplicantsToday = 0,
+      totalApplicantsYesterday = 0,
+      totalJobs = 0,
+      totalJobsToday = 0,
+      totalJobsYesterday = 0,
+      totalCourses = 0,
+      totalCoursesToday = 0,
+      totalCoursesYesterday = 0,
       totalCourseApplicants = 0,
+      totalCourseApplicantsToday = 0,
+      totalCourseApplicantsYesterday = 0,
     ] = await Promise.all([
-      this.prismaService.jobPost.count({ where: { userId: user.id } }),
-      this.prismaService.partnerCourse.count({ where: { userId: user.id } }),
       this.prismaService.jobApplication.count({
-        where: { jobPost: { userId: user.id } },
+        where: {
+          jobPost: {
+            userId: user.id,
+          },
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+            createdAt: { gte: todayStart, lte: todayEnd },
+          },
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user.id,
+            createdAt: { gte: yesterdayStart, lte: yesterdayEnd },
+          },
+        },
+      }),
+      this.prismaService.jobPost.count({ where: { userId: user.id } }),
+      this.prismaService.jobPost.count({
+        where: {
+          userId: user.id,
+          createdAt: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      this.prismaService.jobPost.count({
+        where: {
+          userId: user.id,
+          createdAt: {
+            gte: yesterdayStart,
+            lte: yesterdayEnd,
+          },
+        },
+      }),
+      this.prismaService.partnerCourse.count({ where: { userId: user.id } }),
+      this.prismaService.partnerCourse.count({
+        where: {
+          userId: user.id,
+          createdAt: { gte: todayStart, lte: todayEnd },
+        },
+      }),
+      this.prismaService.partnerCourse.count({
+        where: {
+          userId: user.id,
+          createdAt: {
+            gte: yesterdayStart,
+            lte: yesterdayEnd,
+          },
+        },
       }),
       this.prismaService.courseApplication.count({
         where: { course: { userId: user.id } },
       }),
+      this.prismaService.courseApplication.count({
+        where: {
+          course: {
+            userId: user.id,
+            createdAt: { gte: todayStart, lte: todayEnd },
+          },
+        },
+      }),
+      this.prismaService.courseApplication.count({
+        where: {
+          course: {
+            userId: user.id,
+            createdAt: { gte: yesterdayStart, lte: yesterdayEnd },
+          },
+        },
+      }),
     ]);
     return new ApiSuccessResponse(true, 'total', {
-      totalJobs,
-      totalCourses,
       totalJobApplicants,
+      totalApplicantsToday,
+      totalApplicantsYesterday,
+      totalJobs,
+      totalJobsToday,
+      totalJobsYesterday,
+      totalCourses,
+      totalCoursesToday,
+      totalCoursesYesterday,
       totalCourseApplicants,
+      totalCourseApplicantsToday,
+      totalCourseApplicantsYesterday,
     });
   }
 
@@ -382,8 +473,6 @@ export class PartnerVenueService {
   }
 
   async jobApplicationTotal(user: Auth) {
-    console.log('userId ', user);
-
     const [applied, shortlisted, rejected, accepted] = await Promise.all([
       this.prismaService.jobApplication.count({
         where: {

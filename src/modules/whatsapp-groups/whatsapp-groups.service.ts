@@ -5,7 +5,11 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { QueryWhatsAppDto } from './dto/query-whatsapp-group.dto';
 import { Prisma } from '@prisma/client';
-import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
+import {
+  getPaginationSkip,
+  getPaginationTake,
+  getSortOrder,
+} from 'src/common/utils/common';
 
 @Injectable()
 export class WhatsappGroupsService {
@@ -104,5 +108,46 @@ export class WhatsappGroupsService {
       'WhatsApp Group Deleted Successfully',
       null,
     );
+  }
+
+  async createWhatsAppGroup(dto: CreateWhatsappGroupDto): Promise<any> {
+    const createWhatsAppGroup = await this.prismaService.whatsAppGroup.create({
+      data: {
+        link: dto.link,
+        name: dto.name,
+        city: dto.city,
+        description: dto.description,
+      },
+    });
+
+    return new ApiSuccessResponse(
+      true,
+      'WhatsApp group created successfully',
+      createWhatsAppGroup,
+    );
+  }
+
+  async getWhatAppGroups(query: QueryWhatsAppDto) {
+    const where: Prisma.WhatsAppGroupWhereInput = {};
+
+    const whatsAppGroups = await this.prismaService.whatsAppGroup.findMany();
+  }
+
+  #queryBuilder(query: QueryWhatsAppDto) {
+    const where: Prisma.WhatsAppGroupWhereInput = {};
+    if (query.city) {
+      where.city = query.city;
+    }
+
+    if (query.search) {
+      where.name = {
+        contains: query.search,
+        mode: 'insensitive',
+      };
+    }
+    const skip = getPaginationSkip(query.page, query.limit);
+    const page = getPaginationTake(query.limit);
+
+    // return { where, skip, limit };
   }
 }

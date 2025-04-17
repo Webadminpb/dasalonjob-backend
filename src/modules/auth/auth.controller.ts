@@ -139,6 +139,20 @@ export class AuthController {
     return this.authService.getAllUsersForAdmin(query);
   }
 
+  @Get('agency/partner/total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('AGENCY')
+  fetchAgencyPartnerTotal(@GetUser() user: Auth) {
+    return this.authService.fetchAgencyPartnerTotal(user);
+  }
+
+  @Get('agency/applicant/total')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('AGENCY')
+  fetchAgencyApplicantTotal(@GetUser() user: Auth) {
+    return this.authService.fetchAgencyApplicantTotal(user);
+  }
+
   // Update Account (Applicant, Partner, User) Status By Id
   @Patch('admin/user/:id')
   @HttpCode(HttpStatus.OK)

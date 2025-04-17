@@ -685,4 +685,32 @@ export class AuthService {
     });
     return new ApiSuccessResponse(true, 'Account Deleted Successfully', null);
   }
+
+  async fetchAgencyPartnerTotal(user: Auth) {
+    const [active, inActive] = await Promise.all([
+      this.prismaService.auth.count({
+        where: { role: 'PARTNER', status: 'ACTIVE' },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          role: 'PARTNER',
+          status: 'INACTIVE',
+        },
+      }),
+    ]);
+
+    return new ApiSuccessResponse(true, 'Partners Count', { active, inActive });
+  }
+
+  async fetchAgencyApplicantTotal(user: Auth) {
+    const [active, inActive] = await Promise.all([
+      this.prismaService.auth.count({ where: { role: 'USER' } }),
+      this.prismaService.auth.count({ where: { role: 'USER' } }),
+    ]);
+
+    return new ApiSuccessResponse(true, 'Applicants Count', {
+      active,
+      inActive,
+    });
+  }
 }
