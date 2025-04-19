@@ -111,4 +111,14 @@ export class JobApplicationController {
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.jobApplicationService.remove(id, user);
   }
+
+  @Get('agency/recents')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('AGENCY')
+  getAgencyRecentApplicants(
+    @Query() query: QueryJobApplicationDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobApplicationService.getAgencyRecentApplicants(query, user);
+  }
 }

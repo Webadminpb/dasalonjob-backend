@@ -8,9 +8,15 @@ import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { QueryJobApplicationDto } from './dto/query-job-application.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { Auth, JobApplicationStatus } from '@prisma/client';
-import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
+import { Auth, JobApplicationStatus, Prisma } from '@prisma/client';
+import {
+  getPaginationSkip,
+  getPaginationTake,
+  getSortBy,
+  getSortOrder,
+} from 'src/common/utils/common';
 import { StatusJobApplicationDto } from './dto/status-job.dto';
+import { QueryAgencyTeamMembersDto } from '../agency-team-members/dto/query-agency-team-member.dto';
 
 @Injectable()
 export class JobApplicationService {
@@ -608,5 +614,29 @@ export class JobApplicationService {
       where: { id },
     });
     return new ApiSuccessResponse(true, 'Job application deleted', null);
+  }
+
+  async getAgencyRecentApplicants(query: QueryJobApplicationDto, user: Auth) {
+    const where: Prisma.JobApplicationWhereInput = {};
+    const orderBy = getSortOrder(query.order);
+    const sortBy = getSortBy(query.sort);
+
+    const [existedJobApplications, totalExistingJobApplications] =
+      await Promise.all([
+        this.prismaService.jobApplication.findMany({
+          where,
+          orderBy: {
+            [sortBy]: [orderBy],
+          },
+        }),
+        this.prismaService.jobApplication.count(),
+      ]);
+    if (!existedJobApplications) {
+      throw new NotFoundException('No recent applicants found');
+    }
+    return new ApiSuccessResponse(true, 'Recent Applicants', {
+      existedJobApplications,
+      totalExistingJobApplications,
+    });
   }
 }

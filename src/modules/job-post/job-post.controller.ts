@@ -125,4 +125,6 @@ export class JobPostController {
   findJobPostsForAgency(@Query() query: QueryJobPostDto) {
     return this.jobPostService.findAllForAdmin(query);
   }
+
+ 
 }
