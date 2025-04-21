@@ -1,0 +1,21 @@
+model SponsoredJob {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    jobPostId String @db.ObjectId
+    job JobPost @relation(fields: [jobPostId], references: [id])
+
+    startDate DateTime @default(now())
+    endDate DateTime
+
+    priority Int @default(1)
+
+    isActive Boolean @default(true)
+    impressions Int @default(0)
+
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([jobPostId])
+    @@index([isActive, endDate, priority])
+}

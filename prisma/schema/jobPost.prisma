@@ -28,6 +28,7 @@ model JobPost {
   jobApplications JobApplication[]
   saveJobPosts SaveJobPost[]
   featuredJobs FeaturedJob[]
+  sponsoredJobs SponsoredJob[]
 
   views Int @default(0)
 

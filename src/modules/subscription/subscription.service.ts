@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 
+import { Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
-import { Prisma } from '@prisma/client';
 import {
   CreateSubscriptionDto,
   QuerySubscriptionDto,
   UpdateSubscriptionDto,
 } from './dto/subscription.dto';
-import { PaymentHistoryService } from './payment-history/payment-history.service';
 
 @Injectable()
 export class SubscriptionService {

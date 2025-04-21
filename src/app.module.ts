@@ -56,6 +56,7 @@ import { FeaturedJobsModule } from './modules/featured-jobs/featured-jobs.module
 import { CreditPlansModule } from './modules/credit-plans/credit-plans.module';
 import { CreditsModule } from './modules/credits/credits.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { SponsoredJobModule } from './modules/sponsored-jobs/sponsored-job-module';
 
 @Module({
   imports: [
@@ -114,6 +115,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
     CreditPlansModule,
     CreditsModule,
     SubscriptionModule,
+    SponsoredJobModule,
   ],
   controllers: [AppController],
   providers: [AppService],
