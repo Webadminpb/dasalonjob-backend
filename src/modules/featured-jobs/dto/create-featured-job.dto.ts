@@ -4,8 +4,10 @@ import { z } from 'zod';
 
 export const FeaturedJobSchema = z.object({
   jobPostId: z.string(),
+  startDate: z.string().datetime(),
   endDate: z.string().datetime(),
   priority: z.number().int().min(1).max(10).optional(),
+  isActive: z.boolean().optional(),
 });
 
 export class CreateFeaturedJobDto extends createZodDto(FeaturedJobSchema) {

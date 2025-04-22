@@ -16,7 +16,9 @@ export class FeaturedJobService {
       data: {
         jobPostId: body.jobPostId,
         endDate: body.endDate,
+        startDate: body.startDate,
         priority: body.priority || 1,
+        isActive: body.isActive,
       },
       include: {
         jobPost: true,

@@ -2,7 +2,7 @@ model SaveJobPost {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   // ApplicantId
-  userId String @db.ObjectId
+  userId String @db.ObjectId 
   user Auth @relation(fields: [userId], references: [id])
 
   jobPostId String @db.ObjectId

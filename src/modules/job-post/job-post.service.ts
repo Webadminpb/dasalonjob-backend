@@ -281,7 +281,138 @@ export class JobPostService {
             },
           },
           jobApplications: true,
-          saveJobPosts: true,
+          saveJobPosts: {
+            where: {
+              userId: user.id,
+            },
+          },
+        },
+        skip,
+        take,
+        orderBy: {
+          [orderBy]: sortOrder,
+        },
+      }),
+      this.prismaService.jobPost.count({ where, skip, take }),
+    ]);
+
+    if (!jobPost) {
+      throw new NotFoundException('Job post not found');
+    }
+    const jobPostWithCounts = jobPost.map((job: any) => ({
+      ...job,
+      totalApplicants: job.jobApplications.length,
+      totalSaved: job.saveJobPosts.length,
+    }));
+    return new ApiSuccessResponse(true, 'Job post found', {
+      total,
+      totalOpenJobs,
+      totalFulfilledJobs,
+      jobPosts: jobPostWithCounts,
+    });
+  }
+
+  async findAllForApplicant(query: QueryJobPostDto, user?: Auth) {
+    const where: Prisma.JobPostWhereInput = {};
+    // if (user) {
+    //   where.userId = user.id;
+    // }
+
+    if (query.job_profile || query.search || query.job_type) {
+      where.jobBasicInfo = {};
+
+      if (query.job_profile?.length) {
+        where.jobBasicInfo.profile = {
+          in: query.job_profile,
+        };
+      }
+
+      if (query.search) {
+        where.jobBasicInfo.title = {
+          contains: query.search,
+          mode: 'insensitive',
+        };
+      }
+
+      if (query.job_type?.length) {
+        where.jobBasicInfo.jobType = {
+          in: query.job_type,
+        };
+      }
+
+      if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+        const salaryFilter: any = {};
+
+        if (query.minSalary !== undefined) {
+          salaryFilter.start = { gte: query.minSalary };
+        }
+
+        if (query.maxSalary !== undefined) {
+          salaryFilter.end = { lte: query.maxSalary };
+        }
+
+        where.jobBasicInfo.salaryRange = salaryFilter;
+      }
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+    if (query.countryId) {
+      where.countryId = query.countryId;
+    }
+
+    if (query.experience) {
+      where.jobQualification = {
+        minExperience: query.experience,
+      };
+    }
+
+    if (query.locations && query.locations.length > 0) {
+      where.venue = {
+        venueBasicDetails: {
+          city: { in: query.locations },
+        },
+      };
+    }
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
+    const sortOrder = getSortOrder(query.order);
+    const orderBy = getSortBy(query.sort);
+
+    const [totalOpenJobs, totalFulfilledJobs] = await Promise.all([
+      this.prismaService.jobPost.count({ where: { isOpen: true } }),
+      this.prismaService.jobPost.count({ where: { isOpen: false } }),
+    ]);
+
+    const [jobPost, total] = await Promise.all([
+      await this.prismaService.jobPost.findMany({
+        where,
+        include: {
+          jobBasicInfo: true,
+          jobBenefits: true,
+          jobDescription: true,
+          jobQualification: {
+            include: {
+              skills: true,
+            },
+          },
+          venue: {
+            include: {
+              venueBasicDetails: {
+                include: {
+                  files: true,
+                },
+              },
+            },
+          },
+          jobApplications: true,
+          saveJobPosts: {
+            where: {
+              userId: user.id,
+            },
+          },
         },
         skip,
         take,
@@ -529,7 +660,152 @@ export class JobPostService {
             },
           },
           jobApplications: true,
-          saveJobPosts: true,
+          _count: {
+            select: {
+              saveJobPosts: true,
+            },
+          },
+        },
+
+        skip,
+        take,
+        orderBy: {
+          [orderBy]: sortOrder,
+        },
+      }),
+      this.prismaService.jobPost.count({ where, skip, take }),
+    ]);
+
+    if (!jobPost) {
+      throw new NotFoundException('Job post not found');
+    }
+    const jobPostWithCounts = jobPost.map((job: any) => ({
+      ...job,
+      totalApplicants: job.jobApplications.length,
+      totalSaved: job._count,
+    }));
+    return new ApiSuccessResponse(true, 'Job post found', {
+      total,
+      totalOpenJobs,
+      totalFulfilledJobs,
+      totalPendingJobs,
+      jobPosts: jobPostWithCounts,
+    });
+  }
+
+  async findAllForAgency(query: QueryJobPostDto, user: Auth) {
+    const where: Prisma.JobPostWhereInput = {};
+    if (query.partnerId) {
+      where.userId = query.partnerId;
+    }
+
+    if (query.job_profile || query.search || query.job_type) {
+      where.jobBasicInfo = {};
+
+      if (query.job_profile?.length) {
+        where.jobBasicInfo.profile = {
+          in: query.job_profile,
+        };
+      }
+
+      if (query.search) {
+        where.jobBasicInfo.title = {
+          contains: query.search,
+          mode: 'insensitive',
+        };
+      }
+
+      if (query.job_type?.length) {
+        where.jobBasicInfo.jobType = {
+          in: query.job_type,
+        };
+      }
+
+      if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+        const salaryFilter: any = {};
+
+        if (query.minSalary !== undefined) {
+          salaryFilter.start = { gte: query.minSalary };
+        }
+
+        if (query.maxSalary !== undefined) {
+          salaryFilter.end = { lte: query.maxSalary };
+        }
+
+        where.jobBasicInfo.salaryRange = salaryFilter;
+      }
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    if (query.date) {
+      where.createdAt = {
+        gte: new Date(query.date).toISOString(),
+      };
+    }
+
+    if (query.countryId) {
+      where.countryId = query.countryId;
+    }
+
+    if (query.experience) {
+      where.jobQualification = {
+        minExperience: query.experience,
+      };
+    }
+
+    if (query.locations && query.locations.length > 0) {
+      where.venue = {
+        venueBasicDetails: {
+          city: { in: query.locations },
+        },
+      };
+    }
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
+    const sortOrder = getSortOrder(query.order);
+    const orderBy = getSortBy(query.sort);
+
+    const [totalOpenJobs, totalFulfilledJobs, totalPendingJobs] =
+      await Promise.all([
+        this.prismaService.jobPost.count({ where: { isOpen: true } }),
+        this.prismaService.jobPost.count({ where: { isOpen: false } }),
+        this.prismaService.jobPost.count({ where: { status: 'Pending' } }),
+      ]);
+
+    const [jobPost, total] = await Promise.all([
+      await this.prismaService.jobPost.findMany({
+        where,
+        include: {
+          jobBasicInfo: {
+            include: {
+              venue: {
+                include: {
+                  venueBasicDetails: {
+                    include: {
+                      files: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          jobBenefits: true,
+          jobDescription: true,
+          jobQualification: {
+            include: {
+              skills: true,
+            },
+          },
+          jobApplications: true,
+          saveJobPosts: {
+            where: {
+              userId: user.id,
+            },
+          },
         },
 
         skip,

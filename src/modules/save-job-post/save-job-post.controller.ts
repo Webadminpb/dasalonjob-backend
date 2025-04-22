@@ -26,28 +26,28 @@ export class SaveJobPostController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'AGENCY')
   create(@Body() body: CreateASaveJobPostDto, @GetUser() user: Auth) {
     return this.saveJobPostService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'AGENCY')
   findAll(@GetUser() user: Auth) {
     return this.saveJobPostService.findAll(user);
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'AGENCY')
   findOne(@Param('id') id: string, @GetUser() user: Auth) {
     return this.saveJobPostService.findOne(id, user);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'AGENCY')
   update(
     @Param('id') id: string,
     @Body() body: UpdateSaveJobPostDto,
@@ -58,7 +58,7 @@ export class SaveJobPostController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated('USER', 'AGENCY')
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.saveJobPostService.remove(id, user);
   }

@@ -47,8 +47,9 @@ export class JobPostController {
   // For Applicant
   @Get('u-query')
   @HttpCode(HttpStatus.OK)
-  findJobPosts(@Query() query: QueryJobPostDto) {
-    return this.jobPostService.findAll(query);
+  @AllowAuthenticated()
+  findJobPosts(@Query() query: QueryJobPostDto, @GetUser() user: Auth) {
+    return this.jobPostService.findAllForApplicant(query, user);
   }
 
   // For Partner
@@ -122,9 +123,10 @@ export class JobPostController {
   @Get('agency-query')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
-  findJobPostsForAgency(@Query() query: QueryJobPostDto) {
-    return this.jobPostService.findAllForAdmin(query);
+  findJobPostsForAgency(
+    @Query() query: QueryJobPostDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.jobPostService.findAllForAgency(query, user);
   }
-
- 
 }
