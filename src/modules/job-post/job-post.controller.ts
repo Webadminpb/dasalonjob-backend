@@ -71,8 +71,9 @@ export class JobPostController {
 
   @Get('/applicant/:id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
-    return this.jobPostService.findOne(id);
+  @AllowAuthenticated()
+  findOne(@Param('id') id: string, @GetUser() user: Auth) {
+    return this.jobPostService.findOne(id, user);
   }
 
   @Put(':id')

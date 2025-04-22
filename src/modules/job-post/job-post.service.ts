@@ -125,7 +125,7 @@ export class JobPostService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: Auth) {
     const [jobPost, update] = await this.prismaService.$transaction([
       this.prismaService.jobPost.findUnique({
         where: { id },
@@ -147,6 +147,11 @@ export class JobPostService {
                   file: true,
                 },
               },
+            },
+          },
+          jobApplications: {
+            where: {
+              userId: user.id,
             },
           },
         },
