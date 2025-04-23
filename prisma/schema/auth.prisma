@@ -113,6 +113,9 @@ model Auth {
   agencyOwners AgencyTeam[] @relation("Agency")
   agencyTeamMembers AgencyTeam[] @relation("TeamMember")
 
+  savedApplicants SavedApplicant[] @relation("SavedApplicantsByAgency")
+  savedByAgencues SavedApplicant[] @relation("SavedAsApplicantByAgency")
+
   agencyCollaborations PartnerAgencyJobPermission[] @relation("AgencyCollaborations") 
   partnerCollaborations PartnerAgencyJobPermission[] @relation("PartnerCollaborations") 
 

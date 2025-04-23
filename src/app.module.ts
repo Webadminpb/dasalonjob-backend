@@ -57,9 +57,11 @@ import { CreditPlansModule } from './modules/credit-plans/credit-plans.module';
 import { CreditsModule } from './modules/credits/credits.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { SponsoredJobModule } from './modules/sponsored-jobs/sponsored-job-module';
+import { SavedApplicantModule } from './modules/saved-applicant/saved-applicant.module';
 
 @Module({
   imports: [
+    SavedApplicantModule,
     AuthModule,
     BasicdetailsModule,
     ContactdetailsModule,

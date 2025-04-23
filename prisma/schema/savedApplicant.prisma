@@ -1,0 +1,14 @@
+model SavedApplicant {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    agencyId String @db.ObjectId
+    agency Auth @relation("SavedApplicantsByAgency",fields: [agencyId], references: [id])
+
+    applicantId String @db.ObjectId
+    applicant Auth @relation("SavedAsApplicantByAgency",fields: [applicantId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([agencyId, applicantId], name:"agencyId_applicantId_unique")
+}
