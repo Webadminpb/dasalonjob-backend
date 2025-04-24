@@ -119,6 +119,9 @@ model Auth {
   agencyCollaborations PartnerAgencyJobPermission[] @relation("AgencyCollaborations") 
   partnerCollaborations PartnerAgencyJobPermission[] @relation("PartnerCollaborations") 
 
+  jobOffersAsAgency JobOfferToSavedApplicant[] @relation("JobOffersByAgency")
+  jobOffersAsApplicant JobOfferToSavedApplicant[] @relation("JobOffersToApplicant")
+
   subscriptions Subscription[]
   subscriptionPaymentHistories SubscriptionPaymentHistory[]
 

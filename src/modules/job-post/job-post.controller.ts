@@ -20,7 +20,10 @@ import {
 import { JobPostService } from './job-post.service';
 import { CreateJobPostDto } from './dto/create-job-post.dto';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
-import { QueryJobPostDto } from './dto/query-job-post.dto';
+import {
+  QueryJobPostDto,
+  QueryJobPostDtoForAdmin,
+} from './dto/query-job-post.dto';
 import { CreateJobStatusDto } from './dto/status-job-post.dto';
 
 @ApiTags('partner')
@@ -116,7 +119,7 @@ export class JobPostController {
   @Get('admin-query')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
-  findJobPostsForAdmin(@Query() query: QueryJobPostDto) {
+  findJobPostsForAdmin(@Query() query: QueryJobPostDtoForAdmin) {
     return this.jobPostService.findAllForAdmin(query);
   }
 

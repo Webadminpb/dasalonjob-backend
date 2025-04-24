@@ -58,9 +58,11 @@ import { CreditsModule } from './modules/credits/credits.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { SponsoredJobModule } from './modules/sponsored-jobs/sponsored-job-module';
 import { SavedApplicantModule } from './modules/saved-applicant/saved-applicant.module';
+import { JobOfferToSavedApplicantModule } from './modules/jobOfferToSavedApplicants/jobOfferToSavedApplicant.module';
 
 @Module({
   imports: [
+    JobOfferToSavedApplicantModule,
     SavedApplicantModule,
     AuthModule,
     BasicdetailsModule,

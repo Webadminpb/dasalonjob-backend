@@ -11,7 +11,10 @@ import {
 import { PartnerAgencyPermissionService } from '../partner-agency-job-permission/partner-agency-job-permission.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateJobPostDto } from './dto/create-job-post.dto';
-import { QueryJobPostDto } from './dto/query-job-post.dto';
+import {
+  QueryJobPostDto,
+  QueryJobPostDtoForAdmin,
+} from './dto/query-job-post.dto';
 import { CreateJobStatusDto } from './dto/status-job-post.dto';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
 @Injectable()
@@ -75,7 +78,11 @@ export class JobPostService {
           user: true,
           venue: {
             include: {
-              venueBasicDetails: true,
+              venueBasicDetails: {
+                include: {
+                  files: true,
+                },
+              },
             },
           },
           jobBasicInfo: true,
@@ -200,9 +207,7 @@ export class JobPostService {
       where.jobBasicInfo = {};
 
       if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = {
-          in: query.job_profile,
-        };
+        where.jobBasicInfo.profile = query.job_profile;
       }
 
       if (query.search) {
@@ -327,9 +332,7 @@ export class JobPostService {
       where.jobBasicInfo = {};
 
       if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = {
-          in: query.job_profile,
-        };
+        where.jobBasicInfo.profile = query.job_profile;
       }
 
       if (query.search) {
@@ -557,7 +560,7 @@ export class JobPostService {
     );
   }
 
-  async findAllForAdmin(query: QueryJobPostDto) {
+  async findAllForAdmin(query: QueryJobPostDtoForAdmin) {
     const where: Prisma.JobPostWhereInput = {};
     if (query.partnerId) {
       where.userId = query.partnerId;
@@ -708,9 +711,7 @@ export class JobPostService {
       where.jobBasicInfo = {};
 
       if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = {
-          in: query.job_profile,
-        };
+        where.jobBasicInfo.profile = query.job_profile;
       }
 
       if (query.search) {

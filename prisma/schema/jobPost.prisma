@@ -29,6 +29,7 @@ model JobPost {
   saveJobPosts SaveJobPost[]
   featuredJobs FeaturedJob[]
   sponsoredJobs SponsoredJob[]
+  JobOfferToSavedApplicants JobOfferToSavedApplicant[]
 
   views Int @default(0)
 

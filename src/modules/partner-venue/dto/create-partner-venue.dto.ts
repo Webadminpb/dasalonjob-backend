@@ -4,6 +4,8 @@ import { z } from 'zod';
 
 export const CreatePartnerVenueSchema = z.object({
   venueBasicDetailsId: z.string(),
+  logoId: z.string().optional(),
+  description: z.string().optional(),
   salonBasicDetailsId: z.string(),
   venueAmenityIds: z.string(),
   venueWorkStationIds: z.array(z.string()),
