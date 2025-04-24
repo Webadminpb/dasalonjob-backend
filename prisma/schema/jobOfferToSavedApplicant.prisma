@@ -1,0 +1,24 @@
+// model JobOfferToSavedApplicant {
+//     id String @id @default(auto()) @map("_id") @db.ObjectId
+
+//     agencyId String @db.ObjectId
+//     agency Auth @relation("JobOffersByAgency", fields: [agencyId], references: [id])
+
+//     applicantId String @db.ObjectId
+//     applicant Auth @relation("JobOffersToApplicant", fields: [applicantId], references: [id])
+
+//     jobPostId String @db.ObjectId
+//     jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+//     status JobOfferStatus @default(SENT)
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+
+//     @@unique([agencyId, applicantId, jobPostId], name:"agency_applicant_job_unique")
+// }
+
+// enum JobOfferStatus {
+//     SENT 
+//     ACCEPTED
+//     REJECTED    
+// }

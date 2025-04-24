@@ -1,6 +1,9 @@
 model PartnerVenue {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  logoId String? @db.ObjectId
+  logo File? @relation(fields: [logoId], references: [id])
+
   venueBasicDetailsId String @db.ObjectId 
   venueBasicDetails VenueDetails @relation(fields: [venueBasicDetailsId], references: [id])
 
@@ -18,6 +21,8 @@ model PartnerVenue {
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
+
+  description String?
 
   courseAcademy CourseAcademy[]
   jobBasicInfo JobBasicInfo[]

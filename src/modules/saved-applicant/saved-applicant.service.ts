@@ -58,17 +58,38 @@ export class SavedApplicantService {
     }
 
     if (query?.search) {
+      where.OR = [
+        {
+          applicant: {
+            firstName: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          applicant: {
+            lastName: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
     }
-    const order = getSortOrder(query.order);
-    const sort = getSortBy(query.sort);
+    const orderBy = getSortOrder(query.order);
+    const sortBy = getSortBy(query.sort);
 
     const [savedApplicants, total] = await Promise.all([
       this.prismaService.savedApplicant.findMany({
         where,
         skip: getPaginationSkip(query.page, query.limit),
         take: getPaginationTake(query.limit),
-        orderBy: {
-          [order]: [sort],
+        // orderBy: {
+        //   [orderBy]: [sortBy],
+        // },
+        include: {
+          applicant: true,
         },
       }),
       this.prismaService.savedApplicant.count({ where }),

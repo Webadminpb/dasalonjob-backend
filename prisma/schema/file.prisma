@@ -24,6 +24,7 @@ model File {
   courseDetails CourseDetails[]
   certificates Certificate[]
   languages Language[]
+  partnerVenues PartnerVenue[]
 
   profileImageAuth Auth[] @relation("ProfileImage")
 
