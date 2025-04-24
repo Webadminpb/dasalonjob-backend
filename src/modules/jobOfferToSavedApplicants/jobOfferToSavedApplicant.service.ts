@@ -49,6 +49,9 @@ export class JobOfferToSavedApplicantService {
     const where: Prisma.JobOfferToSavedApplicantWhereInput = {
       applicantId: user.id,
     };
+    if (query.status) {
+      where.status = query.status;
+    }
     const [jobOffers, total] = await Promise.all([
       this.prismaService.jobOfferToSavedApplicant.findMany({
         where,
