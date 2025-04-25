@@ -77,6 +77,19 @@ export class SavedApplicantService {
         },
       ];
     }
+
+    const jobPost = await this.prismaService.jobPost.findUnique({
+      where: { id: query.jobPostId },
+      include: {
+        jobQualification: {
+          include: {
+            skills: true,
+          },
+        },
+      },
+    });
+    const jobRequiredSkillIds =
+      jobPost?.jobQualification?.skills.map((skill) => skill.id) || [];
     const orderBy = getSortOrder(query.order);
     const sortBy = getSortBy(query.sort);
 
@@ -89,14 +102,42 @@ export class SavedApplicantService {
         //   [orderBy]: [sortBy],
         // },
         include: {
-          applicant: true,
+          applicant: {
+            include: {
+              profileImage: true,
+              jobPreference: {
+                include: {
+                  skills: true,
+                },
+              },
+            },
+          },
         },
       }),
       this.prismaService.savedApplicant.count({ where }),
     ]);
 
+    const savedApplicantsWithMatchCount = savedApplicants.map((applicant) => {
+      const applicantSkills = applicant.applicant.jobPreference?.skills || [];
+      const applicantSkillIds = applicantSkills.map((skill) => skill.id);
+
+      const matchingSkillsCount = jobRequiredSkillIds.filter((skillId) =>
+        applicantSkillIds.includes(skillId),
+      ).length;
+
+      return {
+        ...applicant,
+        skillsMatchCount: matchingSkillsCount,
+        totalRequiredSkills: jobRequiredSkillIds.length,
+      };
+    });
+
+    savedApplicantsWithMatchCount.sort(
+      (a, b) => b.skillsMatchCount - a.skillsMatchCount,
+    );
+
     return new ApiSuccessResponse(true, 'Saved Applicant Data', {
-      savedApplicants,
+      savedApplicants: savedApplicantsWithMatchCount,
       total,
     });
   }

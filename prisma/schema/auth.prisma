@@ -124,6 +124,7 @@ model Auth {
 
   subscriptions Subscription[]
   subscriptionPaymentHistories SubscriptionPaymentHistory[]
+  savedApplicantCategory SavedApplicantCategory[]
 
   accountDeletion AccountDeletion?
 

@@ -29,7 +29,6 @@ export class WhatsappGroupsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
   findAll(@Query() query: QueryWhatsAppDto) {
     return this.whatsappGroupsService.findAll(query);
   }

@@ -236,7 +236,7 @@ export class PartnerCourseService {
     });
   }
 
-  async findOneForApplicant(id: string) {
+  async findOneForApplicant(id: string, user?: Auth) {
     const [course, _, totalSaved, totalApplicant] =
       await this.prismaService.$transaction([
         this.prismaService.partnerCourse.findUnique({
@@ -247,6 +247,16 @@ export class PartnerCourseService {
             courseDetails: {
               include: {
                 file: true,
+              },
+            },
+            saveCourses: {
+              where: {
+                userId: user?.id,
+              },
+            },
+            courseApplications: {
+              where: {
+                userId: user?.id,
               },
             },
             courseContent: true,
@@ -407,7 +417,7 @@ export class PartnerCourseService {
     );
   }
 
-  async findAllForAdmin(query: QueryPartnerCourseDto) {
+  async findAllForAdmin(query: QueryPartnerCourseDto, user?: Auth) {
     const where: Prisma.PartnerCourseWhereInput = {};
     if (query.partnerId) {
       where.userId = query.partnerId;
@@ -470,6 +480,16 @@ export class PartnerCourseService {
             courseContent: true,
             courseAcademy: true,
             courseTypeAndLocation: true,
+            saveCourses: {
+              where: {
+                userId: user?.id,
+              },
+            },
+            courseApplications: {
+              where: {
+                userId: user?.id,
+              },
+            },
           },
           skip: getPaginationSkip(query.page, query.limit),
           take: getPaginationTake(query.limit),

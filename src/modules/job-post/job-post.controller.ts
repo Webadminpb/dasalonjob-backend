@@ -55,6 +55,12 @@ export class JobPostController {
     return this.jobPostService.findAllForApplicant(query, user);
   }
 
+  @Get('guest-u-query')
+  @HttpCode(HttpStatus.OK)
+  findJobPostsForGuest(@Query() query: QueryJobPostDto) {
+    return this.jobPostService.findAllForApplicant(query);
+  }
+
   // For Partner
   @Get('deadline-jobs')
   @HttpCode(HttpStatus.OK)
@@ -70,6 +76,12 @@ export class JobPostController {
   @HttpCode(HttpStatus.OK)
   findOneFor(@Param('id') id: string) {
     return this.jobPostService.findOneForPartner(id);
+  }
+
+  @Get('/guest/:id')
+  @HttpCode(HttpStatus.OK)
+  findOneJobPostForGuest(@Param('id') id: string) {
+    return this.jobPostService.findOne(id);
   }
 
   @Get('/applicant/:id')

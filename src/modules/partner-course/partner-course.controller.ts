@@ -58,6 +58,13 @@ export class PartnerCourseController {
     return this.partnerCourseService.findOneForApplicant(id);
   }
 
+  @Get('applicant/:id')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  findForApplicant(@Param('id') id: string) {
+    return this.partnerCourseService.findOneForApplicant(id);
+  }
+
   // Partner
   @Put(':id')
   @AllowAuthenticated('PARTNER', 'ADMIN', 'SUPER_ADMIN')
@@ -105,7 +112,17 @@ export class PartnerCourseController {
 
   @Get('courses')
   @HttpCode(HttpStatus.OK)
-  getAllCoursesForApplicant(@Query() query: QueryPartnerCourseDto) {
+  getAllCoursesForGuest(@Query() query: QueryPartnerCourseDto) {
     return this.partnerCourseService.findAllForAdmin(query);
+  }
+
+  @Get('applicant-courses')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  getAllCoursesForApplicant(
+    @Query() query: QueryPartnerCourseDto,
+    @GetUser() user: Auth,
+  ) {
+    return this.partnerCourseService.findAllForAdmin(query, user);
   }
 }
