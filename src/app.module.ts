@@ -59,9 +59,11 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { SponsoredJobModule } from './modules/sponsored-jobs/sponsored-job-module';
 import { SavedApplicantModule } from './modules/saved-applicant/saved-applicant.module';
 import { JobOfferToSavedApplicantModule } from './modules/jobOfferToSavedApplicants/jobOfferToSavedApplicant.module';
+import { SavedApplicantCategory } from './modules/saved-applicant-category/saved-applicant-category.module';
 
 @Module({
   imports: [
+    SavedApplicantCategory,
     JobOfferToSavedApplicantModule,
     SavedApplicantModule,
     AuthModule,

@@ -7,6 +7,9 @@ model SavedApplicant {
     applicantId String @db.ObjectId
     applicant Auth @relation("SavedAsApplicantByAgency",fields: [applicantId], references: [id])
 
+    categoryId String @db.ObjectId
+    category SavedApplicantCategory @relation(fields: [categoryId], references: [id])
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

@@ -39,6 +39,7 @@ export class SavedApplicantService {
 
     const newSavedApplicant = await this.prismaService.savedApplicant.create({
       data: {
+        categoryId: body.categoryId,
         agencyId: user.id,
         applicantId: body.applicantId,
       },
@@ -55,6 +56,10 @@ export class SavedApplicantService {
     const where: Prisma.SavedApplicantWhereInput = {};
     if (user?.id) {
       where.agencyId = user.id;
+    }
+
+    if (query?.categoryId) {
+      where.categoryId = query?.categoryId;
     }
 
     if (query?.search) {
@@ -77,17 +82,19 @@ export class SavedApplicantService {
         },
       ];
     }
-
-    const jobPost = await this.prismaService.jobPost.findUnique({
-      where: { id: query.jobPostId },
-      include: {
-        jobQualification: {
-          include: {
-            skills: true,
+    let jobPost: any;
+    if (query?.jobPostId) {
+      jobPost = await this.prismaService.jobPost.findUnique({
+        where: { id: query?.jobPostId },
+        include: {
+          jobQualification: {
+            include: {
+              skills: true,
+            },
           },
         },
-      },
-    });
+      });
+    }
     const jobRequiredSkillIds =
       jobPost?.jobQualification?.skills.map((skill) => skill.id) || [];
     const orderBy = getSortOrder(query.order);
@@ -121,7 +128,7 @@ export class SavedApplicantService {
       const applicantSkills = applicant.applicant.jobPreference?.skills || [];
       const applicantSkillIds = applicantSkills.map((skill) => skill.id);
 
-      const matchingSkillsCount = jobRequiredSkillIds.filter((skillId) =>
+      const matchingSkillsCount = jobRequiredSkillIds.filter((skillId: any) =>
         applicantSkillIds.includes(skillId),
       ).length;
 

@@ -32,13 +32,39 @@ export class FeaturedJobService {
     );
   }
 
-  async findAll(query: QueryFeaturedJobDto) {
+  async findAll(query: QueryFeaturedJobDto, user?: Auth) {
     const where = this.buildFeaturedJobWhereClause(query);
     const [featuredJobs, total] = await Promise.all([
       this.prismaService.featuredJob.findMany({
         where,
         include: {
-          jobPost: true,
+          jobPost: {
+            include: {
+              jobBasicInfo: {
+                include: {
+                  venue: {
+                    include: {
+                      venueBasicDetails: {
+                        include: {
+                          files: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              saveJobPosts: {
+                where: {
+                  userId: user?.id,
+                },
+              },
+              jobApplications: {
+                where: {
+                  userId: user?.id,
+                },
+              },
+            },
+          },
         },
         skip: getPaginationSkip(query.page, query.limit),
         take: getPaginationTake(query.limit),

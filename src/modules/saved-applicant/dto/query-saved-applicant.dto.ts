@@ -3,7 +3,8 @@ import { createZodDto } from 'nestjs-zod';
 
 const QuerySavedApplicantSchema = z.object({
   search: z.string(),
-  jobPostId:z.string(),
+  jobPostId: z.string(),
+  categoryId: z.string(),
   page: z
     .string()
     .transform(Number)

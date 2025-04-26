@@ -39,6 +39,12 @@ export class FeaturedJobController {
     return this.featuredJobService.findAll(query);
   }
 
+  @Get('guest')
+  @HttpCode(HttpStatus.OK)
+  findAllForGuest(@Query() query: QueryFeaturedJobDto) {
+    return this.featuredJobService.findAll(query);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated('ADMIN', 'SUPER_ADMIN')
