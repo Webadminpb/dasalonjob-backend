@@ -2,14 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWhatsappGroupDto } from './dto/create-whatsapp-group.dto';
 import { UpdateWhatsappGroupDto } from './dto/update-whatsapp-group.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+// import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import { ApiSuccessResponse } from '../../common/api-response/api-success';
 import { QueryWhatsAppDto } from './dto/query-whatsapp-group.dto';
 import { Prisma } from '@prisma/client';
+// import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 import {
   getPaginationSkip,
   getPaginationTake,
-  getSortOrder,
-} from 'src/common/utils/common';
+} from '../../common/utils/common';
 
 @Injectable()
 export class WhatsappGroupsService {
@@ -33,14 +34,24 @@ export class WhatsappGroupsService {
 
   async findAll(query: QueryWhatsAppDto) {
     const where: Prisma.WhatsAppGroupWhereInput = {};
-    if (query.city) {
-      where.city = query.city;
-    }
+    // if (query.search) {
+    //   where.city = query.city;
+    // }
     if (query.search) {
-      where.name = {
-        contains: query.search,
-        mode: 'insensitive',
-      };
+      where.OR = [
+        {
+          name: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          city: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+      ];
     }
     const [groups, total] = await Promise.all([
       this.prismaService.whatsAppGroup.findMany({

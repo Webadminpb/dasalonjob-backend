@@ -335,6 +335,13 @@ export class JobApplicationService {
 
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
+    console.log('job application query id ', query.partnerId);
+    const count = await this.prismaService.jobApplication.count({
+      where: {
+        jobPostId: query.jobPostId,
+        status: JobApplicationStatus.Applied,
+      },
+    });
 
     const [
       jobApplications,
@@ -372,33 +379,25 @@ export class JobApplicationService {
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: query.partnerId,
-          },
+          jobPostId: query.jobPostId,
           status: JobApplicationStatus.Applied,
         },
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: query.partnerId,
-          },
+          jobPostId: query.jobPostId,
           status: JobApplicationStatus.Accepted,
         },
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: query.partnerId,
-          },
+          jobPostId: query.jobPostId,
           status: JobApplicationStatus.Shortlisted,
         },
       }),
       this.prismaService.jobApplication.count({
         where: {
-          jobPost: {
-            userId: query.partnerId,
-          },
+          jobPostId: query.jobPostId,
           status: JobApplicationStatus.Rejected,
         },
       }),

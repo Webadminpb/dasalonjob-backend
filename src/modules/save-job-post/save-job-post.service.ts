@@ -38,6 +38,16 @@ export class SaveJobPostService {
         where: {
           userId: user.id,
         },
+        include: {
+          jobPost: {
+            include: {
+              jobBasicInfo: true,
+              jobBenefits: true,
+              jobDescription: true,
+              jobQualification: true,
+            },
+          },
+        },
       }),
       await this.prismaService.saveJobPost.count({
         where: {

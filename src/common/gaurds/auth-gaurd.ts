@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@prisma/client';
-import { PrismaService } from 'src/modules/prisma/prisma.service';
+import { PrismaService } from '../../modules/prisma/prisma.service';
 
 @Injectable()
 export class AuthGaurd implements CanActivate {

@@ -13,7 +13,7 @@ import {
 import { WhatsappGroupsService } from './whatsapp-groups.service';
 import { CreateWhatsappGroupDto } from './dto/create-whatsapp-group.dto';
 import { UpdateWhatsappGroupDto } from './dto/update-whatsapp-group.dto';
-import { AllowAuthenticated } from 'src/common/decorators/auth-decorator';
+import { AllowAuthenticated } from '../../common/decorators/auth-decorator';
 import { QueryWhatsAppDto } from './dto/query-whatsapp-group.dto';
 
 @Controller('whatsapp-groups')
