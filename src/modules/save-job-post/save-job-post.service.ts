@@ -41,9 +41,23 @@ export class SaveJobPostService {
         include: {
           jobPost: {
             include: {
+              _count: {
+                select: {
+                  jobApplications: true,
+                  saveJobPosts: true,
+                },
+              },
               jobBasicInfo: {
                 include: {
-                  venue: true,
+                  venue: {
+                    include: {
+                      venueBasicDetails: {
+                        include: {
+                          files: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
               jobBenefits: true,

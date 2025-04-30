@@ -23,20 +23,21 @@ export class SavedApplicantService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createSavedApplicant(body: CreateSavedApplicantDto, user: Auth) {
+    console.log('body ', body, user);
     const existingSavedApplicant =
-      await this.prismaService.savedApplicant.findUnique({
+      await this.prismaService.savedApplicant.findFirst({
         where: {
-          agencyId_applicantId_unique: {
-            agencyId: user.id,
-            applicantId: body.applicantId,
-          },
+          agencyId: user?.id,
+          applicantId: body?.applicantId,
+          categoryId: body?.categoryId,
         },
       });
-
+    console.log('Existing user ', existingSavedApplicant);
     if (existingSavedApplicant) {
+      console.log('existing user existed');
       throw new ConflictException('Saved Applicant Already Existed');
     }
-
+    console.log('line 41');
     const newSavedApplicant = await this.prismaService.savedApplicant.create({
       data: {
         categoryId: body.categoryId,
@@ -44,7 +45,7 @@ export class SavedApplicantService {
         applicantId: body.applicantId,
       },
     });
-
+    console.log('new Saved Applicants ', newSavedApplicant);
     return new ApiSuccessResponse(
       true,
       'Saved Applicant Created Successfully',
