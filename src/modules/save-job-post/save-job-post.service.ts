@@ -41,7 +41,11 @@ export class SaveJobPostService {
         include: {
           jobPost: {
             include: {
-              jobBasicInfo: true,
+              jobBasicInfo: {
+                include: {
+                  venue: true,
+                },
+              },
               jobBenefits: true,
               jobDescription: true,
               jobQualification: true,
