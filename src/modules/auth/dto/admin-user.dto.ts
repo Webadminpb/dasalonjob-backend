@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { Gender, Role } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -12,6 +12,16 @@ const createAdminAuthSchema = z.object({
       phoneCode: z.string().optional(),
     }),
   ),
+});
+
+const createAgencyTeamMemberSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  role: z.enum(['STAFF', 'MANAGER']),
+  gender: z.nativeEnum(Gender),
+  phone: z.string().min(10),
+  phoneCode: z.string().optional(),
 });
 class AdminUser {
   @ApiProperty({ example: 'admin@example.com' })
@@ -34,3 +44,7 @@ export class CreateAdminAuthDto extends createZodDto(createAdminAuthSchema) {
   })
   users: AdminUser[];
 }
+
+export class CreateAgencyTeamMemberDto extends createZodDto(
+  createAgencyTeamMemberSchema,
+) {}

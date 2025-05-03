@@ -28,7 +28,10 @@ import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
 import { QueryAuthDto } from './dto/query-auth.dto';
-import { CreateAdminAuthDto } from './dto/admin-user.dto';
+import {
+  CreateAdminAuthDto,
+  CreateAgencyTeamMemberDto,
+} from './dto/admin-user.dto';
 import { AuthBaseSchema, PublicUserSchema } from './dto/auth.dto';
 import { parseWithSchema } from 'src/common/utils/zod-parser';
 import { CreateDeletionReasonDto } from './dto/deletion-reason.dto';
@@ -653,6 +656,34 @@ export class AuthService {
     });
 
     return new ApiSuccessResponse(true, 'User Created Successfully', { users });
+  }
+
+  async createAgencyTeamMember(body: CreateAgencyTeamMemberDto) {
+    const existingTeamMember = await this.prismaService.auth.findUnique({
+      where: {
+        email: body.email,
+      },
+    });
+    if (existingTeamMember) {
+      throw new BadRequestException('User Already Existed');
+    }
+    const password = generateRandomPassword();
+    const newUser = await this.prismaService.auth.create({
+      data: {
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        role: body.role,
+        phone: body.phone,
+        password: password,
+        phoneCode: body.phoneCode,
+      },
+    });
+    return new ApiSuccessResponse(
+      true,
+      'Team Member Added Successfully',
+      newUser,
+    );
   }
 
   async deleteAccount(body: CreateDeletionReasonDto, user: Auth) {

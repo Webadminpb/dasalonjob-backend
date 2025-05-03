@@ -50,7 +50,7 @@ export class JobPostController {
   // For Applicant
   @Get('u-query')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated()
+  @AllowAuthenticated('USER')
   findJobPosts(@Query() query: QueryJobPostDto, @GetUser() user: Auth) {
     return this.jobPostService.findAllForApplicant(query, user);
   }

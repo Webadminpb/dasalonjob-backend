@@ -56,12 +56,16 @@ export class AuthGaurd implements CanActivate {
     }
 
     if (userRole === 'USER') {
-      const user = await this.prisma.auth.findFirst({
+      console.log('req.user ', req.user);
+      const user = await this.prisma.auth.findUnique({
         where: {
           id: req.user.id,
-          isDeleted: false,
         },
       });
+      console.log('user ', user);
+      if (user.isDeleted === true) {
+        throw new UnauthorizedException('User Account Not Found');
+      }
       if (!user) {
         throw new UnauthorizedException('Invalid Client id.');
       }

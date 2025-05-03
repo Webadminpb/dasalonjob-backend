@@ -54,7 +54,75 @@ describe('SaveJobPostService', () => {
     );
   });
 
-  it('should return all save job post', async() =>{
-    const query = {Search}
+  it('should return all save job post', async () => {
+    // const query = { search: '', page: 1, limit: 10 };
+    const user: any = {
+      id: 'UserId 1',
+      email: 'User Email',
+      role: 'User Role',
+    };
+    const saveJobsPosts = [
+      {
+        id: '1',
+        jobPostId: 'Job Post Id 1',
+        userId: 'User Id 1',
+      },
+    ];
+    const total = 1;
+    mockPrismaService.saveJobPost.findMany.mockResolvedValue(saveJobsPosts);
+    mockPrismaService.saveJobPost.count.mockResolvedValue(total);
+
+    const response = await service.findAll(user);
+    expect(response).toEqual(
+      new ApiSuccessResponse(true, 'Saved Job Post Data', {
+        saveJobsPosts,
+        total,
+      }),
+    );
+  });
+
+  it('should update save job post', async () => {
+    const id: string = 'save job post id';
+    const user: any = {
+      id: 'UserId 1',
+      email: 'User Email',
+      role: 'User Role',
+    };
+    const updateDto: any = {
+      jobPostId: 'JobPostId 1',
+    };
+
+    mockPrismaService.saveJobPost.findUnique.mockResolvedValue(id);
+    mockPrismaService.saveJobPost.update.mockResolvedValue(updateDto);
+    const response = await service.update(id, updateDto, user);
+
+    expect(response).toEqual(
+      new ApiSuccessResponse(
+        true,
+        'Save Job Post Updated Successfully',
+        updateDto,
+      ),
+    );
+  });
+
+  it('should delete saved job post', async () => {
+    const id: string = 'job post id 1';
+    const user: any = {
+      id: 'User Id 1',
+      role: 'ADMIN',
+      email: 'user email',
+    };
+    const deleteDto = {
+      id: 'Save Job Post 1',
+      jobPostId: 'Job Post Id 1',
+      userId: 'User Id 1',
+    };
+
+    mockPrismaService.saveJobPost.findUnique.mockResolvedValue(id);
+    mockPrismaService.saveJobPost.delete.mockResolvedValue(id);
+    const response = await service.remove(id, user);
+    expect(response).toEqual(
+      new ApiSuccessResponse(true, 'Save Job Post Deleted Successfully', null),
+    );
   });
 });

@@ -23,7 +23,10 @@ import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
 import { QueryAuthDto } from './dto/query-auth.dto';
-import { CreateAdminAuthDto } from './dto/admin-user.dto';
+import {
+  CreateAdminAuthDto,
+  CreateAgencyTeamMemberDto,
+} from './dto/admin-user.dto';
 import { CreateDeletionReasonDto } from './dto/deletion-reason.dto';
 
 @ApiTags('users')
@@ -197,10 +200,8 @@ export class AuthController {
   @Post('agency/add-user')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
-  createUserByAgency(@Body() body: CreateAdminAuthDto) {
-    console.log('body', body);
-    // return { message: 'Agency User Created' };
-    return this.authService.createUserByAdmin(body);
+  createUserByAgency(@Body() body: CreateAgencyTeamMemberDto) {
+    return this.authService.createAgencyTeamMember(body);
   }
 
   // Update User Status
