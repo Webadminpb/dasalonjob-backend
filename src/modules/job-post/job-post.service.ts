@@ -177,12 +177,37 @@ export class JobPostService {
         },
       }),
     ]);
+    const jobRequiredSkillIds =
+      jobPost?.jobQualification?.skills.map((skill) => skill.id) || [];
+    const userSkills = await this.prismaService.jobPreference.findUnique({
+      where: {
+        userId: user?.id,
+      },
+      select: {
+        skills: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    const matchingSkills = jobRequiredSkillIds.filter((id) =>
+      userSkills.skills.some((skill) => skill.id === id),
+    );
+
+    console.log('job post required skills ', jobRequiredSkillIds);
+    console.log('user skills ', userSkills);
+    console.log('Matching skills count:', matchingSkills);
 
     if (!jobPost) {
       throw new NotFoundException('Job post not found');
     }
 
-    return new ApiSuccessResponse(true, 'Job post found', jobPost);
+    return new ApiSuccessResponse(true, 'Job post found', {
+      jobPost,
+      matchingSkills,
+    });
   }
 
   async getJobStatusTotal() {
@@ -426,7 +451,6 @@ export class JobPostService {
               userId: user?.id,
             },
           },
-          
         },
         skip,
         take,
@@ -445,6 +469,7 @@ export class JobPostService {
       totalApplicants: job.jobApplications.length,
       totalSaved: job.saveJobPosts.length,
     }));
+
     return new ApiSuccessResponse(true, 'Job post found', {
       total,
       totalOpenJobs,
