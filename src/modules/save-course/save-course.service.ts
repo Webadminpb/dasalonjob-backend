@@ -95,6 +95,19 @@ export class SaveCourseService {
         include: {
           course: {
             include: {
+              courseDetails: {
+                include: {
+                  file: true,
+                },
+              },
+              courseApplications: {
+                where: {
+                  userId: user?.id,
+                },
+                select: {
+                  createdAt: true,
+                },
+              },
               courseTypeAndLocation: true,
             },
           },
@@ -105,6 +118,8 @@ export class SaveCourseService {
       }),
       this.prismaService.saveCourse.count({ where }),
     ]);
+
+    console.log('saved courses data ', saveCourses);
 
     if (!saveCourses.length) {
       throw new NotFoundException('Saved course not found');

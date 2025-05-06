@@ -677,6 +677,7 @@ export class AuthService {
         phone: body.phone,
         password: password,
         phoneCode: body.phoneCode,
+        profileImageId: body.profileImageId,
       },
     });
     return new ApiSuccessResponse(

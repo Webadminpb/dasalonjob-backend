@@ -22,6 +22,7 @@ const createAgencyTeamMemberSchema = z.object({
   gender: z.nativeEnum(Gender),
   phone: z.string().min(10),
   phoneCode: z.string().optional(),
+  profileImageId: z.string().optional(),
 });
 class AdminUser {
   @ApiProperty({ example: 'admin@example.com' })

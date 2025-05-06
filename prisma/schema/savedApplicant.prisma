@@ -13,5 +13,5 @@ model SavedApplicant {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@unique([agencyId, applicantId], name:"agencyId_applicantId_unique")
+    // @@unique([agencyId, applicantId], name:"agencyId_applicantId_unique")
 }
