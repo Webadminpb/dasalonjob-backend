@@ -187,7 +187,11 @@ export class AuthService {
       include: {
         basicDetails: true,
         contactDetails: true,
-        jobPreference: true,
+        jobPreference: {
+          include: {
+            skills: true,
+          },
+        },
         pastExperiences: true,
         PastWork: true,
         educations: true,

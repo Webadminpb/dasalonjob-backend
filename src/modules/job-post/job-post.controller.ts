@@ -64,7 +64,7 @@ export class JobPostController {
   // For Partner
   @Get('deadline-jobs')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'AGENCY')
   getJobApplicationTotal(
     @GetUser() user: Auth,
     @Query() query: QueryJobPostDto,
@@ -74,9 +74,15 @@ export class JobPostController {
 
   @Get('/partner/:id')
   @HttpCode(HttpStatus.OK)
-  findOneFor(@Param('id') id: string) {
+  findOneForPartner(@Param('id') id: string) {
     return this.jobPostService.findOneForPartner(id);
   }
+
+  // @Get('/agency/:id')
+  // @HttpCode(HttpStatus.OK)
+  // findOneForAgency(@Param('id') id: string) {
+  //   return this.jobPostService.findOneForPartner(id);
+  // }
 
   @Get('/guest/:id')
   @HttpCode(HttpStatus.OK)

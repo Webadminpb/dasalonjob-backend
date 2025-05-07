@@ -93,4 +93,9 @@ export class PartnerVenueController {
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerVenueService.remove(id, user);
   }
+
+  // @Get('/partner')
+  // @HttpCode(HttpStatus.OK)
+  // @AllowAuthenticated()
+  // getVenuesData;
 }

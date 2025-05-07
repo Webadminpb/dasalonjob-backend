@@ -1,5 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Auth, JobApplicationStatus, Prisma } from '@prisma/client';
+import {
+  Auth,
+  HighestEducation,
+  JobApplicationStatus,
+  Prisma,
+} from '@prisma/client';
 import { addDays } from 'date-fns';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import {
@@ -64,6 +69,79 @@ export class JobPostService {
   }
 
   async findOneForPartner(id: string) {
+    const [
+      jobPost,
+      applicantCount,
+      savedCount,
+      shortlistedCount,
+      rejectedCount,
+      acceptedCount,
+    ] = await Promise.all([
+      this.prismaService.jobPost.findUnique({
+        where: { id },
+        include: {
+          user: {
+            include: {
+              partnerSocialLinks: true,
+            },
+          },
+          venue: {
+            include: {
+              venueBasicDetails: {
+                include: {
+                  files: true,
+                },
+              },
+            },
+          },
+          jobBasicInfo: true,
+          jobBenefits: true,
+          jobDescription: true,
+          jobQualification: {
+            include: {
+              skills: true,
+              languages: {
+                include: {
+                  file: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { jobPostId: id },
+      }),
+      this.prismaService.saveJobPost.count({
+        where: { jobPostId: id },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { id, status: JobApplicationStatus.Shortlisted },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { id, status: JobApplicationStatus.Rejected },
+      }),
+      this.prismaService.jobApplication.count({
+        where: { id, status: JobApplicationStatus.Accepted },
+      }),
+    ]);
+
+    if (!jobPost) {
+      throw new NotFoundException('Job post not found');
+    }
+
+    return new ApiSuccessResponse(true, 'Job post found', {
+      ...jobPost,
+      applicantCount,
+      savedCount,
+      shortlistedCount,
+      rejectedCount,
+      acceptedCount,
+      totalViews: jobPost?.views || 0,
+    });
+  }
+
+  async findOneForAgency(id: string) {
     const [
       jobPost,
       applicantCount,
@@ -178,7 +256,16 @@ export class JobPostService {
       }),
     ]);
     const jobRequiredSkillIds =
-      jobPost?.jobQualification?.skills.map((skill) => skill.id) || [];
+      jobPost?.jobQualification?.skills?.map((skill) => skill?.id) || [];
+
+    const jobRequiredLanguages =
+      jobPost?.jobQualification?.languages?.map((language) => language?.id) ||
+      [];
+
+    console.log('jobRequiredLanguages ', jobRequiredLanguages);
+
+    const jobRequiredEducations = jobPost?.jobQualification?.education;
+
     const userSkills = await this.prismaService.jobPreference.findUnique({
       where: {
         userId: user?.id,
@@ -192,13 +279,45 @@ export class JobPostService {
       },
     });
 
-    const matchingSkills = jobRequiredSkillIds.filter((id) =>
-      userSkills.skills.some((skill) => skill.id === id),
+    const userLanguages = await this.prismaService.userLanguage.findMany({
+      where: {
+        userId: user?.id,
+      },
+      select: {
+        languageId: true,
+      },
+    });
+
+    const userEducation = await this.prismaService.education.findMany({
+      where: {
+        userId: user?.id,
+      },
+      select: {
+        education: true,
+      },
+      orderBy: {
+        education: 'desc',
+      },
+    });
+
+    console.log('user languages ', userLanguages);
+
+    const matchingSkills = jobRequiredSkillIds?.filter((id) =>
+      userSkills?.skills?.some((skill) => skill?.id === id),
+    );
+
+    const matchingLanguages = jobRequiredLanguages?.filter((id) =>
+      userLanguages.some((lang) => lang.languageId === id),
+    );
+
+    const matchingEducation = userEducation.some(
+      (edu) => edu.education === jobRequiredEducations,
     );
 
     console.log('job post required skills ', jobRequiredSkillIds);
     console.log('user skills ', userSkills);
     console.log('Matching skills count:', matchingSkills);
+    console.log('Matching langs count ', matchingLanguages);
 
     if (!jobPost) {
       throw new NotFoundException('Job post not found');
@@ -207,6 +326,8 @@ export class JobPostService {
     return new ApiSuccessResponse(true, 'Job post found', {
       jobPost,
       matchingSkills,
+      matchingLanguages,
+      matchingEducation,
     });
   }
 
