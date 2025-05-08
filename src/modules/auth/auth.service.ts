@@ -583,6 +583,7 @@ export class AuthService {
         id,
       },
       include: {
+        profileImage: true,
         basicDetails: true,
         contactDetails: true,
         educations: true,
