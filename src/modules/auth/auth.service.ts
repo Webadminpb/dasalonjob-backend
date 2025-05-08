@@ -589,7 +589,11 @@ export class AuthService {
         educations: true,
         pastExperiences: true,
         PastWork: true,
-        jobPreference: true,
+        jobPreference: {
+          include: {
+            skills: true,
+          },
+        },
         certificates: true,
         languages: true,
       },
