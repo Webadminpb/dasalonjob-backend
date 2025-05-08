@@ -595,7 +595,15 @@ export class AuthService {
           },
         },
         certificates: true,
-        languages: true,
+        languages: {
+          include: {
+            language: {
+              include: {
+                file: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!user) {
