@@ -507,7 +507,7 @@ export class AuthService {
     //   ? { [query.order]: query.sort || 'desc' }
     //   : { createdAt: 'desc' };
 
-    const [users, total] = await Promise.all([
+    const [users, total, active, inActive] = await Promise.all([
       this.prismaService.auth.findMany({
         where,
         include: {
@@ -543,6 +543,16 @@ export class AuthService {
         take: getPaginationTake(query.limit),
       }),
       this.prismaService.auth.count({ where }),
+      this.prismaService.auth.count({
+        where: {
+          status: 'ACTIVE',
+        },
+      }),
+      this.prismaService.auth.count({
+        where: {
+          status: 'INACTIVE',
+        },
+      }),
     ]);
     if (!users) {
       throw new BadRequestException('No users found');
@@ -550,6 +560,8 @@ export class AuthService {
     return new ApiSuccessResponse(true, 'Users found', {
       users,
       total,
+      active,
+      inActive,
     });
   }
 
@@ -594,7 +606,11 @@ export class AuthService {
             skills: true,
           },
         },
-        certificates: true,
+        certificates: {
+          include: {
+            file: true,
+          },
+        },
         languages: {
           include: {
             language: {
