@@ -48,6 +48,7 @@ model Auth {
   jobPreference JobPreference?
   PastWork PastWork?
   partnerPersonalData PartnerPersonalData?
+  agencyContactDetails AgencyContactDetails?
 
   experiences Experience[]
   educations Education[]

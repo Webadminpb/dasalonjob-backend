@@ -10,4 +10,4 @@ import { SavedApplicantCategoryService } from './saved-applicant-category.servic
   controllers: [SavedApplicantCategoryController],
   providers: [PrismaService, JwtService, SavedApplicantCategoryService],
 })
-export class SavedApplicantCategory {}
+export class SavedApplicantCategoryModule {}

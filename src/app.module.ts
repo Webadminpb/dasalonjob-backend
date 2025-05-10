@@ -59,11 +59,12 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { SponsoredJobModule } from './modules/sponsored-jobs/sponsored-job-module';
 import { SavedApplicantModule } from './modules/saved-applicant/saved-applicant.module';
 import { JobOfferToSavedApplicantModule } from './modules/jobOfferToSavedApplicants/jobOfferToSavedApplicant.module';
-import { SavedApplicantCategory } from './modules/saved-applicant-category/saved-applicant-category.module';
+import { SavedApplicantCategoryModule } from './modules/saved-applicant-category/saved-applicant-category.module';
+import { AgencyContactDetailsModule } from './modules/agency-contact-details/agency-contact-details.module';
 
 @Module({
   imports: [
-    SavedApplicantCategory,
+    SavedApplicantCategoryModule,
     JobOfferToSavedApplicantModule,
     SavedApplicantModule,
     AuthModule,
@@ -122,6 +123,7 @@ import { SavedApplicantCategory } from './modules/saved-applicant-category/saved
     CreditsModule,
     SubscriptionModule,
     SponsoredJobModule,
+    AgencyContactDetailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
