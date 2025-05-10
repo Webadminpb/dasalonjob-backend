@@ -187,15 +187,19 @@ export class AuthService {
       include: {
         basicDetails: true,
         contactDetails: true,
+        profileImage: true,
         jobPreference: {
           include: {
             skills: true,
           },
         },
+        courseDetails: true,
+        experiences: true,
         pastExperiences: true,
         PastWork: true,
         educations: true,
         certificates: true,
+        languages: true,
       },
     });
     if (!existingUser) {
@@ -213,6 +217,7 @@ export class AuthService {
         profileImage: true,
         salonDetails: true,
         venueDetails: true,
+        contactDetails: true,
         venueMainBusinessDays: true,
         venueMainBusinessServices: true,
         partnerSocialLinks: true,

@@ -2,7 +2,7 @@ model AgencyDetails {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   businessName String
-  ownerName String
+  ownerName String?
   email String
 
   phoneCode String
