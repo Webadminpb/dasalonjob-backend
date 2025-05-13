@@ -13,6 +13,9 @@ model Education {
   fileId String? @db.ObjectId
   file File? @relation(fields: [fileId], references: [id])
 
+  isProfessionalTrained Boolean @default(false)
+  isCrmTrained Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
