@@ -196,10 +196,18 @@ export class AuthService {
         courseDetails: true,
         experiences: true,
         pastExperiences: true,
-        PastWork: true,
+        PastWork: {
+          include: {
+            files: true,
+          },
+        },
         educations: true,
         certificates: true,
-        languages: true,
+        languages: {
+          include: {
+            language: true,
+          },
+        },
       },
     });
     if (!existingUser) {
