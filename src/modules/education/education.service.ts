@@ -73,6 +73,8 @@ export class EducationService {
         school: body.school,
         attended: new Date(body.attended).toISOString(),
         graduated: new Date(body.graduated).toISOString(),
+        isProfessionalTrained: body.isProfessionalTrained,
+        isCrmTrained: body.isCrmTrained,
       },
     });
     return new ApiSuccessResponse(true, 'eduction updated ', updatedEducation);
