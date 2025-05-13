@@ -54,8 +54,12 @@ export class CertificateService {
     if (query.userId) {
       where.userId = query.userId;
     }
+
     const certificates = await this.prismaService.certificate.findMany({
       where,
+      include: {
+        file: true,
+      },
       skip: getPaginationSkip(query.page, query.limit),
       take: getPaginationTake(query.limit),
     });
