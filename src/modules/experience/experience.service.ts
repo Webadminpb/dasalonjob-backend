@@ -83,6 +83,7 @@ export class ExperienceService {
       data: {
         profile: body.profile,
         location: body.location,
+        description: body.description,
         longitude: body.longitude,
         latitude: body.latitude,
         startDate: new Date(body.startDate).toISOString(),
