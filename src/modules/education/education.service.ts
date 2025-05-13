@@ -16,6 +16,7 @@ export class EducationService {
         attended: new Date(body.attended).toISOString(),
         graduated: new Date(body.graduated).toISOString(),
         userId: user.id,
+        fileId: body.fileId,
       },
     });
     return new ApiSuccessResponse(true, 'education added', education);
@@ -25,6 +26,9 @@ export class EducationService {
     const educations = await this.prismaService.education.findMany({
       where: {
         userId: user.id,
+      },
+      include: {
+        file: true,
       },
     });
     if (!educations) {
@@ -37,6 +41,9 @@ export class EducationService {
     const education = await this.prismaService.education.findUnique({
       where: {
         id,
+      },
+      include: {
+        file: true,
       },
     });
     if (!education) {

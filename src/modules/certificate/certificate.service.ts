@@ -29,6 +29,7 @@ export class CertificateService {
   async findMyAllCertificates(user: Auth) {
     const certificates = await this.prismaService.certificate.findMany({
       where: { userId: user.id },
+      include: { file: true },
     });
     if (!certificates) {
       throw new NotFoundException('certificates not found');
@@ -40,6 +41,7 @@ export class CertificateService {
   async findOne(id: string) {
     const certificate = await this.prismaService.certificate.findUnique({
       where: { id },
+      include: { file: true },
     });
     if (!certificate) {
       throw new NotFoundException(`certificate not found`);

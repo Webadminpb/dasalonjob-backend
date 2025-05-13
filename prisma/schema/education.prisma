@@ -10,6 +10,9 @@ model Education {
   userId      String @db.ObjectId
   user       Auth   @relation(fields: [userId], references: [id])
 
+  fileId String? @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
