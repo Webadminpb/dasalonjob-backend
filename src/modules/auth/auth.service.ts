@@ -202,7 +202,11 @@ export class AuthService {
           },
         },
         educations: true,
-        certificates: true,
+        certificates: {
+          include: {
+            file: true,
+          },
+        },
         languages: {
           include: {
             language: true,
