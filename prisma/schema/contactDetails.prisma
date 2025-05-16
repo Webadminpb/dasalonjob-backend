@@ -8,6 +8,7 @@ model ContactDetails {
   state       String? 
   city        String? 
   streetAddress String?
+  email String?
 
   longitude String? 
   latitude String?

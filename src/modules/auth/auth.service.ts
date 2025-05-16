@@ -217,7 +217,70 @@ export class AuthService {
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
-    return new ApiSuccessResponse(true, 'User data', existingUser);
+    return new ApiSuccessResponse(true, 'User data', {
+      existingUser,
+      profileCompletion: this.calculateProfileCompletion(existingUser),
+    });
+  }
+
+  private calculateProfileCompletion(user: any): number {
+    let score = 0;
+
+    // Basic Info
+    if (
+      user.basicDetails?.firstName &&
+      user.basicDetails?.lastName &&
+      user.basicDetails?.dob &&
+      user.basicDetails?.gender
+    ) {
+      score += 10;
+    }
+
+    // Contact Details
+    if (
+      user.contactDetails?.phoneCode &&
+      user.contactDetails?.phoneNumber &&
+      user.contactDetails?.city &&
+      user.contactDetails?.state
+    ) {
+      score += 10;
+    }
+
+    // Profile Image
+    if (user.profileImage?.url) score += 5;
+
+    // Job Preference
+    if (
+      user.jobPreference?.skills?.length &&
+      user.jobPreference?.salary?.start &&
+      user.jobPreference?.locations?.length
+    ) {
+      score += 10;
+    }
+
+    // Experience
+    if (user.experiences?.length) score += 10;
+
+    // Past Work
+    if (user.PastWork?.videoLink?.length || user.PastWork?.files?.length)
+      score += 10;
+
+    // Education
+    if (user.educations?.length) score += 10;
+
+    // Certificates
+    if (user.certificates?.some((cert) => cert.file)) score += 10;
+
+    // Course Details
+    if (user.courseDetails?.length) score += 10;
+
+    // Languages
+    if (user.languages?.some((lang) => lang.language)) score += 5;
+
+    // Verification
+    if (user.isEmailVerified || user.isPhoneVerified) score += 10;
+
+    return score;
   }
 
   async getMyPartnerProfile(user: Auth) {

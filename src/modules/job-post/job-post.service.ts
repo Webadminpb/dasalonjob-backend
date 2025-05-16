@@ -218,9 +218,15 @@ export class JobPostService {
           user: true,
           venue: {
             include: {
-              venueBasicDetails: true,
+              venueBasicDetails: {
+                include: {
+                  files: true,
+                },
+              },
+              logo: true,
             },
           },
+
           jobBasicInfo: true,
           jobBenefits: true,
           jobDescription: true,
@@ -477,6 +483,17 @@ export class JobPostService {
     const where: Prisma.JobPostWhereInput = {};
     // if (user) {
     //   where.userId = user.id;
+    // }
+
+    // if (user) {
+    //   where.NOT = {
+    //     jobApplications: {
+    //       some: {
+    //         userId: user.id,
+    //         status: 'Rejected',
+    //       },
+    //     },
+    //   };
     // }
 
     if (query.job_profile || query.search || query.job_type) {

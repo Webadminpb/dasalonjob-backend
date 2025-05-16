@@ -24,13 +24,14 @@ export class BasicdetailsService {
     if (existingBasicDetails) {
       throw new BadRequestException('Basic Details already added');
     }
+    console.log('dob ', body.dob, typeof body.dob);
     const basicDetails = await this.prismaService.basicDetails.create({
       data: {
         userId: user.id,
         firstName: body.firstName,
         lastName: body.lastName,
         gender: body.gender,
-        dob: new Date(body.dob).toISOString(),
+        dob: body.dob as any,
         martialStatus: body.martialStatus,
         fileId: body.fileId,
       },
@@ -64,7 +65,7 @@ export class BasicdetailsService {
     if (!existingBasicDetails) {
       throw new NotFoundException('Basic details not found');
     }
-
+    console.log('dob ', body?.dob, typeof body?.dob);
     const updatedBasicDetails = await this.prismaService.basicDetails.update({
       where: {
         id: existingBasicDetails.id,
@@ -73,7 +74,7 @@ export class BasicdetailsService {
         firstName: body.firstName,
         lastName: body.lastName,
         gender: body.gender,
-        dob: new Date(body.dob).toISOString(),
+        dob: body.dob as any,
         martialStatus: body.martialStatus,
         fileId: body.fileId,
       },

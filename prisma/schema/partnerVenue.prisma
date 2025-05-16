@@ -4,6 +4,7 @@ model PartnerVenue {
   logoId String? @db.ObjectId
   logo File? @relation(fields: [logoId], references: [id])
 
+
   venueBasicDetailsId String @db.ObjectId 
   venueBasicDetails VenueDetails @relation(fields: [venueBasicDetailsId], references: [id])
 
