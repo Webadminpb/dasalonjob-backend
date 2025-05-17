@@ -61,8 +61,14 @@ export class PartnerCourseController {
   @Get('applicant/:id')
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
-  findForApplicant(@Param('id') id: string) {
-    return this.partnerCourseService.findOneForApplicant(id);
+  findForApplicant(@Param('id') id: string, @GetUser() user: Auth) {
+    return this.partnerCourseService.findOneForApplicant(id, user);
+  }
+
+  @Get('guest/:id')
+  @HttpCode(HttpStatus.OK)
+  findForGuest(@Param('id') id: string) {
+    return this.partnerCourseService.findOneForGuest(id);
   }
 
   // Partner

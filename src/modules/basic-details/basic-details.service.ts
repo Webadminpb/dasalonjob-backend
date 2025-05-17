@@ -65,7 +65,7 @@ export class BasicdetailsService {
     if (!existingBasicDetails) {
       throw new NotFoundException('Basic details not found');
     }
-    console.log('dob ', body?.dob, typeof body?.dob);
+
     const updatedBasicDetails = await this.prismaService.basicDetails.update({
       where: {
         id: existingBasicDetails.id,
