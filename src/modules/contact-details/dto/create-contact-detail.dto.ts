@@ -11,6 +11,7 @@ export const createContactDetailsSchema = z.object({
   streetAddress: z.string().optional(),
   longitude: z.string().optional(),
   latitude: z.string().optional(),
+  email: z.string().optional(),
 });
 
 export class CreateContactDetailsDto extends createZodDto(

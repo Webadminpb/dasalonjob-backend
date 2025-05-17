@@ -35,6 +35,7 @@ export class ContactdetailsService {
         streetAddress: body.streetAddress,
         longitude: body.longitude,
         latitude: body.latitude,
+        email: body.email,
       },
     });
     return new ApiSuccessResponse(
