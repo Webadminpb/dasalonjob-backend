@@ -23,13 +23,13 @@ export class SaveJobPostService {
     if (existingSaveJobPost) {
       throw new BadRequestException('Already saved');
     }
-    await this.prismaService.saveJobPost.create({
+    const saveJobPost = await this.prismaService.saveJobPost.create({
       data: {
         jobPostId,
         userId: user.id,
       },
     });
-    return new ApiSuccessResponse(true, 'Saved successfully', null);
+    return new ApiSuccessResponse(true, 'Saved successfully', saveJobPost);
   }
 
   async findAll(user: Auth) {

@@ -26,13 +26,13 @@ export class SaveCourseService {
     if (existingSaveCourse) {
       throw new BadRequestException('Already saved');
     }
-    await this.prismaService.saveCourse.create({
+    const saveCourse = await this.prismaService.saveCourse.create({
       data: {
         courseId,
         userId: user.id,
       },
     });
-    return new ApiSuccessResponse(true, 'Saved successfully', null);
+    return new ApiSuccessResponse(true, 'Saved successfully', saveCourse);
   }
 
   async findAllForApplicant(user: Auth, query: QuerySaveCourseDto) {
@@ -118,8 +118,6 @@ export class SaveCourseService {
       }),
       this.prismaService.saveCourse.count({ where }),
     ]);
-
-    console.log('saved courses data ', saveCourses);
 
     if (!saveCourses.length) {
       throw new NotFoundException('Saved course not found');
