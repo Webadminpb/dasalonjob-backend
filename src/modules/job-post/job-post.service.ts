@@ -583,7 +583,11 @@ export class JobPostService {
               },
             },
           },
-          jobApplications: true,
+          jobApplications: {
+            where: {
+              userId: user?.id,
+            },
+          },
           saveJobPosts: {
             where: {
               userId: user?.id,
