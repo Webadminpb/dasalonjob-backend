@@ -237,9 +237,8 @@ export class PartnerCourseService {
   }
 
   async findOneForApplicant(id: string, user?: Auth) {
-    const [course, _, totalSaved, totalApplicant] =
-      await this.prismaService.$transaction([
-        this.prismaService.partnerCourse.findUnique({
+
+    const course = await this.prismaService.partnerCourse.findUnique({
           where: {
             id: id,
           },
@@ -271,29 +270,29 @@ export class PartnerCourseService {
             },
             courseTypeAndLocation: true,
           },
-        }),
-        this.prismaService.partnerCourse.update({
-          data: { views: { increment: 1 } },
+      })
+    if (!course) {
+      throw new BadRequestException('Course not found');
+    }
+    const updatePartnerCourse = await this.prismaService.partnerCourse.update({
+        data: { views: { increment: 1 } },
           where: {
             id: id,
           },
-        }),
-        this.prismaService.saveCourse.count({
-          where: {
+    })
+    const totalSaved = await this.prismaService.saveCourse.count({
+      where: {
             courseId: id,
           },
-        }),
-        this.prismaService.courseApplication.count({
+    })
+    const totalApplicant = await  this.prismaService.courseApplication.count({
           where: {
             course: {
               id: id,
             },
           },
-        }),
-      ]);
-    if (!course) {
-      throw new BadRequestException('Course not found');
-    }
+    })
+
     return new ApiSuccessResponse(true, 'Course found', {
       partnerCourse: course,
       totalSaved,

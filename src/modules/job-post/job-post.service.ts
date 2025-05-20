@@ -211,8 +211,9 @@ export class JobPostService {
   }
 
   async findOne(id: string, user?: Auth) {
-    const [jobPost, update] = await this.prismaService.$transaction([
-      this.prismaService.jobPost.findUnique({
+    console.log("id line 214 ", id)
+    // const [jobPost, update] = await this.prismaService.$transaction([
+      const jobPost = await this.prismaService.jobPost.findUnique({
         where: { id },
         include: {
           user: true,
@@ -251,16 +252,18 @@ export class JobPostService {
             },
           },
         },
-      }),
-      this.prismaService.jobPost.update({
+      })
+      if(!jobPost) throw new NotFoundException("Job post is not found")
+      const updateJobPost = await this.prismaService.jobPost.update({
         where: { id },
         data: {
           views: {
             increment: 1,
           },
         },
-      }),
-    ]);
+      })
+    // ]);
+
     const jobRequiredSkillIds =
       jobPost?.jobQualification?.skills?.map((skill) => skill?.id) || [];
 

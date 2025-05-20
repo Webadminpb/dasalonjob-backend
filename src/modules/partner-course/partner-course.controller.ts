@@ -62,6 +62,7 @@ export class PartnerCourseController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   findForApplicant(@Param('id') id: string, @GetUser() user: Auth) {
+    console.log("partner course id", id)
     return this.partnerCourseService.findOneForApplicant(id, user);
   }
 
