@@ -40,7 +40,7 @@ export class SaveCourseController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated()
   findOne(@Param('id') id: string, @GetUser() user: Auth) {
     return this.saveCourseService.findOne(id, user);
   }

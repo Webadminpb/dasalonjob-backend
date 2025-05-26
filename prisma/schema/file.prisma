@@ -9,6 +9,11 @@ model File {
   userId    String @db.ObjectId
   user      Auth @relation(fields: [userId], references: [id])
 
+  isDeleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   pastWorkIds String[] @db.ObjectId
   pastWorks PastWork[] @relation(fields: [pastWorkIds], references: [id])
 
@@ -31,7 +36,4 @@ model File {
 
   verificationFileAuth Auth[] @relation("VerificationFile", fields: [verificationFileAuthId], references: [id])
   verificationFileAuthId String[] @db.ObjectId
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

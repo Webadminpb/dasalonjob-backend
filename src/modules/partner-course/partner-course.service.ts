@@ -532,7 +532,20 @@ export class PartnerCourseService {
               },
             },
             courseContent: true,
-            courseAcademy: true,
+            courseAcademy: {
+              include:{
+                provider:{
+                  include:{
+                    logo:true,
+                    venueBasicDetails:{
+                      select:{
+                        name:true
+                      }
+                    }
+                  }
+                }
+              }
+            },
             courseTypeAndLocation: true,
             saveCourses: {
               where: {
