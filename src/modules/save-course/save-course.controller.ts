@@ -26,14 +26,14 @@ export class SaveCourseController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated()
   async create(@Body() body: CreateSaveCourseDto, @GetUser() user: Auth) {
     return this.saveCourseService.create(body, user);
   }
 
   @Get('user')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated()
   findAll(@GetUser() user: Auth, @Query() query: QuerySaveCourseDto) {
     return this.saveCourseService.findAllForApplicant(user, query);
   }
@@ -58,7 +58,7 @@ export class SaveCourseController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated()
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.saveCourseService.remove(id, user);
   }
