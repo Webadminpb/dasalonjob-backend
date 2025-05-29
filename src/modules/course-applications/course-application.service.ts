@@ -89,6 +89,13 @@ export class CourseApplicationService {
                   }
                 }
               },
+              saveCourses:{
+                where:{
+                  userId:user.id,
+        
+                },
+                select:{id:true}
+              }
               // courseApplications:{
               //   where:{
               //     user
