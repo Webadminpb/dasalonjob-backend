@@ -14,15 +14,24 @@ export class SaveJobPostService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(body: CreateASaveJobPostDto, user: Auth) {
     const { jobPostId } = body;
+    const isExistsJobPost = await this.prismaService.jobPost.findFirst({
+      where:{
+        id:jobPostId
+      }
+    });
+    if(!isExistsJobPost) throw new NotFoundException("Job Post Not Found");
+
     const existingSaveJobPost = await this.prismaService.saveJobPost.findFirst({
       where: {
         jobPostId,
         userId: user.id,
       },
     });
+
     if (existingSaveJobPost) {
       throw new BadRequestException('Already saved');
     }
+    
     const saveJobPost = await this.prismaService.saveJobPost.create({
       data: {
         jobPostId,

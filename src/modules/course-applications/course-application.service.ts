@@ -69,6 +69,35 @@ export class CourseApplicationService {
     const [courses, total] = await Promise.all([
       this.prismaService.courseApplication.findMany({
         where,
+        include:{
+          course:{
+            include:{
+              courseDetails:{
+                include:{
+                  file:true
+                }
+              },
+              courseTypeAndLocation:true,
+              courseAcademy:{
+                include:{
+                  provider:{
+                    include:{
+                      venueBasicDetails:true,
+                      logo:true
+                      
+                    }
+                  }
+                }
+              },
+              // courseApplications:{
+              //   where:{
+              //     user
+              //   }
+              // }
+
+            }
+          }
+        },
         skip: getPaginationSkip(query.page, query.limit),
         take: getPaginationTake(query.limit),
       }),
