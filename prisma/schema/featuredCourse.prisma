@@ -1,0 +1,19 @@
+model FeaturedCourse {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  courseId String @db.ObjectId 
+  course PartnerCourse @relation(fields: [courseId], references: [id])
+
+  startDate DateTime @default(now())
+  endDate DateTime 
+
+  priority Int @default(1)
+
+  isActive Boolean @default(true)
+
+  impressions Int @default(0)
+  clicks Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

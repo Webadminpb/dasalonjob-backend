@@ -64,6 +64,11 @@ export class SaveJobPostService {
                   },
                 },
               },
+              jobApplications:{
+                where:{
+                  userId:user?.id
+                }
+              },
               jobBasicInfo: {
                 include: {
                   venue: {

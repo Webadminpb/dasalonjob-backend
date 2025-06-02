@@ -20,11 +20,13 @@ model PartnerCourse {
   status CourseStatus @default(Approved)
   isOpen Boolean @default(true)
 
-  saveCourses SaveCourse[]
-  courseApplications CourseApplication[]
-
   views Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  saveCourses SaveCourse[]
+  courseApplications CourseApplication[]
+
+  featuredCourse FeaturedCourse[]
 }

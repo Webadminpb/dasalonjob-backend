@@ -61,6 +61,7 @@ import { SavedApplicantModule } from './modules/saved-applicant/saved-applicant.
 import { JobOfferToSavedApplicantModule } from './modules/jobOfferToSavedApplicants/jobOfferToSavedApplicant.module';
 import { SavedApplicantCategoryModule } from './modules/saved-applicant-category/saved-applicant-category.module';
 import { AgencyContactDetailsModule } from './modules/agency-contact-details/agency-contact-details.module';
+import { FeaturedCourseModule } from './modules/featured-courses/featured-course.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { AgencyContactDetailsModule } from './modules/agency-contact-details/age
     VenuebusinessdaysModule,
     VenuebusinessservicesModule,
     JobbasicinfoModule,
+    FeaturedCourseModule,
     JobdescriptionModule,
     JobqualificationModule,
     JobbenefitsModule,
