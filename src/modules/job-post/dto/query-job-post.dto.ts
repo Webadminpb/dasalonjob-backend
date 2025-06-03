@@ -15,6 +15,10 @@ export const QueryJobPostSchema = z.object({
   limit: z.string().optional().transform(Number),
   // job_profile: z.array(z.nativeEnum(JobBasicInfoProfileType)).optional(),
   job_profile: z.nativeEnum(JobBasicInfoProfileType).optional(),
+  skillIds: z
+  .string()
+  .optional()
+  .transform((val) => val?.split('_').filter(Boolean) ?? []),
   job_type: z.array(z.nativeEnum(JobType)).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
   countryId: z.string().optional(),
@@ -35,6 +39,10 @@ export const QueryJobPostSchemaForAdmin = z.object({
   page: z.string().optional().transform(Number),
   limit: z.string().optional().transform(Number),
   job_profile: z.array(z.nativeEnum(JobBasicInfoProfileType)).optional(),
+  skillIds: z
+  .string()
+  .optional()
+  .transform((val) => val?.split('_').filter(Boolean) ?? []),
   // job_profile: z.nativeEnum(JobBasicInfoProfileType).optional(),
   job_type: z.array(z.nativeEnum(JobType)).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),

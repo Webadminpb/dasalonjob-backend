@@ -225,12 +225,21 @@ export class CourseApplicationService {
           [sortBy]: sortOrder,
         },
         include: {
-          course: true,
+          course: {
+            include:{
+              courseDetails:true
+            }
+          },
           user: {
             include: {
+              profileImage:true,
               basicDetails: true,
               contactDetails: true,
-              languages: true,
+              languages: {
+                include:{
+                  language:true
+                }
+              },
             },
           },
         },

@@ -2,7 +2,11 @@ model JobBasicInfo {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   title String
-  profile JobBasicInfoProfileType 
+
+  // skills id
+  profileId String @db.ObjectId
+  profile Skills @relation(fields: [profileId], references: [id])
+
   jobType JobType
   totalOpening Int @default(1)
   gender Gender
@@ -21,4 +25,7 @@ model JobBasicInfo {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // skillIds String[] @db.ObjectId
+  // skills Skills[] @relation(fields: [skillIds], references: [id])
 }

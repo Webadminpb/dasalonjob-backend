@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Auth, BusinessType, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import {
@@ -18,6 +18,10 @@ export class PartnerVenueService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreatePartnerVenueDto, user: Auth) {
+    const userData = await this.prismaService.auth.findUnique({where:{id:user?.id}, select:{
+      profileImageId:true
+    }})
+    if(!userData) throw new NotFoundException("Partner Account Not Found");
     const partnerVenue = await this.prismaService.partnerVenue.create({
       data: {
         venueBasicDetailsId: body.venueBasicDetailsId,
@@ -26,6 +30,7 @@ export class PartnerVenueService {
         venueMainBusinessDaysId: body.venueMainBusinessDaysId,
         venueWorkStationIds: body.venueWorkStationIds,
         userId: user.id,
+        logoId:userData.profileImageId ? userData.profileImageId : null
       },
     });
     return new ApiSuccessResponse(
@@ -75,6 +80,7 @@ export class PartnerVenueService {
             files: true,
           },
         },
+        logo:true,
         salonBasicDetails: true,
         venueAmenities: true,
         venueWorkStations: true,

@@ -95,6 +95,16 @@ export class SaveCourseService {
         include: {
           course: {
             include: {
+              courseAcademy:{
+                include:{
+                  provider:{
+                    include:{
+                      venueBasicDetails:true,
+                      logo:true
+                    }
+                  }
+                }
+              },
               courseDetails: {
                 include: {
                   file: true,

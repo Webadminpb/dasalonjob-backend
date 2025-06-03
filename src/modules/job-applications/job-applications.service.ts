@@ -515,7 +515,11 @@ export class JobApplicationService {
             include: {
               user: true,
               jobBasicInfo: true,
-              venue:true,
+              venue:{
+                include:{
+                  venueBasicDetails:true
+                }
+              },
               saveJobPosts:{
                 where:{
                   userId:user?.id

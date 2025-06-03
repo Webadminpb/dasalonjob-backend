@@ -12,7 +12,7 @@ export const SalaryRangeSchema = z.object({
 export const JobBasicInfoSchema = z.object({
   title: z.string(),
   venueId: z.string(),
-  profile: z.nativeEnum(JobBasicInfoProfileType),
+  profileId: z.string(),
   jobType: z.nativeEnum(JobType),
   totalOpening: z.number().default(1),
   gender: z.nativeEnum(Gender),

@@ -19,7 +19,7 @@ export class JobBasicInfoService {
         data: {
           title: body.title,
           venueId: body.venueId,
-          profile: body.profile,
+          profileId: body.profileId,
           jobType: body.jobType,
           totalOpening: body.totalOpening,
           gender: body.gender,
@@ -34,7 +34,7 @@ export class JobBasicInfoService {
       data: {
         title: body.title,
         venueId: body.venueId,
-        profile: body.profile,
+        profileId: body.profileId,
         jobType: body.jobType,
         totalOpening: body.totalOpening,
         gender: body.gender,
@@ -71,7 +71,7 @@ export class JobBasicInfoService {
       data: {
         title: body.title,
         venueId: body.venueId,
-        profile: body.profile,
+        profileId: body.profileId,
         jobType: body.jobType,
         totalOpening: body.totalOpening,
         gender: body.gender,

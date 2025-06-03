@@ -485,6 +485,15 @@ export class PartnerCourseService {
     if (query.status) {
       where.status = query.status;
     }
+    if(query.skillIds){
+      console.log("skills id array ", query.skillIds?.split("_") )
+      console.log("skills id type ", typeof query.skillIds?.split("_") )
+      where.courseDetails = {
+        skillIds:{
+          hasSome:query.skillIds?.split("_") 
+        }
+      }
+    }
     if (query.customDate) {
       where.createdAt = {
         gte: new Date(query.customDate).toISOString(),

@@ -22,6 +22,7 @@ import {
 import { Auth } from '@prisma/client';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
 import { CreateCourseStatusDto } from './dto/status-partner-course.dto';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('partner-course')
 export class PartnerCourseController {

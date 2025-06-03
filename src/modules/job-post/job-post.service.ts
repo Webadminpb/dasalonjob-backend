@@ -1,9 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   Auth,
-  HighestEducation,
   JobApplicationStatus,
-  Prisma,
+  Prisma
 } from '@prisma/client';
 import { addDays } from 'date-fns';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
@@ -22,6 +21,7 @@ import {
 } from './dto/query-job-post.dto';
 import { CreateJobStatusDto } from './dto/status-job-post.dto';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
+
 @Injectable()
 export class JobPostService {
   constructor(
@@ -366,9 +366,13 @@ export class JobPostService {
     if (query.job_profile || query.search || query.job_type) {
       where.jobBasicInfo = {};
 
-      if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = query.job_profile;
-      }
+      // if (query.job_profile?.length) {
+      //   where.jobBasicInfo = {
+      //     skillIds:{
+      //       hasSome: query.skillIds
+      //     }
+      //   };
+      // }
 
       if (query.search) {
         where.jobBasicInfo.title = {
@@ -409,6 +413,13 @@ export class JobPostService {
       where.jobQualification = {
         minExperience: query.experience,
       };
+    }
+    if(query.skillIds){
+      where.jobQualification = {
+        skillIds:{
+          hasSome:query.skillIds
+        }
+      }
     }
 
     if (query.locations && query.locations.length > 0) {
@@ -483,7 +494,13 @@ export class JobPostService {
   }
 
   async findAllForApplicant(query: QueryJobPostDto, user?: Auth) {
-    const where: Prisma.JobPostWhereInput = {};
+    const where: Prisma.JobPostWhereInput = {
+      jobBasicInfo: {
+        deadline: {
+          gt: new Date().toISOString(), // Always exclude expired job deadlines
+        },
+      },
+    };
     // if (user) {
     //   where.userId = user.id;
     // }
@@ -500,10 +517,18 @@ export class JobPostService {
     // }
 
     if (query.job_profile || query.search || query.job_type) {
-      where.jobBasicInfo = {};
+      where.jobBasicInfo = {
+        // deadline: {
+        //   gt: new Date().toISOString(), // Exclude expired job deadlines
+        // },
+      };
 
       if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = query.job_profile;
+        where.jobBasicInfo = {
+          profileId:{
+            in:query.skillIds
+          }
+        }
       }
 
       if (query.search) {
@@ -746,8 +771,10 @@ export class JobPostService {
       where.jobBasicInfo = {};
 
       if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = {
-          in: query.job_profile,
+        where.jobBasicInfo = {
+          profileId:{
+            in:query.skillIds
+          },
         };
       }
 
@@ -887,7 +914,11 @@ export class JobPostService {
       where.jobBasicInfo = {};
 
       if (query.job_profile?.length) {
-        where.jobBasicInfo.profile = query.job_profile;
+        where.jobBasicInfo = {
+          profileId:{
+            in:query.skillIds
+          }
+        };
       }
 
       if (query.search) {

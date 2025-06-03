@@ -1,7 +1,8 @@
 model CourseDetails {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  jobProfile JobProfile
+  // jobProfile JobProfile
+
 
   courseName String
   courseType String?
@@ -27,7 +28,8 @@ model CourseDetails {
 
   partnerCourses PartnerCourse[]
 
-
+  skillIds String[] @db.ObjectId
+  skills Skills[] @relation(fields: [skillIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

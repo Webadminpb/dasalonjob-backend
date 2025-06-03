@@ -14,7 +14,7 @@ export class CourseDetailsService {
     if (user.role == 'ADMIN' || user.role == 'SUPER_ADMIN') {
       const courseDetails = await this.prismaService.courseDetails.create({
         data: {
-          jobProfile: body.jobProfile,
+          // jobProfile: body.jobProfile,
           courseName: body.courseName,
           courseType: body.courseType,
           startDate: new Date(body.startDate).toISOString(),
@@ -36,7 +36,7 @@ export class CourseDetailsService {
     }
     const courseDetails = await this.prismaService.courseDetails.create({
       data: {
-        jobProfile: body.jobProfile,
+        // jobProfile: body.jobProfile,
         courseName: body.courseName,
         courseType: body.courseType,
         startDate: new Date(body.startDate).toISOString(),
@@ -101,7 +101,7 @@ export class CourseDetailsService {
         id: id,
       },
       data: {
-        jobProfile: body.jobProfile,
+        // jobProfile: body.jobProfile,
         courseName: body.courseName,
         courseType: body.courseType,
         startDate: body.startDate
