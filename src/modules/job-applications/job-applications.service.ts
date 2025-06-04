@@ -517,7 +517,8 @@ export class JobApplicationService {
               jobBasicInfo: true,
               venue:{
                 include:{
-                  venueBasicDetails:true
+                  venueBasicDetails:true,
+                  logo:true
                 }
               },
               saveJobPosts:{
