@@ -17,7 +17,8 @@ export class FeaturedCourseService
                 courseId:body.courseId
             }
         });
-        if(isExistingCourse) throw new NotFoundException("Featured Course Already Exists!");
+        console.log("existing course ", isExistingCourse);
+        if(isExistingCourse.length > 0) throw new NotFoundException("Featured Course Already Exists!");
         const featuredCourse = await this.prismaService.featuredCourse.create({
             data:{
                 courseId:body.courseId,
@@ -127,7 +128,7 @@ export class FeaturedCourseService
         return where;
       }
     
-      private builderFeaturedCourseOrderBy(
+    private builderFeaturedCourseOrderBy(
         sort?: string,
       ): Prisma.FeaturedCourseOrderByWithRelationInput {
         if (!sort) return { priority: 'desc' };
@@ -160,7 +161,22 @@ export class FeaturedCourseService
                     include: {
                       course: {
                         include: {
-                          courseDetails:true,
+                          courseDetails:{
+                            include:{
+                                file:true
+                            }
+                          },
+                          courseAcademy:{
+                            include:{
+                                provider:{
+                                    include:{
+                                        venueBasicDetails:true,
+                                        logo:true
+                                    }
+                                }
+                            }
+                          },
+                          courseTypeAndLocation:true,
                           courseApplications:{
                             where:{
                                 userId:user?.id
