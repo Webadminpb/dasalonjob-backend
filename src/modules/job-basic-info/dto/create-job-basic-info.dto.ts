@@ -16,7 +16,9 @@ export const JobBasicInfoSchema = z.object({
   jobType: z.nativeEnum(JobType),
   totalOpening: z.number().default(1),
   gender: z.nativeEnum(Gender),
-  salaryRange: SalaryRangeSchema,
+  // salaryRange: SalaryRangeSchema,
+  start: z.number().default(0),
+  end: z.number().default(0),
   deadline: zDateOptional,
   userId: z.string().optional(),
 });

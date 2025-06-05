@@ -11,7 +11,9 @@ model JobBasicInfo {
   totalOpening Int @default(1)
   gender Gender
 
-  salaryRange SalaryRange
+  start Int @default(0)
+  end Int @default(0)
+
   deadline DateTime
 
   

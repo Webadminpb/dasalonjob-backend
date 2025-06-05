@@ -17,15 +17,15 @@ export const QueryJobPostSchema = z.object({
   job_profile: z.nativeEnum(JobBasicInfoProfileType).optional(),
   skillIds: z
   .string()
-  .optional()
-  .transform((val) => val?.split('_').filter(Boolean) ?? []),
+  .optional(),
+  // .transform((val) => val?.split('_').filter(Boolean) ?? []),
   job_type: z.array(z.nativeEnum(JobType)).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
   countryId: z.string().optional(),
-  minSalary: z.string().transform(Number).optional(),
-  maxSalary: z.string().transform(Number).optional(),
+  minSalary: z.string().optional(),
+  maxSalary: z.string().optional(),
   experience: z.nativeEnum(UserExperience).optional(),
-  locations: z.array(z.string()).optional(),
+  locations: z.string().optional(),
   date: zDateOptional,
   partnerId: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
@@ -47,8 +47,8 @@ export const QueryJobPostSchemaForAdmin = z.object({
   job_type: z.array(z.nativeEnum(JobType)).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
   countryId: z.string().optional(),
-  minSalary: z.string().transform(Number).optional(),
-  maxSalary: z.string().transform(Number).optional(),
+  // minSalary: z.string().transform(Number).optional(),
+  // maxSalary: z.string().transform(Number).optional(),
   experience: z.nativeEnum(UserExperience).optional(),
   locations: z.array(z.string()).optional(),
   date: zDateOptional,
@@ -97,10 +97,10 @@ export class QueryJobPostDto extends createZodDto(QueryJobPostSchema) {
   countryId?: string;
 
   @ApiPropertyOptional({ type: Number, description: 'Minimum Salary' })
-  minSalary?: number;
+  minSalary?: any;
 
   @ApiPropertyOptional({ type: Number, description: 'Maximum Salary' })
-  maxSalary?: number;
+  maxSalary?: any;
 }
 export class QueryJobPostDtoForAdmin extends createZodDto(
   QueryJobPostSchemaForAdmin,

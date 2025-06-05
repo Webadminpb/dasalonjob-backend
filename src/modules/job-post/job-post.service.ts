@@ -21,6 +21,7 @@ import {
 } from './dto/query-job-post.dto';
 import { CreateJobStatusDto } from './dto/status-job-post.dto';
 import { UpdateJobPostDto } from './dto/update-job-post.dto';
+import { number } from 'zod';
 
 @Injectable()
 export class JobPostService {
@@ -398,7 +399,7 @@ export class JobPostService {
           salaryFilter.end = { lte: query.maxSalary };
         }
 
-        where.jobBasicInfo.salaryRange = salaryFilter;
+        where.jobBasicInfo = salaryFilter;
       }
     }
 
@@ -417,7 +418,7 @@ export class JobPostService {
     if(query.skillIds){
       where.jobQualification = {
         skillIds:{
-          hasSome:query.skillIds
+          hasSome:query?.skillIds?.split("_")
         }
       }
     }
@@ -425,7 +426,7 @@ export class JobPostService {
     if (query.locations && query.locations.length > 0) {
       where.venue = {
         venueBasicDetails: {
-          city: { in: query.locations },
+          city: { in: query?.locations?.split("_") },
         },
       };
     }
@@ -494,6 +495,7 @@ export class JobPostService {
   }
 
   async findAllForApplicant(query: QueryJobPostDto, user?: Auth) {
+    console.log("locations ", query)
     const where: Prisma.JobPostWhereInput = {
       jobBasicInfo: {
         deadline: {
@@ -501,35 +503,17 @@ export class JobPostService {
         },
       },
     };
-    // if (user) {
-    //   where.userId = user.id;
-    // }
 
-    // if (user) {
-    //   where.NOT = {
-    //     jobApplications: {
-    //       some: {
-    //         userId: user.id,
-    //         status: 'Rejected',
-    //       },
-    //     },
-    //   };
-    // }
+    if (query.skillIds || query.search || query.job_type || query.minSalary || query.maxSalary) {
 
-    if (query.job_profile || query.search || query.job_type) {
-      where.jobBasicInfo = {
-        // deadline: {
-        //   gt: new Date().toISOString(), // Exclude expired job deadlines
-        // },
-      };
-
-      if (query.job_profile?.length) {
+      if (query.skillIds?.length) {
         where.jobBasicInfo = {
           profileId:{
-            in:query.skillIds
+            in:query.skillIds?.split("_")  
           }
         }
       }
+      
 
       if (query.search) {
         where.jobBasicInfo.title = {
@@ -544,24 +528,30 @@ export class JobPostService {
         };
       }
 
-      if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+      if (query.minSalary || query.maxSalary) {
+        console.log("line 532")
         const salaryFilter: any = {};
 
-        if (query.minSalary !== undefined) {
-          salaryFilter.start = { gte: query.minSalary };
+        if (query.minSalary) {
+          salaryFilter.start = { gte: parseInt(query.minSalary) };
+          // salaryFilter.start = parseInt(query.minSalary);
         }
 
-        if (query.maxSalary !== undefined) {
-          salaryFilter.end = { lte: query.maxSalary };
+        if (query.maxSalary) {
+          // salaryFilter.end  = parseInt(query.maxSalary);
+          salaryFilter.start = { gte: parseInt(query.minSalary) };
+
         }
 
-        where.jobBasicInfo.salaryRange = salaryFilter;
+        where.jobBasicInfo = salaryFilter;
       }
     }
 
     if (query.status) {
       where.status = query.status;
     }
+
+
     if (query.countryId) {
       where.countryId = query.countryId;
     }
@@ -575,7 +565,7 @@ export class JobPostService {
     if (query.locations && query.locations.length > 0) {
       where.venue = {
         venueBasicDetails: {
-          city: { in: query.locations },
+          city: { in: query?.locations?.split("_") },
         },
       };
     }
@@ -628,7 +618,7 @@ export class JobPostService {
           [orderBy]: sortOrder,
         },
       }),
-      this.prismaService.jobPost.count({ where, skip, take }),
+      this.prismaService.jobPost.count({ where }),
     ]);
 
     if (!jobPost) {
@@ -791,19 +781,20 @@ export class JobPostService {
         };
       }
 
-      if (query.minSalary !== undefined || query.maxSalary !== undefined) {
-        const salaryFilter: any = {};
+    //   if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+    //     const salaryFilter: any = {};
 
-        if (query.minSalary !== undefined) {
-          salaryFilter.start = { gte: query.minSalary };
-        }
+    //     if (query.minSalary) {
+    //       // salaryFilter.start = { gte: parseInt(query.minSalary) };
+    //       salaryFilter.start = parseInt(query.minSalary);
+    //     }
 
-        if (query.maxSalary !== undefined) {
-          salaryFilter.end = { lte: query.maxSalary };
-        }
+    //     if (query.maxSalary) {
+    //       salaryFilter.end  = parseInt(query.maxSalary);
+    //     }
 
-        where.jobBasicInfo.salaryRange = salaryFilter;
-      }
+    //     where.jobBasicInfo = salaryFilter;
+    //   }
     }
 
     if (query.status) {
@@ -916,7 +907,7 @@ export class JobPostService {
       if (query.job_profile?.length) {
         where.jobBasicInfo = {
           profileId:{
-            in:query.skillIds
+            in:query.skillIds.split("_")
           }
         };
       }
@@ -945,7 +936,7 @@ export class JobPostService {
           salaryFilter.end = { lte: query.maxSalary };
         }
 
-        where.jobBasicInfo.salaryRange = salaryFilter;
+        where.jobBasicInfo = salaryFilter;
       }
     }
 
@@ -972,7 +963,7 @@ export class JobPostService {
     if (query.locations && query.locations.length > 0) {
       where.venue = {
         venueBasicDetails: {
-          city: { in: query.locations },
+          city: { in: query?.locations?.split("_") },
         },
       };
     }
