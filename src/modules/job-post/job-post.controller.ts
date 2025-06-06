@@ -94,7 +94,6 @@ export class JobPostController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   findOne(@Param('id') id: string, @GetUser() user: Auth) {
-    console.log("params ki id ", id)
     return this.jobPostService.findOne(id, user);
   }
 

@@ -11,11 +11,10 @@ export const QueryPartnerCourseSchema = z.object({
   type: z.nativeEnum(CourseType).optional(),
   location: z.string().optional(),
   partnerId: z.string().optional(),
+  minPrice: z.string().optional(),
+  maxPrice: z.string().optional(),
   skillIds: z
   .string().optional(),
-  // .transform((val) => val.split("_").filter(Boolean))
-  // .optional()
-  // .or(z.literal('').transform(() => [])),
   search: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),

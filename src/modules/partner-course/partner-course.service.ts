@@ -473,6 +473,8 @@ export class PartnerCourseService {
 
   async findAllForAdmin(query: QueryPartnerCourseDto, user?: Auth) {
     const where: Prisma.PartnerCourseWhereInput = {};
+    const courseDetailsFilter: Prisma.CourseDetailsWhereInput = {};
+
     if (query.partnerId) {
       where.userId = query.partnerId;
     }
@@ -485,15 +487,37 @@ export class PartnerCourseService {
     if (query.status) {
       where.status = query.status;
     }
-    if(query.skillIds){
-      console.log("skills id array ", query.skillIds?.split("_") )
-      console.log("skills id type ", typeof query.skillIds?.split("_") )
-      where.courseDetails = {
-        skillIds:{
-          hasSome:query.skillIds?.split("_") 
-        }
-      }
-    }
+
+    
+  if (query.skillIds) {
+  courseDetailsFilter.skillIds = {
+    hasSome: query.skillIds.split("_")
+  };
+  }
+
+  if (query.minPrice || query.maxPrice) {
+  const priceFilter: Prisma.FloatFilter = {
+    ...(query.minPrice && { gte: parseFloat(query.minPrice) }),
+    ...(query.maxPrice && { lte: parseFloat(query.maxPrice) }),
+  };
+
+  courseDetailsFilter.OR = [
+    { offerPrice: priceFilter },
+    {
+      AND: [
+        { offerPrice: { equals: undefined } },
+        { price: priceFilter },
+      ],
+    },
+  ];
+}
+
+// Final courseDetails condition
+  if (Object.keys(courseDetailsFilter).length > 0) {
+  where.courseDetails = {
+    is: courseDetailsFilter,
+  };
+  }
     if (query.customDate) {
       where.createdAt = {
         gte: new Date(query.customDate).toISOString(),

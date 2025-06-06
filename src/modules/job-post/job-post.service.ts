@@ -2,7 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   Auth,
   JobApplicationStatus,
-  Prisma
+  Prisma,
+  UserExperience
 } from '@prisma/client';
 import { addDays } from 'date-fns';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
@@ -384,7 +385,7 @@ export class JobPostService {
 
       if (query.job_type?.length) {
         where.jobBasicInfo.jobType = {
-          in: query.job_type,
+          equals: query.job_type,
         };
       }
 
@@ -495,11 +496,20 @@ export class JobPostService {
   }
 
   async findAllForApplicant(query: QueryJobPostDto, user?: Auth) {
-    console.log("locations ", query)
+
+    const experienceOrder = [
+      'FRESHER',
+      'ONE_YEAR',
+      'TWO_YEAR',
+      'THREE_YEAR',
+      'FOUR_YEAR',
+      'FIVE_PLUS_YEAR',
+    ] as const;
+
     const where: Prisma.JobPostWhereInput = {
       jobBasicInfo: {
         deadline: {
-          gt: new Date().toISOString(), // Always exclude expired job deadlines
+          gt: new Date().toISOString(),
         },
       },
     };
@@ -522,14 +532,12 @@ export class JobPostService {
         };
       }
 
-      if (query.job_type?.length) {
-        where.jobBasicInfo.jobType = {
-          in: query.job_type,
-        };
+      if (query.job_type) {
+        where.jobBasicInfo.jobType = {equals:query.job_type}
+
       }
 
       if (query.minSalary || query.maxSalary) {
-        console.log("line 532")
         const salaryFilter: any = {};
 
         if (query.minSalary) {
@@ -557,9 +565,24 @@ export class JobPostService {
     }
 
     if (query.experience) {
-      where.jobQualification = {
-        minExperience: query.experience,
-      };
+      const experienceIndex = experienceOrder.indexOf(query.experience);
+      // if(query.experience === UserExperience.FIVE_PLUS_YEAR){
+      //   console.log("five year exp ", query.experience)
+      //   console.log("five year exp type ", typeof query.experience)
+      //   where.jobQualification = {
+      //     minExperience:query.experience
+      //   };
+      //   console.log("where.job qualifications ", where)
+      // } else
+       if(experienceIndex !== -1 ){
+        console.log("experience list ", experienceOrder.slice(0,experienceIndex + 1));
+        where.jobQualification = {
+          minExperience: {
+            in:experienceOrder.slice(0,experienceIndex + 1)
+            // in:[ 'FRESHER', 'ONE_YEAR', 'TWO_YEAR', 'THREE_YEAR' ]
+          }
+        }
+      }
     }
 
     if (query.locations && query.locations.length > 0) {
@@ -594,6 +617,7 @@ export class JobPostService {
           },
           venue: {
             include: {
+              logo:true,
               venueBasicDetails: {
                 include: {
                   files: true,
@@ -921,7 +945,7 @@ export class JobPostService {
 
       if (query.job_type?.length) {
         where.jobBasicInfo.jobType = {
-          in: query.job_type,
+          equals: query.job_type,
         };
       }
 

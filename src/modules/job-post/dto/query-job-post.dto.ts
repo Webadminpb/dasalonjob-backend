@@ -19,7 +19,7 @@ export const QueryJobPostSchema = z.object({
   .string()
   .optional(),
   // .transform((val) => val?.split('_').filter(Boolean) ?? []),
-  job_type: z.array(z.nativeEnum(JobType)).optional(),
+  job_type: z.nativeEnum(JobType).optional(),
   status: z.nativeEnum(JobPostStatus).optional(),
   countryId: z.string().optional(),
   minSalary: z.string().optional(),
@@ -85,7 +85,7 @@ export class QueryJobPostDto extends createZodDto(QueryJobPostSchema) {
     enum: JobType,
     description: 'Filter by job type',
   })
-  job_type?: JobType[];
+  job_type?: JobType;
 
   @ApiPropertyOptional({
     enum: JobPostStatus,
