@@ -33,13 +33,11 @@ export class SkillsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated()
   findAll() {
     return this.skillsService.findAll();
   }
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated()
   findOne(@Param('id') id: string) {
     return this.skillsService.findOne(id);
   }

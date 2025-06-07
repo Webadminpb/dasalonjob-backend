@@ -14,7 +14,7 @@ model Country {
 
   auth Auth[]
   jobPosts JobPost[]
-  venueDetails VenueDetails[]
+  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

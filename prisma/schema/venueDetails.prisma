@@ -21,9 +21,8 @@ model VenueDetails {
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
-
-  countryId String? @db.ObjectId
-  country Country? @relation(fields: [countryId], references: [id])
+  
+  country String?
 
   businessType BusinessType[]
 

@@ -22,7 +22,7 @@ export class VenueDetailsService {
         streetAddress: body.streetAddress,
         gender: body.gender,
         state: body.state,
-        countryId: body.countryId,
+        country: body.country,
         zipCode: body.zipCode,
         fileIds: body.fileIds,
         userId: user.id,

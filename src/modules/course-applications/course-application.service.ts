@@ -17,8 +17,8 @@ export class CourseApplicationService {
           userId_courseId: { userId: user.id, courseId: body.courseId },
         },
       });
-    if (!isCourseExisted) {
-      throw new NotFoundException('Course Data Not Found');
+    if (isCourseExisted) {
+      throw new NotFoundException('Course Application Already Found');
     }
     const courseApplication = await this.prismaService.courseApplication.create(
       {

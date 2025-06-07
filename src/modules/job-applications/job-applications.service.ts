@@ -16,7 +16,7 @@ import {
   getSortOrder,
 } from 'src/common/utils/common';
 import { StatusJobApplicationDto } from './dto/status-job.dto';
-import { QueryAgencyTeamMembersDto } from '../agency-team-members/dto/query-agency-team-member.dto';
+import { permission } from 'process';
 
 @Injectable()
 export class JobApplicationService {
@@ -649,5 +649,47 @@ export class JobApplicationService {
       existedJobApplications,
       totalExistingJobApplications,
     });
+  }
+
+  async getAgencyJobApplicants(query:QueryJobApplicationDto, user:Auth){
+    const permissions = await this.prismaService.partnerAgencyJobPermission.findMany({
+      where:{
+        agencyId:user.id,
+        hasAccess:true
+      },
+      select:{
+        partnerId:true
+      }
+    });
+    const partnerIds = permissions.map(p => p.partnerId);
+    if(partnerIds.length === 0) return [];
+
+    const jobPosts = await this.prismaService.jobPost.findMany({
+      where:{
+        userId:{in:partnerIds}
+      },
+      skip:getPaginationSkip(query.page, query.limit),
+      take:getPaginationTake(query.limit),
+      select:{
+        id:true
+      }
+    });
+
+    const jobPostIds = jobPosts.map(j => j.id);
+    if(jobPostIds.length === 0) return [];
+
+    const [applications, total ]= await Promise.all([ this.prismaService.jobApplication.findMany({
+      where:{
+        jobPostId:{in:jobPostIds}
+      },
+      include:{
+        user:true,
+        jobPost:true
+      }
+    }),
+    this.prismaService.jobApplication.count({})
+    ]);
+    return new ApiSuccessResponse(true, "Applicants fetched successfully", {applications, total}); 
+
   }
 }

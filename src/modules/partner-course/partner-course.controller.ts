@@ -44,6 +44,12 @@ export class PartnerCourseController {
     return this.partnerCourseService.findAll(query);
   }
 
+  @Get('guest')
+  @HttpCode(HttpStatus.OK)
+  findAllForGuest(@Query() query: QueryPartnerCourseDto) {
+    return this.partnerCourseService.findAll(query);
+  }
+
   // Partner
   @Get('partner/:id')
   @AllowAuthenticated('PARTNER')

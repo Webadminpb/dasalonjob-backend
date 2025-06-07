@@ -121,4 +121,11 @@ export class JobApplicationController {
   ) {
     return this.jobApplicationService.getAgencyRecentApplicants(query, user);
   }
+
+  @Get("agency/applicants")
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  getAgencyApplicants(@Query() query: QueryJobApplicationDto, @GetUser() user:Auth){
+    return this.jobApplicationService.getAgencyJobApplicants(query, user)
+  }
 }

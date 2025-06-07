@@ -16,7 +16,7 @@ export const VenueDetailsSchema = z.object({
   gender: z.nativeEnum(Gender),
   fileIds: z.array(z.string()).optional(),
   state: z.string().optional(),
-  countryId: z.string().optional(),
+  country: z.string().optional(),
   latitide: z.string().optional(),
   longitude: z.string().optional(),
 });
