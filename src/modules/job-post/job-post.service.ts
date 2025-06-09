@@ -3,7 +3,7 @@ import {
   Auth,
   JobApplicationStatus,
   Prisma,
-  UserExperience
+  UserExperience,
 } from '@prisma/client';
 import { addDays } from 'date-fns';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
@@ -213,57 +213,57 @@ export class JobPostService {
   }
 
   async findOne(id: string, user?: Auth) {
-    console.log("id line 214 ", id)
+    console.log('id line 214 ', id);
     // const [jobPost, update] = await this.prismaService.$transaction([
-      const jobPost = await this.prismaService.jobPost.findUnique({
-        where: { id },
-        include: {
-          user: true,
-          venue: {
-            include: {
-              venueBasicDetails: {
-                include: {
-                  files: true,
-                },
+    const jobPost = await this.prismaService.jobPost.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        venue: {
+          include: {
+            venueBasicDetails: {
+              include: {
+                files: true,
               },
-              logo: true,
             },
+            logo: true,
           },
+        },
 
-          jobBasicInfo: true,
-          jobBenefits: true,
-          jobDescription: true,
-          jobQualification: {
-            include: {
-              skills: true,
-              languages: {
-                include: {
-                  file: true,
-                },
+        jobBasicInfo: true,
+        jobBenefits: true,
+        jobDescription: true,
+        jobQualification: {
+          include: {
+            skills: true,
+            languages: {
+              include: {
+                file: true,
               },
             },
           },
-          jobApplications: {
-            where: {
-              userId: user.id,
-            },
-          },
-          saveJobPosts: {
-            where: {
-              userId: user?.id,
-            },
+        },
+        jobApplications: {
+          where: {
+            userId: user.id,
           },
         },
-      })
-      if(!jobPost) throw new NotFoundException("Job post is not found")
-      const updateJobPost = await this.prismaService.jobPost.update({
-        where: { id },
-        data: {
-          views: {
-            increment: 1,
+        saveJobPosts: {
+          where: {
+            userId: user?.id,
           },
         },
-      })
+      },
+    });
+    if (!jobPost) throw new NotFoundException('Job post is not found');
+    const updateJobPost = await this.prismaService.jobPost.update({
+      where: { id },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
     // ]);
 
     const jobRequiredSkillIds =
@@ -416,18 +416,18 @@ export class JobPostService {
         minExperience: query.experience,
       };
     }
-    if(query.skillIds){
+    if (query.skillIds) {
       where.jobQualification = {
-        skillIds:{
-          hasSome:query?.skillIds?.split("_")
-        }
-      }
+        skillIds: {
+          hasSome: query?.skillIds?.split('_'),
+        },
+      };
     }
 
     if (query.locations && query.locations.length > 0) {
       where.venue = {
         venueBasicDetails: {
-          city: { in: query?.locations?.split("_") },
+          city: { in: query?.locations?.split('_') },
         },
       };
     }
@@ -496,7 +496,6 @@ export class JobPostService {
   }
 
   async findAllForApplicant(query: QueryJobPostDto, user?: Auth) {
-
     const experienceOrder = [
       'FRESHER',
       'ONE_YEAR',
@@ -514,16 +513,54 @@ export class JobPostService {
       },
     };
 
-    if (query.skillIds || query.search || query.job_type || query.minSalary || query.maxSalary) {
+    const include: Prisma.JobPostInclude = {
+      jobBasicInfo: true,
+      jobBenefits: true,
+      jobDescription: true,
+      jobQualification: {
+        include: {
+          skills: true,
+        },
+      },
+      venue: {
+        include: {
+          logo: true,
+          venueBasicDetails: {
+            include: {
+              files: true,
+            },
+          },
+        },
+      },
+    };
 
+    if (user) {
+      include.jobApplications = {
+        where: {
+          userId: user.id,
+        },
+      };
+      include.saveJobPosts = {
+        where: {
+          userId: user.id,
+        },
+      };
+    }
+
+    if (
+      query.skillIds ||
+      query.search ||
+      query.job_type ||
+      query.minSalary ||
+      query.maxSalary
+    ) {
       if (query.skillIds?.length) {
         where.jobBasicInfo = {
-          profileId:{
-            in:query.skillIds?.split("_")  
-          }
-        }
+          profileId: {
+            in: query.skillIds?.split('_'),
+          },
+        };
       }
-      
 
       if (query.search) {
         where.jobBasicInfo.title = {
@@ -533,22 +570,23 @@ export class JobPostService {
       }
 
       if (query.job_type) {
-        where.jobBasicInfo.jobType = {equals:query.job_type}
-
+        where.jobBasicInfo.jobType = { equals: query.job_type };
       }
 
       if (query.minSalary || query.maxSalary) {
         const salaryFilter: any = {};
 
-        if (query.minSalary) {
+        console.log('query.minSalary ', query.maxSalary, query.minSalary);
+        if (query.minSalary && query.maxSalary) {
+          console.log('line 545');
           salaryFilter.start = { gte: parseInt(query.minSalary) };
           // salaryFilter.start = parseInt(query.minSalary);
         }
 
         if (query.maxSalary) {
+          console.log('line 551');
           // salaryFilter.end  = parseInt(query.maxSalary);
-          salaryFilter.start = { gte: parseInt(query.minSalary) };
-
+          salaryFilter.end = { lte: parseInt(query.maxSalary) };
         }
 
         where.jobBasicInfo = salaryFilter;
@@ -558,7 +596,6 @@ export class JobPostService {
     if (query.status) {
       where.status = query.status;
     }
-
 
     if (query.countryId) {
       where.countryId = query.countryId;
@@ -574,21 +611,24 @@ export class JobPostService {
       //   };
       //   console.log("where.job qualifications ", where)
       // } else
-       if(experienceIndex !== -1 ){
-        console.log("experience list ", experienceOrder.slice(0,experienceIndex + 1));
+      if (experienceIndex !== -1) {
+        console.log(
+          'experience list ',
+          experienceOrder.slice(0, experienceIndex + 1),
+        );
         where.jobQualification = {
           minExperience: {
-            in:experienceOrder.slice(0,experienceIndex + 1)
+            in: experienceOrder.slice(0, experienceIndex + 1),
             // in:[ 'FRESHER', 'ONE_YEAR', 'TWO_YEAR', 'THREE_YEAR' ]
-          }
-        }
+          },
+        };
       }
     }
 
     if (query.locations && query.locations.length > 0) {
       where.venue = {
         venueBasicDetails: {
-          city: { in: query?.locations?.split("_") },
+          city: { in: query?.locations?.split('_') },
         },
       };
     }
@@ -606,36 +646,7 @@ export class JobPostService {
     const [jobPost, total] = await Promise.all([
       await this.prismaService.jobPost.findMany({
         where,
-        include: {
-          jobBasicInfo: true,
-          jobBenefits: true,
-          jobDescription: true,
-          jobQualification: {
-            include: {
-              skills: true,
-            },
-          },
-          venue: {
-            include: {
-              logo:true,
-              venueBasicDetails: {
-                include: {
-                  files: true,
-                },
-              },
-            },
-          },
-          jobApplications: {
-            where: {
-              userId: user?.id,
-            },
-          },
-          saveJobPosts: {
-            where: {
-              userId: user?.id,
-            },
-          },
-        },
+        include,
         skip,
         take,
         orderBy: {
@@ -650,8 +661,8 @@ export class JobPostService {
     }
     const jobPostWithCounts = jobPost.map((job: any) => ({
       ...job,
-      totalApplicants: job.jobApplications.length,
-      totalSaved: job.saveJobPosts.length,
+      totalApplicants: job?.jobApplications?.length,
+      totalSaved: job?.saveJobPosts?.length,
     }));
 
     return new ApiSuccessResponse(true, 'Job post found', {
@@ -786,8 +797,8 @@ export class JobPostService {
 
       if (query.job_profile?.length) {
         where.jobBasicInfo = {
-          profileId:{
-            in:query.skillIds
+          profileId: {
+            in: query.skillIds,
           },
         };
       }
@@ -805,20 +816,20 @@ export class JobPostService {
         };
       }
 
-    //   if (query.minSalary !== undefined || query.maxSalary !== undefined) {
-    //     const salaryFilter: any = {};
+      //   if (query.minSalary !== undefined || query.maxSalary !== undefined) {
+      //     const salaryFilter: any = {};
 
-    //     if (query.minSalary) {
-    //       // salaryFilter.start = { gte: parseInt(query.minSalary) };
-    //       salaryFilter.start = parseInt(query.minSalary);
-    //     }
+      //     if (query.minSalary) {
+      //       // salaryFilter.start = { gte: parseInt(query.minSalary) };
+      //       salaryFilter.start = parseInt(query.minSalary);
+      //     }
 
-    //     if (query.maxSalary) {
-    //       salaryFilter.end  = parseInt(query.maxSalary);
-    //     }
+      //     if (query.maxSalary) {
+      //       salaryFilter.end  = parseInt(query.maxSalary);
+      //     }
 
-    //     where.jobBasicInfo = salaryFilter;
-    //   }
+      //     where.jobBasicInfo = salaryFilter;
+      //   }
     }
 
     if (query.status) {
@@ -930,9 +941,9 @@ export class JobPostService {
 
       if (query.job_profile?.length) {
         where.jobBasicInfo = {
-          profileId:{
-            in:query.skillIds.split("_")
-          }
+          profileId: {
+            in: query.skillIds.split('_'),
+          },
         };
       }
 
@@ -987,7 +998,7 @@ export class JobPostService {
     if (query.locations && query.locations.length > 0) {
       where.venue = {
         venueBasicDetails: {
-          city: { in: query?.locations?.split("_") },
+          city: { in: query?.locations?.split('_') },
         },
       };
     }

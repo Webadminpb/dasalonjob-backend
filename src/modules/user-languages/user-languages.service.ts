@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { CreateUserLanguageDto } from './dto/create-user-language.dto';
@@ -11,11 +15,11 @@ export class UserLanguagesService {
 
   async create(body: CreateUserLanguageDto, user: Auth) {
     const isExisting = await this.prismaService.userLanguage.findFirst({
-      where:{
-        languageId:body.languageId
-      }
-    })
-    if(isExisting) throw new BadRequestException("Language Already Exists")
+      where: {
+        languageId: body.languageId,
+      },
+    });
+    if (isExisting) throw new BadRequestException('Language Already Exists');
     const userLanguage = await this.prismaService.userLanguage.create({
       data: {
         userId: user.id,
@@ -61,9 +65,10 @@ export class UserLanguagesService {
   }
 
   async update(id: string, body: UpdateUserLanguageDto, user: Auth) {
+    console.log('body ', body);
     const existingUserLanguage =
       await this.prismaService.userLanguage.findUnique({
-        where: { id, userId:user.id },
+        where: { id, userId: user.id },
       });
     if (!existingUserLanguage) {
       throw new NotFoundException('User language not found');

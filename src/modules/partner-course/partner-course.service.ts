@@ -11,6 +11,7 @@ import { Auth, Prisma } from '@prisma/client';
 import { QueryPartnerCourseDto } from './dto/query-partner-course.dto';
 import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
 import { CreateCourseStatusDto } from './dto/status-partner-course.dto';
+import { model } from 'mongoose';
 
 @Injectable()
 export class PartnerCourseService {
@@ -237,61 +238,60 @@ export class PartnerCourseService {
   }
 
   async findOneForApplicant(id: string, user?: Auth) {
-
     const course = await this.prismaService.partnerCourse.findUnique({
-          where: {
-            id: id,
-          },
+      where: {
+        id: id,
+      },
+      include: {
+        courseDetails: {
           include: {
-            courseDetails: {
-              include: {
-                file: true,
-              },
-            },
-            saveCourses: {
-              where: {
-                userId: user?.id,
-              },
-            },
-            courseApplications: {
-              where: {
-                userId: user?.id,
-              },
-            },
-            courseContent: true,
-            courseAcademy: {
-              include: {
-                provider: {
-                  include: {
-                    venueBasicDetails: true,
-                  },
-                },
-              },
-            },
-            courseTypeAndLocation: true,
+            file: true,
           },
-      })
+        },
+        saveCourses: {
+          where: {
+            userId: user?.id,
+          },
+        },
+        courseApplications: {
+          where: {
+            userId: user?.id,
+          },
+        },
+        courseContent: true,
+        courseAcademy: {
+          include: {
+            provider: {
+              include: {
+                venueBasicDetails: true,
+              },
+            },
+          },
+        },
+        courseTypeAndLocation: true,
+      },
+    });
     if (!course) {
       throw new BadRequestException('Course not found');
     }
     const updatePartnerCourse = await this.prismaService.partnerCourse.update({
-        data: { views: { increment: 1 } },
-          where: {
-            id: id,
-          },
-    })
+      data: { views: { increment: 1 } },
+      where: {
+        id: id,
+      },
+    });
     const totalSaved = await this.prismaService.saveCourse.count({
       where: {
-            courseId: id,
-          },
-    })
-    const totalApplicant = await  this.prismaService.courseApplication.count({
-          where: {
-            course: {
-              id: id,
-            },
-          },
-    })
+        courseId: id,
+      },
+    });
+    const totalApplicant = await this.prismaService.courseApplication.count({
+      where: {
+        course: {
+          id: id,
+        },
+      },
+    });
 
     return new ApiSuccessResponse(true, 'Course found', {
       partnerCourse: course,
@@ -479,50 +479,82 @@ export class PartnerCourseService {
       where.userId = query.partnerId;
     }
     if (query.type) {
-      where.courseTypeAndLocation.courseType = query.type;
+      where.courseTypeAndLocation = {
+        courseType: query.type,
+      };
     }
-    if (query.location) {
-      where.courseTypeAndLocation.city = query.location;
+    if (query.locations) {
+      // where.courseTypeAndLocation.city = query.location;
+      where.OR = [
+        {
+          courseTypeAndLocation: {
+            city: {
+              in: query.locations.split('_'),
+            },
+          },
+        },
+        {
+          courseAcademy: {
+            provider: {
+              venueBasicDetails: {
+                city: {
+                  in: query.locations.split('_'),
+                },
+              },
+            },
+          },
+        },
+      ];
     }
     if (query.status) {
       where.status = query.status;
     }
 
-    
-  if (query.skillIds) {
-  courseDetailsFilter.skillIds = {
-    hasSome: query.skillIds.split("_")
-  };
-  }
-
-  if (query.minPrice || query.maxPrice) {
-  const priceFilter: Prisma.FloatFilter = {
-    ...(query.minPrice && { gte: parseFloat(query.minPrice) }),
-    ...(query.maxPrice && { lte: parseFloat(query.maxPrice) }),
-  };
-
-  courseDetailsFilter.OR = [
-    { offerPrice: priceFilter },
-    {
-      AND: [
-        { offerPrice: { equals: undefined } },
-        { price: priceFilter },
-      ],
-    },
-  ];
-}
-
-// Final courseDetails condition
-  if (Object.keys(courseDetailsFilter).length > 0) {
-  where.courseDetails = {
-    is: courseDetailsFilter,
-  };
-  }
-    if (query.customDate) {
-      where.createdAt = {
-        gte: new Date(query.customDate).toISOString(),
+    if (query.skillIds) {
+      courseDetailsFilter.skillIds = {
+        hasSome: query.skillIds.split('_'),
       };
     }
+
+    if (query.minPrice || query.maxPrice) {
+      const priceFilter: Prisma.FloatFilter = {
+        ...(query.minPrice && { gte: parseFloat(query.minPrice) }),
+        ...(query.maxPrice && { lte: parseFloat(query.maxPrice) }),
+      };
+
+      courseDetailsFilter.OR = [
+        { offerPrice: priceFilter },
+        {
+          AND: [{ offerPrice: { equals: undefined } }, { price: priceFilter }],
+        },
+      ];
+    }
+    if (query.startDate && query.endDate) {
+      courseDetailsFilter.AND = [
+        {
+          startDate: {
+            gte: new Date(query.startDate).toISOString(),
+          },
+        },
+        {
+          endDate: {
+            lte: new Date(query.endDate).toISOString(),
+          },
+        },
+      ];
+    }
+
+    // Final courseDetails condition
+    if (Object.keys(courseDetailsFilter).length > 0) {
+      where.courseDetails = {
+        is: courseDetailsFilter,
+      };
+    }
+    // if (query.startDate && query.endDate) {
+    //   where.createdAt = {
+    //     gte: new Date(query.customDate).toISOString(),
+    //   };
+    // }
     if (query.search) {
       where.OR = [
         {
@@ -543,11 +575,11 @@ export class PartnerCourseService {
         },
       ];
     }
-    if (query.customDate) {
-      where.createdAt = {
-        gte: new Date(query.customDate).toISOString(),
-      };
-    }
+    // if (query.customDate) {
+    //   where.createdAt = {
+    //     gte: new Date(query.customDate).toISOString(),
+    //   };
+    // }
 
     const [partnerCourses, total, openTotal, fullfieldTotal] =
       await Promise.all([
@@ -566,18 +598,14 @@ export class PartnerCourseService {
             },
             courseContent: true,
             courseAcademy: {
-              include:{
-                provider:{
-                  include:{
-                    logo:true,
-                    venueBasicDetails:{
-                      select:{
-                        name:true
-                      }
-                    }
-                  }
-                }
-              }
+              include: {
+                provider: {
+                  include: {
+                    logo: true,
+                    venueBasicDetails: true,
+                  },
+                },
+              },
             },
             courseTypeAndLocation: true,
             saveCourses: {
