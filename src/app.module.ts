@@ -62,6 +62,8 @@ import { JobOfferToSavedApplicantModule } from './modules/jobOfferToSavedApplica
 import { SavedApplicantCategoryModule } from './modules/saved-applicant-category/saved-applicant-category.module';
 import { AgencyContactDetailsModule } from './modules/agency-contact-details/agency-contact-details.module';
 import { FeaturedCourseModule } from './modules/featured-courses/featured-course.module';
+import { UserNotificationSettingModule } from './modules/user-notification-setting/user-notification-setting.module';
+import { NotificationModule } from './modules/notifications/notification.module';
 
 @Module({
   imports: [
@@ -121,11 +123,13 @@ import { FeaturedCourseModule } from './modules/featured-courses/featured-course
     AgencyTeamMembersModule,
     PartnerAgencyJobPermissionModule,
     FeaturedJobsModule,
+    UserNotificationSettingModule,
     CreditPlansModule,
     CreditsModule,
     SubscriptionModule,
     SponsoredJobModule,
     AgencyContactDetailsModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

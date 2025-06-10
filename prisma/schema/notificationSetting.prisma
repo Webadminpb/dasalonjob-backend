@@ -1,0 +1,14 @@
+model UserNotificationSetting {
+    id String @id @map("_id") @db.ObjectId @default(auto())
+
+    userId String @db.ObjectId @unique
+    user Auth @relation(fields: [userId], references: [id])
+
+    isWhatsApp Boolean @default(true)
+    isSystemApp Boolean @default(true)
+    isEmail Boolean @default(true)
+    isSMS Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

@@ -128,5 +128,8 @@ model Auth {
   savedApplicantCategory SavedApplicantCategory[]
 
   accountDeletion AccountDeletion?
+  userNotificationSetting UserNotificationSetting?
+
+  notifications Notification[]
 
 }
