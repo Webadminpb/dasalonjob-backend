@@ -213,8 +213,6 @@ export class JobPostService {
   }
 
   async findOne(id: string, user?: Auth) {
-    console.log('id line 214 ', id);
-    // const [jobPost, update] = await this.prismaService.$transaction([
     const jobPost = await this.prismaService.jobPost.findUnique({
       where: { id },
       include: {
@@ -273,8 +271,6 @@ export class JobPostService {
       jobPost?.jobQualification?.languages?.map((language) => language?.id) ||
       [];
 
-    console.log('jobRequiredLanguages ', jobRequiredLanguages);
-
     const jobRequiredEducations = jobPost?.jobQualification?.education;
 
     const userSkills = await this.prismaService.jobPreference.findUnique({
@@ -311,8 +307,6 @@ export class JobPostService {
       },
     });
 
-    console.log('user languages ', userLanguages);
-
     const matchingSkills = jobRequiredSkillIds?.filter((id) =>
       userSkills?.skills?.some((skill) => skill?.id === id),
     );
@@ -325,11 +319,6 @@ export class JobPostService {
       (edu) => edu.education === jobRequiredEducations,
     );
 
-    console.log('job post required skills ', jobRequiredSkillIds);
-    console.log('user skills ', userSkills);
-    console.log('Matching skills count:', matchingSkills);
-    console.log('Matching langs count ', matchingLanguages);
-
     if (!jobPost) {
       throw new NotFoundException('Job post not found');
     }
@@ -339,6 +328,111 @@ export class JobPostService {
       matchingSkills,
       matchingLanguages,
       matchingEducation,
+    });
+  }
+  async findOneForGuest(id: string) {
+    const jobPost = await this.prismaService.jobPost.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        venue: {
+          include: {
+            venueBasicDetails: {
+              include: {
+                files: true,
+              },
+            },
+            logo: true,
+          },
+        },
+
+        jobBasicInfo: true,
+        jobBenefits: true,
+        jobDescription: true,
+        jobQualification: {
+          include: {
+            skills: true,
+            languages: {
+              include: {
+                file: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!jobPost) throw new NotFoundException('Job post is not found');
+    const updateJobPost = await this.prismaService.jobPost.update({
+      where: { id },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
+    // ]);
+
+    const jobRequiredSkillIds =
+      jobPost?.jobQualification?.skills?.map((skill) => skill?.id) || [];
+
+    const jobRequiredLanguages =
+      jobPost?.jobQualification?.languages?.map((language) => language?.id) ||
+      [];
+
+    const jobRequiredEducations = jobPost?.jobQualification?.education;
+
+    // const userSkills = await this.prismaService.jobPreference.findUnique({
+    //   where: {
+    //     userId: user?.id,
+    //   },
+    //   select: {
+    //     skills: {
+    //       select: {
+    //         id: true,
+    //       },
+    //     },
+    //   },
+    // });
+
+    // const userLanguages = await this.prismaService.userLanguage.findMany({
+    //   where: {
+    //     userId: user?.id,
+    //   },
+    //   select: {
+    //     languageId: true,
+    //   },
+    // });
+
+    // const userEducation = await this.prismaService.education.findMany({
+    //   where: {
+    //     userId: user?.id,
+    //   },
+    //   select: {
+    //     education: true,
+    //   },
+    //   orderBy: {
+    //     education: 'desc',
+    //   },
+    // });
+
+    // const matchingSkills = jobRequiredSkillIds?.filter((id) =>
+    //   userSkills?.skills?.some((skill) => skill?.id === id),
+    // );
+
+    // const matchingLanguages = jobRequiredLanguages?.filter((id) =>
+    //   userLanguages.some((lang) => lang.languageId === id),
+    // );
+
+    // const matchingEducation = userEducation.some(
+    //   (edu) => edu.education === jobRequiredEducations,
+    // );
+
+    if (!jobPost) {
+      throw new NotFoundException('Job post not found');
+    }
+
+    return new ApiSuccessResponse(true, 'Job post found', {
+      jobPost,
     });
   }
 

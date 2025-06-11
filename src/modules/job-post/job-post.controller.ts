@@ -87,7 +87,7 @@ export class JobPostController {
   @Get('/guest/:id')
   @HttpCode(HttpStatus.OK)
   findOneJobPostForGuest(@Param('id') id: string) {
-    return this.jobPostService.findOne(id);
+    return this.jobPostService.findOneForGuest(id);
   }
 
   @Get('/applicant/:id')
