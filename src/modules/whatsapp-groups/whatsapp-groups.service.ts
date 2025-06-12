@@ -11,10 +11,15 @@ import {
   getPaginationSkip,
   getPaginationTake,
 } from '../../common/utils/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NOTIFICATION_EVENT } from '../notifications/notification.event';
 
 @Injectable()
 export class WhatsappGroupsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async create(body: CreateWhatsappGroupDto) {
     const group = await this.prismaService.whatsAppGroup.create({
@@ -24,6 +29,12 @@ export class WhatsappGroupsService {
         city: body.city,
         description: body.description,
       },
+    });
+
+    this.eventEmitter.emit(NOTIFICATION_EVENT, {
+      isBroadCast: true,
+      title: `Group ${body.name} is created`,
+      body: 'join the group',
     });
     return new ApiSuccessResponse(
       true,

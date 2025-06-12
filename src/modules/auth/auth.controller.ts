@@ -170,7 +170,7 @@ export class AuthController {
   // Find One Applicant By Id
   @Get('admin/applicant/:id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY', 'PARTNER')
   fetchApplicantDetails(@Param('id') id: string) {
     return this.authService.findOneApplicant(id);
   }

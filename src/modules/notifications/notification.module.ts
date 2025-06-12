@@ -4,6 +4,7 @@ import { NotificationListener } from './notification.listener';
 import { NotificationGateway } from './notification.gateway';
 import { PrismaService } from '../prisma/prisma.service';
 import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
+import { WsDispatcher } from './dispatcher/ws.dispatcher';
 
 @Module({
   imports: [EventEmitterModule.forRoot()],
@@ -12,6 +13,7 @@ import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
     NotificationListener,
     NotificationGateway,
     PrismaService,
+    WsDispatcher,
   ],
   exports: [NotificationService],
 })
