@@ -87,6 +87,7 @@ export class AuthService {
   }
 
   async login(body: LoginAuthDto) {
+    console.log('body email ', body.email);
     const user = await this.prismaService.auth.findUnique({
       where: { email: body.email },
       include: {
@@ -105,7 +106,7 @@ export class AuthService {
       email: user.email,
     };
 
-    const accessToken = await generateAccessToken(payload);
+    const { token, expiry } = await generateAccessToken(payload);
     const refreshToken = await generateRefreshToken(payload);
 
     await this.prismaService.loginHistory.create({
@@ -113,11 +114,17 @@ export class AuthService {
         userId: user.id,
       },
     });
-
+    console.log('response data ', {
+      user: parseWithSchema(PublicUserSchema, user),
+      accessToken: token,
+      refreshToken,
+      expiry: expiry,
+    });
     return new ApiSuccessResponse(true, 'User logged in successfully', {
       user: parseWithSchema(PublicUserSchema, user),
-      accessToken,
+      accessToken: token,
       refreshToken,
+      expiry: expiry,
     });
   }
 

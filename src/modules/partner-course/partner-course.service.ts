@@ -114,12 +114,9 @@ export class PartnerCourseService {
             courseAcademy: {
               select: {
                 provider: {
-                  select: {
-                    venueBasicDetails: {
-                      select: {
-                        name: true,
-                      },
-                    },
+                  include: {
+                    logo: true,
+                    venueBasicDetails: true,
                   },
                 },
               },
@@ -193,17 +190,8 @@ export class PartnerCourseService {
             include: {
               provider: {
                 include: {
-                  venueBasicDetails: {
-                    select: {
-                      streetAddress: true,
-                      name: true,
-                      city: true,
-                      country: true,
-                      state: true,
-                      id: true,
-                      zipCode: true,
-                    },
-                  },
+                  logo: true,
+                  venueBasicDetails: true,
                 },
               },
             },
@@ -263,6 +251,7 @@ export class PartnerCourseService {
           include: {
             provider: {
               include: {
+                logo: true,
                 venueBasicDetails: true,
               },
             },
@@ -318,6 +307,7 @@ export class PartnerCourseService {
               include: {
                 provider: {
                   include: {
+                    logo: true,
                     venueBasicDetails: true,
                   },
                 },
@@ -471,6 +461,244 @@ export class PartnerCourseService {
     );
   }
 
+  // async findAllForAdmin(query: QueryPartnerCourseDto, user?: Auth) {
+  //   const where: Prisma.PartnerCourseWhereInput = {};
+  //   const courseDetailsFilter: Prisma.CourseDetailsWhereInput = {};
+  //   console.log('where line 467 ', where);
+  //   if (query.partnerId) {
+  //     where.userId = query.partnerId;
+  //   }
+
+  //   if (query.locations) {
+  //     // where.courseTypeAndLocation.city = query.location;
+  //     where.OR = [
+  //       {
+  //         courseTypeAndLocation: {
+  //           city: {
+  //             in: query.locations.split('_'),
+  //           },
+  //         },
+  //       },
+  //       {
+  //         courseAcademy: {
+  //           provider: {
+  //             venueBasicDetails: {
+  //               city: {
+  //                 in: query.locations.split('_'),
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     ];
+  //   }
+  //   if (query.status) {
+  //     where.status = query.status;
+  //   }
+
+  //   if (query.skillIds) {
+  //     courseDetailsFilter.skillIds = {
+  //       hasSome: query.skillIds.split('_'),
+  //     };
+  //   }
+
+  //   // if (query.minPrice || query.maxPrice) {
+  //   //   console.log('query.minPrice ', query.minPrice);
+  //   //   console.log('query.maxPrice ', query.maxPrice);
+  //   //   const priceFilter: Prisma.FloatFilter = {
+  //   //     ...(query.minPrice && { gte: parseFloat(query.minPrice) }),
+  //   //     ...(query.maxPrice && { lte: parseFloat(query.maxPrice) }),
+  //   //   };
+  //   //   console.log('price filter ', priceFilter);
+  //   //   courseDetailsFilter.OR = [
+  //   //     { offerPrice: priceFilter },
+  //   //     {
+  //   //       AND: [{ offerPrice: { equals: undefined } }, { price: priceFilter }],
+  //   //     },
+  //   //   ];
+  //   //   console.log('course details ', courseDetailsFilter);
+  //   // }
+
+  //   if (query.minPrice !== undefined && query.maxPrice !== undefined) {
+  //     const min = parseFloat(query.minPrice);
+  //     const max = parseFloat(query.maxPrice);
+
+  //     const priceFilter: Prisma.FloatFilter = {
+  //       gte: min,
+  //       lte: max,
+  //     };
+
+  //     courseDetailsFilter.OR = [
+  //       // Case 1: offerPrice is set and between min and max
+  //       {
+  //         AND: [
+  //           {
+  //             offerPrice: {
+  //               not: null,
+  //             },
+  //           },
+  //           {
+  //             offerPrice: {
+  //               not: 0,
+  //             },
+  //           },
+  //           {
+  //             offerPrice: {
+  //               gte: min,
+  //               lte: max,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //       // Case 2: offerPrice is null or 0, so fallback to price
+  //       {
+  //         AND: [
+  //           {
+  //             OR: [
+  //               {
+  //                 offerPrice: null,
+  //               },
+  //               {
+  //                 offerPrice: {
+  //                   equals: 0,
+  //                 },
+  //               },
+  //             ],
+  //           },
+  //           {
+  //             price: {
+  //               gte: min,
+  //               lte: max,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     ];
+  //   }
+
+  //   if (query.startDate && query.endDate) {
+  //     courseDetailsFilter.AND = [
+  //       {
+  //         startDate: {
+  //           gte: new Date(query.startDate).toISOString(),
+  //         },
+  //       },
+  //       {
+  //         endDate: {
+  //           lte: new Date(query.endDate).toISOString(),
+  //         },
+  //       },
+  //     ];
+  //   }
+
+  //   // Final courseDetails condition
+  //   if (Object.keys(courseDetailsFilter).length > 0) {
+  //     console.log('line 542 ', courseDetailsFilter);
+  //     where.courseDetails = {
+  //       is: courseDetailsFilter,
+  //     };
+  //     console.log('line 546 ', JSON.stringify(where));
+  //   }
+  //   if (query.search) {
+  //     where.OR = [
+  //       {
+  //         courseDetails: {
+  //           courseName: {
+  //             contains: query.search,
+  //             mode: 'insensitive',
+  //           },
+  //         },
+  //       },
+  //       {
+  //         courseContent: {
+  //           description: {
+  //             contains: query.search,
+  //             mode: 'insensitive',
+  //           },
+  //         },
+  //       },
+  //     ];
+  //   }
+  //   // if (query.customDate) {
+  //   //   where.createdAt = {
+  //   //     gte: new Date(query.customDate).toISOString(),
+  //   //   };
+  //   // }
+  //   console.log('line 471 ', query.type);
+  //   if (query.type) {
+  //     console.log('query type ', query.type);
+  //     where.courseTypeAndLocation = {
+  //       courseType: query.type,
+  //     };
+  //     console.log('where line 477 ', where);
+  //   }
+  //   console.log('last where ', where);
+  //   const [partnerCourses, total, openTotal, fullfieldTotal] =
+  //     await Promise.all([
+  //       this.prismaService.partnerCourse.findMany({
+  //         where,
+  //         include: {
+  //           courseDetails: {
+  //             include: {
+  //               file: true,
+  //             },
+  //           },
+  //           _count: {
+  //             select: {
+  //               courseApplications: true,
+  //             },
+  //           },
+  //           courseContent: true,
+  //           courseAcademy: {
+  //             include: {
+  //               provider: {
+  //                 include: {
+  //                   logo: true,
+  //                   venueBasicDetails: true,
+  //                 },
+  //               },
+  //             },
+  //           },
+  //           courseTypeAndLocation: true,
+  //           saveCourses: {
+  //             where: {
+  //               userId: user?.id,
+  //             },
+  //           },
+  //           courseApplications: {
+  //             where: {
+  //               userId: user?.id,
+  //             },
+  //           },
+  //         },
+  //         skip: getPaginationSkip(query.page, query.limit),
+  //         take: getPaginationTake(query.limit),
+  //       }),
+  //       this.prismaService.partnerCourse.count({
+  //         // where,
+  //       }),
+  //       this.prismaService.partnerCourse.count({
+  //         where: {
+  //           isOpen: true,
+  //         },
+  //       }),
+  //       this.prismaService.partnerCourse.count({
+  //         where: {
+  //           isOpen: false,
+  //         },
+  //       }),
+  //     ]);
+  //   if (!partnerCourses) {
+  //     throw new BadRequestException('No partner courses found');
+  //   }
+  //   return new ApiSuccessResponse(true, 'Partner courses found', {
+  //     partnerCourses,
+  //     total,
+  //     openTotal,
+  //     fullfieldTotal,
+  //   });
+  // }
+
   async findAllForAdmin(query: QueryPartnerCourseDto, user?: Auth) {
     const where: Prisma.PartnerCourseWhereInput = {};
     const courseDetailsFilter: Prisma.CourseDetailsWhereInput = {};
@@ -478,13 +706,8 @@ export class PartnerCourseService {
     if (query.partnerId) {
       where.userId = query.partnerId;
     }
-    if (query.type) {
-      where.courseTypeAndLocation = {
-        courseType: query.type,
-      };
-    }
+
     if (query.locations) {
-      // where.courseTypeAndLocation.city = query.location;
       where.OR = [
         {
           courseTypeAndLocation: {
@@ -506,6 +729,7 @@ export class PartnerCourseService {
         },
       ];
     }
+
     if (query.status) {
       where.status = query.status;
     }
@@ -516,19 +740,6 @@ export class PartnerCourseService {
       };
     }
 
-    if (query.minPrice || query.maxPrice) {
-      const priceFilter: Prisma.FloatFilter = {
-        ...(query.minPrice && { gte: parseFloat(query.minPrice) }),
-        ...(query.maxPrice && { lte: parseFloat(query.maxPrice) }),
-      };
-
-      courseDetailsFilter.OR = [
-        { offerPrice: priceFilter },
-        {
-          AND: [{ offerPrice: { equals: undefined } }, { price: priceFilter }],
-        },
-      ];
-    }
     if (query.startDate && query.endDate) {
       courseDetailsFilter.AND = [
         {
@@ -544,17 +755,12 @@ export class PartnerCourseService {
       ];
     }
 
-    // Final courseDetails condition
     if (Object.keys(courseDetailsFilter).length > 0) {
       where.courseDetails = {
         is: courseDetailsFilter,
       };
     }
-    // if (query.startDate && query.endDate) {
-    //   where.createdAt = {
-    //     gte: new Date(query.customDate).toISOString(),
-    //   };
-    // }
+
     if (query.search) {
       where.OR = [
         {
@@ -575,27 +781,23 @@ export class PartnerCourseService {
         },
       ];
     }
-    // if (query.customDate) {
-    //   where.createdAt = {
-    //     gte: new Date(query.customDate).toISOString(),
-    //   };
-    // }
+
+    if (query.type) {
+      where.courseTypeAndLocation = {
+        courseType: query.type,
+      };
+    }
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
 
     const [partnerCourses, total, openTotal, fullfieldTotal] =
       await Promise.all([
         this.prismaService.partnerCourse.findMany({
           where,
           include: {
-            courseDetails: {
-              include: {
-                file: true,
-              },
-            },
-            _count: {
-              select: {
-                courseApplications: true,
-              },
-            },
+            courseDetails: { include: { file: true } },
+            _count: { select: { courseApplications: true } },
             courseContent: true,
             courseAcademy: {
               include: {
@@ -609,38 +811,45 @@ export class PartnerCourseService {
             },
             courseTypeAndLocation: true,
             saveCourses: {
-              where: {
-                userId: user?.id,
-              },
+              where: { userId: user?.id },
             },
             courseApplications: {
-              where: {
-                userId: user?.id,
-              },
+              where: { userId: user?.id },
             },
           },
-          skip: getPaginationSkip(query.page, query.limit),
-          take: getPaginationTake(query.limit),
+          skip,
+          take,
         }),
-        this.prismaService.partnerCourse.count({
-          where,
-        }),
-        this.prismaService.partnerCourse.count({
-          where: {
-            isOpen: true,
-          },
-        }),
-        this.prismaService.partnerCourse.count({
-          where: {
-            isOpen: false,
-          },
-        }),
+
+        this.prismaService.partnerCourse.count({ where }), // total without filtering
+        this.prismaService.partnerCourse.count({ where: { isOpen: true } }),
+        this.prismaService.partnerCourse.count({ where: { isOpen: false } }),
       ]);
-    if (!partnerCourses) {
-      throw new BadRequestException('No partner courses found');
+
+    // Apply price filtering in memory
+    let filteredCourses = partnerCourses;
+
+    if (query.minPrice !== undefined && query.maxPrice !== undefined) {
+      const min = parseFloat(query.minPrice);
+      const max = parseFloat(query.maxPrice);
+
+      filteredCourses = partnerCourses.filter((course) => {
+        const details = course.courseDetails;
+        if (!details) return false;
+
+        const offer = details.offerPrice;
+        const base = details.price;
+
+        if (offer !== null && offer !== 0) {
+          return offer >= min && offer <= max;
+        } else {
+          return base >= min && base <= max;
+        }
+      });
     }
+
     return new ApiSuccessResponse(true, 'Partner courses found', {
-      partnerCourses,
+      partnerCourses: filteredCourses,
       total,
       openTotal,
       fullfieldTotal,

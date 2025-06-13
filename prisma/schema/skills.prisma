@@ -4,6 +4,9 @@ model Skills {
 
   name String
 
+  fileId String? @db.ObjectId
+  file File? @relation(fields: [fileId], references: [id])
+
   jobQualificationIds String[] @db.ObjectId
   JobQualifications JobQualification[] @relation(fields: [jobQualificationIds], references: [id])
 

@@ -11,6 +11,8 @@ model VenueDetails {
   streetAddress String
   gender Gender
 
+  description String?
+
   franchise String?
 
   latitude String?

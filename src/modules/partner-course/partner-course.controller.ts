@@ -69,7 +69,7 @@ export class PartnerCourseController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   findForApplicant(@Param('id') id: string, @GetUser() user: Auth) {
-    console.log("partner course id", id)
+    console.log('partner course id', id);
     return this.partnerCourseService.findOneForApplicant(id, user);
   }
 
@@ -132,7 +132,7 @@ export class PartnerCourseController {
 
   @Get('applicant-courses')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated()
+  // @AllowAuthenticated()
   getAllCoursesForApplicant(
     @Query() query: QueryPartnerCourseDto,
     @GetUser() user: Auth,

@@ -89,6 +89,7 @@ export class JobPostService {
           },
           venue: {
             include: {
+              logo: true,
               venueBasicDetails: {
                 include: {
                   files: true,
@@ -158,6 +159,7 @@ export class JobPostService {
           user: true,
           venue: {
             include: {
+              logo: true,
               venueBasicDetails: {
                 include: {
                   files: true,
@@ -662,28 +664,27 @@ export class JobPostService {
           mode: 'insensitive',
         };
       }
-
+      console.log('line 667 ', query);
+      console.log('line 668 ', query.job_type);
       if (query.job_type) {
+        console.log('line 670');
         where.jobBasicInfo.jobType = { equals: query.job_type };
+        console.log('line 672 ', where.jobBasicInfo.jobType);
       }
 
       if (query.minSalary || query.maxSalary) {
         const salaryFilter: any = {};
-
-        console.log('query.minSalary ', query.maxSalary, query.minSalary);
         if (query.minSalary && query.maxSalary) {
-          console.log('line 545');
           salaryFilter.start = { gte: parseInt(query.minSalary) };
-          // salaryFilter.start = parseInt(query.minSalary);
         }
 
         if (query.maxSalary) {
-          console.log('line 551');
-          // salaryFilter.end  = parseInt(query.maxSalary);
           salaryFilter.end = { lte: parseInt(query.maxSalary) };
         }
 
-        where.jobBasicInfo = salaryFilter;
+        // where.jobBasicInfo = salaryFilter;
+        where.jobBasicInfo.start = salaryFilter.start;
+        where.jobBasicInfo.end = salaryFilter.end;
       }
     }
 
@@ -697,23 +698,10 @@ export class JobPostService {
 
     if (query.experience) {
       const experienceIndex = experienceOrder.indexOf(query.experience);
-      // if(query.experience === UserExperience.FIVE_PLUS_YEAR){
-      //   console.log("five year exp ", query.experience)
-      //   console.log("five year exp type ", typeof query.experience)
-      //   where.jobQualification = {
-      //     minExperience:query.experience
-      //   };
-      //   console.log("where.job qualifications ", where)
-      // } else
       if (experienceIndex !== -1) {
-        console.log(
-          'experience list ',
-          experienceOrder.slice(0, experienceIndex + 1),
-        );
         where.jobQualification = {
           minExperience: {
             in: experienceOrder.slice(0, experienceIndex + 1),
-            // in:[ 'FRESHER', 'ONE_YEAR', 'TWO_YEAR', 'THREE_YEAR' ]
           },
         };
       }
@@ -726,7 +714,7 @@ export class JobPostService {
         },
       };
     }
-
+    console.log('where condition ', where);
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
     const sortOrder = getSortOrder(query.order);
@@ -974,6 +962,7 @@ export class JobPostService {
             include: {
               venue: {
                 include: {
+                  logo: true,
                   venueBasicDetails: {
                     include: {
                       files: true,
@@ -1117,6 +1106,7 @@ export class JobPostService {
             include: {
               venue: {
                 include: {
+                  logo: true,
                   venueBasicDetails: {
                     include: {
                       files: true,

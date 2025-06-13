@@ -12,6 +12,7 @@ export class SkillsService {
     const skills = await this.prismaService.skills.create({
       data: {
         name: body.name,
+        fileId: body.fileId,
       },
     });
 

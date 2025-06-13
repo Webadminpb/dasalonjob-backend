@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export const createSkillsSchema = z.object({
   name: z.string(),
+  fileId: z.string(),
 });
 
 export class CreateSkillDto extends createZodDto(createSkillsSchema) {

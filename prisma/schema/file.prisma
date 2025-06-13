@@ -36,4 +36,7 @@ model File {
 
   verificationFileAuth Auth[] @relation("VerificationFile", fields: [verificationFileAuthId], references: [id])
   verificationFileAuthId String[] @db.ObjectId
+
+
+  skills Skills[]
 }

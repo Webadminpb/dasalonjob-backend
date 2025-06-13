@@ -6,7 +6,7 @@ dotenv.config();
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'qazxswedcrfvbgtnhy';
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'qazyswedcrrvbgtnhy';
 
-const ACCESS_EXPIRY = process.env.JWT_ACCESS_EXPIRY || '5m';
+const ACCESS_EXPIRY = process.env.JWT_ACCESS_EXPIRY || '1d';
 const REFRESH_EXPIRY = process.env.JWT_REFRESH_EXPIRY || '7d';
 
 export async function generateJwtToken(user: Auth) {
@@ -24,15 +24,21 @@ export async function generateJwtToken(user: Auth) {
 
 export async function generateAccessToken(payload: any) {
   console.log('payload ', payload);
-  return jwt.sign(
+  const expiresIn = ACCESS_EXPIRY;
+  const options = { expiresIn };
+  const token = jwt.sign(
     {
       id: payload.id,
       email: payload.email,
       role: payload.role,
     },
     ACCESS_SECRET,
-    { expiresIn: ACCESS_EXPIRY },
+    options,
   );
+
+  const decoded = jwt.decode(token) as { exp?: number };
+  const expiry = decoded?.exp ? new Date(decoded.exp * 1000) : null;
+  return { token, expiry };
 }
 
 export async function generateRefreshToken(payload: Auth) {
