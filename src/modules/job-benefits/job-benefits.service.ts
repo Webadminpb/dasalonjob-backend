@@ -27,8 +27,8 @@ export class JobBenefitsService {
       }
       const jobBenefits = await this.prismaService.jobBenefits.create({
         data: {
-          benefits: body.benefits,
           userId: body.userId,
+          ...body,
         },
       });
       return new ApiSuccessResponse(true, 'Job benefits added', jobBenefits);
@@ -64,7 +64,7 @@ export class JobBenefitsService {
     const updatedJobBenefits = await this.prismaService.jobBenefits.update({
       where: { id: existingJobBenefits.id },
       data: {
-        benefits: body.benefits,
+        ...body,
       },
     });
     return new ApiSuccessResponse(

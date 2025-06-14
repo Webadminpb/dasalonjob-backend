@@ -6,7 +6,13 @@ import { ApiProperty } from '@nestjs/swagger';
 export const IncentiveSchema = z.nativeEnum(Incentive);
 
 export const JobBenefitsSchema = z.object({
-  benefits: z.array(IncentiveSchema),
+  // benefits: z.array(IncentiveSchema),
+  healthInsurance: z.boolean().optional(),
+  paidTimeOff: z.boolean().optional(),
+  flexibleSchedule: z.boolean().optional(),
+  employeeDiscount: z.boolean().optional(),
+  accomodation: z.boolean().optional(),
+  professionalDev: z.boolean().optional(),
   userId: z.string().optional(),
 });
 

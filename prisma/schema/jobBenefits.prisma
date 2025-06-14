@@ -2,7 +2,12 @@ model JobBenefits {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   benefits Incentive[]
-
+  healthInsurance Boolean @default(false)
+  paidTimeOff Boolean @default(false)
+  flexibleSchedule Boolean @default(false)
+  employeeDiscount Boolean @default(false)
+  accomodation Boolean @default(false)
+  professionalDev Boolean @default(false)
   
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])
