@@ -22,6 +22,9 @@ export class SkillsService {
   async findAll() {
     const skills = await this.prismaService.skills.findMany({
       where: {},
+      include: {
+        file: true,
+      },
     });
     if (!skills) {
       throw new NotFoundException('skills not found');
@@ -32,6 +35,9 @@ export class SkillsService {
   async findOne(id: string) {
     const skills = await this.prismaService.skills.findMany({
       where: { id },
+      include: {
+        file: true,
+      },
     });
     if (!skills) {
       throw new NotFoundException('skills not found');

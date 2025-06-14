@@ -252,7 +252,11 @@ export class PartnerCourseService {
             provider: {
               include: {
                 logo: true,
-                venueBasicDetails: true,
+                venueBasicDetails: {
+                  include: {
+                    files: true,
+                  },
+                },
               },
             },
           },

@@ -184,6 +184,7 @@ export class JobApplicationService {
       acceptedTotal,
       shortlistedTotal,
       rejectedTotal,
+      total,
     ] = await Promise.all([
       this.prismaService.jobApplication.findMany({
         where,
@@ -236,6 +237,13 @@ export class JobApplicationService {
           status: JobApplicationStatus.Rejected,
         },
       }),
+      this.prismaService.jobApplication.count({
+        where: {
+          jobPost: {
+            userId: user?.id,
+          },
+        },
+      }),
     ]);
 
     return new ApiSuccessResponse(true, 'Job applications found', {
@@ -244,6 +252,7 @@ export class JobApplicationService {
       acceptedTotal,
       shortlistedTotal,
       rejectedTotal,
+      total,
     });
   }
 
@@ -515,18 +524,18 @@ export class JobApplicationService {
             include: {
               user: true,
               jobBasicInfo: true,
-              venue:{
-                include:{
-                  venueBasicDetails:true,
-                  logo:true
-                }
-              },
-              saveJobPosts:{
-                where:{
-                  userId:user?.id
+              venue: {
+                include: {
+                  venueBasicDetails: true,
+                  logo: true,
                 },
-                select:{id:true}
-              }
+              },
+              saveJobPosts: {
+                where: {
+                  userId: user?.id,
+                },
+                select: { id: true },
+              },
             },
           },
         },
@@ -651,45 +660,49 @@ export class JobApplicationService {
     });
   }
 
-  async getAgencyJobApplicants(query:QueryJobApplicationDto, user:Auth){
-    const permissions = await this.prismaService.partnerAgencyJobPermission.findMany({
-      where:{
-        agencyId:user.id,
-        hasAccess:true
-      },
-      select:{
-        partnerId:true
-      }
-    });
-    const partnerIds = permissions.map(p => p.partnerId);
-    if(partnerIds.length === 0) return [];
+  async getAgencyJobApplicants(query: QueryJobApplicationDto, user: Auth) {
+    const permissions =
+      await this.prismaService.partnerAgencyJobPermission.findMany({
+        where: {
+          agencyId: user.id,
+          hasAccess: true,
+        },
+        select: {
+          partnerId: true,
+        },
+      });
+    const partnerIds = permissions.map((p) => p.partnerId);
+    if (partnerIds.length === 0) return [];
 
     const jobPosts = await this.prismaService.jobPost.findMany({
-      where:{
-        userId:{in:partnerIds}
+      where: {
+        userId: { in: partnerIds },
       },
-      skip:getPaginationSkip(query.page, query.limit),
-      take:getPaginationTake(query.limit),
-      select:{
-        id:true
-      }
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+      select: {
+        id: true,
+      },
     });
 
-    const jobPostIds = jobPosts.map(j => j.id);
-    if(jobPostIds.length === 0) return [];
+    const jobPostIds = jobPosts.map((j) => j.id);
+    if (jobPostIds.length === 0) return [];
 
-    const [applications, total ]= await Promise.all([ this.prismaService.jobApplication.findMany({
-      where:{
-        jobPostId:{in:jobPostIds}
-      },
-      include:{
-        user:true,
-        jobPost:true
-      }
-    }),
-    this.prismaService.jobApplication.count({})
+    const [applications, total] = await Promise.all([
+      this.prismaService.jobApplication.findMany({
+        where: {
+          jobPostId: { in: jobPostIds },
+        },
+        include: {
+          user: true,
+          jobPost: true,
+        },
+      }),
+      this.prismaService.jobApplication.count({}),
     ]);
-    return new ApiSuccessResponse(true, "Applicants fetched successfully", {applications, total}); 
-
+    return new ApiSuccessResponse(true, 'Applicants fetched successfully', {
+      applications,
+      total,
+    });
   }
 }

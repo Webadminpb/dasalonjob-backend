@@ -49,28 +49,18 @@ export class CreditsService {
       where: { userId },
       create: {
         userId,
-        totalJobCredits: credits.jobCredits || 0,
-        totalCourseCredits: credits.courseCredits || 0,
-        remainingJobCredits: credits.jobCredits || 0,
-        remainingCourseCredits: credits.courseCredits || 0,
+        totalCredits: credits.jobCredits || 0,
+        remainingCredits: credits.jobCredits || 0,
       },
       update: {
-        totalJobCredits:
+        totalCredits:
           operation === 'ADD'
             ? { increment: credits.jobCredits || 0 }
             : { decrement: credits.jobCredits || 0 },
-        totalCourseCredits:
-          operation === 'ADD'
-            ? { increment: credits.courseCredits || 0 }
-            : { decrement: credits.courseCredits || 0 },
-        remainingJobCredits:
+        remainingCredits:
           operation === 'ADD'
             ? { increment: credits.jobCredits || 0 }
             : { decrement: credits.jobCredits || 0 },
-        remainingCourseCredits:
-          operation === 'ADD'
-            ? { increment: credits.courseCredits || 0 }
-            : { decrement: credits.courseCredits || 0 },
       },
     });
 
@@ -89,9 +79,9 @@ export class CreditsService {
     if (!userCredit) return false;
 
     if (creditType === 'JOB') {
-      return userCredit.remainingJobCredits >= amount;
+      return userCredit.remainingCredits >= amount;
     } else {
-      return userCredit.remainingCourseCredits >= amount;
+      return userCredit.remainingCredits >= amount;
     }
   }
 
@@ -124,10 +114,8 @@ export class CreditsService {
     return this.prisma.userCredit.findUnique({
       where: { userId },
       select: {
-        totalJobCredits: true,
-        totalCourseCredits: true,
-        remainingJobCredits: true,
-        remainingCourseCredits: true,
+        totalCredits: true,
+        remainingCredits: true,
       },
     });
   }

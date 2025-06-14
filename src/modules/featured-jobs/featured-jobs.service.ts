@@ -44,6 +44,7 @@ export class FeaturedJobService {
                 include: {
                   venue: {
                     include: {
+                      logo: true,
                       venueBasicDetails: {
                         include: {
                           files: true,

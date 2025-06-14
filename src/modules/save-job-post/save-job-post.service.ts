@@ -15,11 +15,11 @@ export class SaveJobPostService {
   async create(body: CreateASaveJobPostDto, user: Auth) {
     const { jobPostId } = body;
     const isExistsJobPost = await this.prismaService.jobPost.findFirst({
-      where:{
-        id:jobPostId
-      }
+      where: {
+        id: jobPostId,
+      },
     });
-    if(!isExistsJobPost) throw new NotFoundException("Job Post Not Found");
+    if (!isExistsJobPost) throw new NotFoundException('Job Post Not Found');
 
     const existingSaveJobPost = await this.prismaService.saveJobPost.findFirst({
       where: {
@@ -31,7 +31,7 @@ export class SaveJobPostService {
     if (existingSaveJobPost) {
       throw new BadRequestException('Already saved');
     }
-    
+
     const saveJobPost = await this.prismaService.saveJobPost.create({
       data: {
         jobPostId,
@@ -64,15 +64,16 @@ export class SaveJobPostService {
                   },
                 },
               },
-              jobApplications:{
-                where:{
-                  userId:user?.id
-                }
+              jobApplications: {
+                where: {
+                  userId: user?.id,
+                },
               },
               jobBasicInfo: {
                 include: {
                   venue: {
                     include: {
+                      logo: true,
                       venueBasicDetails: {
                         include: {
                           files: true,

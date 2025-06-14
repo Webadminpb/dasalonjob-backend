@@ -4,11 +4,9 @@ model UserCredit {
   userId String @db.ObjectId @unique
   user Auth @relation(fields: [userId], references: [id])
 
-  totalJobCredits Int @default(0)
-  totalCourseCredits Int @default(0)
+  totalCredits Int @default(0)
 
-  remainingJobCredits Int @default(0)
-  remainingCourseCredits Int @default(0)
+  remainingCredits Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
