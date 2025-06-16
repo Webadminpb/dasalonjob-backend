@@ -53,7 +53,7 @@ export class UserNotificationSettingService {
       },
     });
     if (!settings)
-      throw new NotFoundException('Notification Setting Not Found');
+      return new ApiSuccessResponse(true, 'User Notifications Settings', {});
 
     return new ApiSuccessResponse(true, 'User Notification Settings', settings);
   }

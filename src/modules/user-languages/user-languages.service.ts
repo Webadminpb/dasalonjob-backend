@@ -17,6 +17,7 @@ export class UserLanguagesService {
     const isExisting = await this.prismaService.userLanguage.findFirst({
       where: {
         languageId: body.languageId,
+        userId: user.id,
       },
     });
     if (isExisting) throw new BadRequestException('Language Already Exists');

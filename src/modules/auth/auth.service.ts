@@ -327,10 +327,7 @@ export class AuthService {
       include: {
         profileImage: true,
         salonDetails: true,
-        venueDetails: true,
         contactDetails: true,
-        venueMainBusinessDays: true,
-        venueMainBusinessServices: true,
         partnerSocialLinks: true,
         partnerPersonalData: true,
       },
@@ -338,7 +335,16 @@ export class AuthService {
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
-    return new ApiSuccessResponse(true, 'User data', existingUser);
+    const { partnerPersonalData, ...userData } = existingUser;
+    const responseData = {
+      ...userData,
+      basicDetails: partnerPersonalData || null,
+    };
+
+    const payload = {};
+    return new ApiSuccessResponse(true, 'User data', {
+      existingUser: responseData,
+    });
   }
 
   async getMyAgencyProfile(user: Auth) {

@@ -69,41 +69,38 @@ export class CourseApplicationService {
     const [courses, total] = await Promise.all([
       this.prismaService.courseApplication.findMany({
         where,
-        include:{
-          course:{
-            include:{
-              courseDetails:{
-                include:{
-                  file:true
-                }
-              },
-              courseTypeAndLocation:true,
-              courseAcademy:{
-                include:{
-                  provider:{
-                    include:{
-                      venueBasicDetails:true,
-                      logo:true
-                      
-                    }
-                  }
-                }
-              },
-              saveCourses:{
-                where:{
-                  userId:user.id,
-        
+        include: {
+          course: {
+            include: {
+              courseDetails: {
+                include: {
+                  file: true,
                 },
-                select:{id:true}
-              }
+              },
+              courseTypeAndLocation: true,
+              courseAcademy: {
+                include: {
+                  provider: {
+                    include: {
+                      venueBasicDetails: true,
+                      logo: true,
+                    },
+                  },
+                },
+              },
+              saveCourses: {
+                where: {
+                  userId: user.id,
+                },
+                select: { id: true },
+              },
               // courseApplications:{
               //   where:{
               //     user
               //   }
               // }
-
-            }
-          }
+            },
+          },
         },
         skip: getPaginationSkip(query.page, query.limit),
         take: getPaginationTake(query.limit),
@@ -216,7 +213,7 @@ export class CourseApplicationService {
     //   throw new NotFoundException('Course Not Found');
     // }
 
-    const [courseApplications, total] = await Promise.all([
+    const [courseApplications, total, totalCourses] = await Promise.all([
       this.prismaService.courseApplication.findMany({
         where,
         skip: getPaginationSkip(query.page, query.limit),
@@ -226,25 +223,30 @@ export class CourseApplicationService {
         },
         include: {
           course: {
-            include:{
-              courseDetails:true
-            }
+            include: {
+              courseDetails: true,
+            },
           },
           user: {
             include: {
-              profileImage:true,
+              profileImage: true,
               basicDetails: true,
               contactDetails: true,
               languages: {
-                include:{
-                  language:true
-                }
+                include: {
+                  language: true,
+                },
               },
             },
           },
         },
       }),
       this.prismaService.courseApplication.count(),
+      this.prismaService.partnerCourse.count({
+        where: {
+          userId: user?.id,
+        },
+      }),
     ]);
     if (!courseApplications) {
       throw new NotFoundException('Course Applications Not Found');
@@ -252,6 +254,7 @@ export class CourseApplicationService {
     return new ApiSuccessResponse(true, 'Course Applications', {
       courseApplications,
       total,
+      totalCourses,
     });
   }
 

@@ -4,8 +4,8 @@ model Experience {
 
   profile JobProfile
   location String
-  longitude String
-  latitude String
+  longitude String?
+  latitude String?
   startDate DateTime
   endDate DateTime
   description String?

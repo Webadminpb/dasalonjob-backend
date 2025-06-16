@@ -42,7 +42,7 @@ export class JobpreferenceService {
         },
       });
     if (!existingJobPreference) {
-      throw new NotFoundException('Job Preference Updated');
+      throw new NotFoundException('Job Preference Not Found');
     }
     const updatedJobPreference = await this.prismaService.jobPreference.update({
       where: {
