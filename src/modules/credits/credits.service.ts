@@ -111,13 +111,14 @@ export class CreditsService {
   }
 
   async getCreditBalance(userId: string) {
-    return this.prisma.userCredit.findUnique({
+    const data = await this.prisma.userCredit.findUnique({
       where: { userId },
       select: {
         totalCredits: true,
         remainingCredits: true,
       },
     });
+    return new ApiSuccessResponse(true, 'Get Credit Balance ', data);
   }
 
   async getCreditHistory(userId: string) {

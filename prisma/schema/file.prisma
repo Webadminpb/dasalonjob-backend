@@ -23,7 +23,7 @@ model File {
   salonDetailsIds String[] @db.ObjectId
   salonDetails SalonDetails[] @relation(fields: [salonDetailsIds], references: [id])
 
-  basicDetails BasicDetails?
+  basicDetails BasicDetails[]
   agencyDetails AgencyDetails?
   agencyVenueDetails AgencyVenueDetails?
   courseDetails CourseDetails[]

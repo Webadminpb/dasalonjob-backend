@@ -11,7 +11,7 @@ model BasicDetails {
   userId    String @unique @db.ObjectId
   user      Auth   @relation(fields: [userId], references: [id])
 
-  fileId String? @unique @db.ObjectId
+  fileId String? @db.ObjectId
   file File? @relation(fields: [fileId], references: [id])
 
   martialStatus MartialStatus? 
