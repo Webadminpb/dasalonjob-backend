@@ -59,7 +59,7 @@ export class SalondetailsService {
         fileIds: body.fileIds,
         firstName: body.firstName,
         lastName: body.lastName,
-        dob: new Date(body.dob).toISOString(),
+        ...(body.dob && { dob: new Date(body.dob).toISOString() }),
       },
     });
     return new ApiSuccessResponse(
@@ -69,7 +69,7 @@ export class SalondetailsService {
     );
   }
 
-  async remove(id, user: Auth) {
+  async remove(id: string, user: Auth) {
     const existingSalonDetails =
       await this.prismaService.salonDetails.findUnique({
         where: { id, userId: user.id },
