@@ -26,21 +26,21 @@ export class ContactdetailsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated()
   create(@Body() body: CreateContactDetailsDto, @GetUser() user: Auth) {
     return this.contactdetailsService.create(body, user);
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated()
   findMyContactDetails(@GetUser() user: Auth) {
     return this.contactdetailsService.findMyContactDetails(user);
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('USER')
+  @AllowAuthenticated()
   update(
     @Param('id') id: string,
     @Body() updateContactdetailDto: UpdateContactdetailDto,
