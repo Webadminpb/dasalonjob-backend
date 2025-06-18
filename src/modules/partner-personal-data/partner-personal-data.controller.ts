@@ -25,7 +25,7 @@ export class PartnerPersonalDataController {
   ) {}
 
   @Post()
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createPartnerPersonalDataDto: CreatePartnerPersonalDataDto,
@@ -45,21 +45,21 @@ export class PartnerPersonalDataController {
   // }
 
   @Get('me')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.OK)
   findMy(@GetUser() user: Auth) {
     return this.partnerPersonalDataService.findMy(user);
   }
 
   @Get(':id')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
     return this.partnerPersonalDataService.findOne(id);
   }
 
   @Put(':id')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.CREATED)
   update(
     @Param('id') id: string,
@@ -74,7 +74,7 @@ export class PartnerPersonalDataController {
   }
 
   @Delete(':id')
-  @AllowAuthenticated('PARTNER')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   @HttpCode(HttpStatus.CREATED)
   remove(@Param('id') id: string, @GetUser() user: Auth) {
     return this.partnerPersonalDataService.remove(id, user);
@@ -82,7 +82,7 @@ export class PartnerPersonalDataController {
 
   @Get('admin/:partnerId/business-details')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   getBusinessDetailsByPartnerId(@Param('partnerId') partnerId: string) {
     return this.partnerPersonalDataService.getBusinessDetailsByPartnerId(
       partnerId,
@@ -91,7 +91,7 @@ export class PartnerPersonalDataController {
 
   @Get('admin/:partnerId/profile')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   getPartnerProfileByPartnerId(@Param('partnerId') partnerId: string) {
     return this.partnerPersonalDataService.getPartnerDetailsByPartnerId(
       partnerId,
@@ -100,7 +100,7 @@ export class PartnerPersonalDataController {
 
   @Get('admin/:partnerId/venues')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   getPartnerVenusByPartnerId(@Param('partnerId') partnerId: string) {
     return this.partnerPersonalDataService.getPartnerVenuesByPartnerId(
       partnerId,
@@ -109,14 +109,14 @@ export class PartnerPersonalDataController {
 
   @Get('admin/:partnerId/jobs')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   getPartnerJobsByPartnerId(@Param('partnerId') partnerId: string) {
     return this.partnerPersonalDataService.getPartnerJobsByPartnerId(partnerId);
   }
 
   @Get('admin/:partnerId/courses')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('SUPER_ADMIN', 'ADMIN')
+  @AllowAuthenticated('PARTNER', 'ADMIN', 'AGENCY', 'SUPER_ADMIN')
   getPartnerCoursesByPartnerId(@Param('partnerId') partnerId: string) {
     return this.partnerPersonalDataService.getPartnerCoursesByPartnerId(
       partnerId,

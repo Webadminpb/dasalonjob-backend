@@ -532,9 +532,18 @@ export class JobPostService {
     const take = getPaginationTake(query.limit);
     const sortOrder = getSortOrder(query.order);
     const orderBy = getSortBy(query.sort);
-
+    const currentDate = new Date().toISOString();
     const [totalOpenJobs, totalFulfilledJobs] = await Promise.all([
-      this.prismaService.jobPost.count({ where: { isOpen: true } }),
+      this.prismaService.jobPost.count({
+        where: {
+          isOpen: true,
+          jobBasicInfo: {
+            deadline: {
+              gte: currentDate,
+            },
+          },
+        },
+      }),
       this.prismaService.jobPost.count({ where: { isOpen: false } }),
     ]);
 
@@ -572,7 +581,7 @@ export class JobPostService {
           [orderBy]: sortOrder,
         },
       }),
-      this.prismaService.jobPost.count({ where, skip, take }),
+      this.prismaService.jobPost.count({}),
     ]);
 
     if (!jobPost) {
@@ -664,12 +673,8 @@ export class JobPostService {
           mode: 'insensitive',
         };
       }
-      console.log('line 667 ', query);
-      console.log('line 668 ', query.job_type);
       if (query.job_type) {
-        console.log('line 670');
         where.jobBasicInfo.jobType = { equals: query.job_type };
-        console.log('line 672 ', where.jobBasicInfo.jobType);
       }
 
       if (query.minSalary || query.maxSalary) {
@@ -682,7 +687,6 @@ export class JobPostService {
           salaryFilter.end = { lte: parseInt(query.maxSalary) };
         }
 
-        // where.jobBasicInfo = salaryFilter;
         where.jobBasicInfo.start = salaryFilter.start;
         where.jobBasicInfo.end = salaryFilter.end;
       }
@@ -714,7 +718,6 @@ export class JobPostService {
         },
       };
     }
-    console.log('where condition ', where);
     const skip = getPaginationSkip(query.page, query.limit);
     const take = getPaginationTake(query.limit);
     const sortOrder = getSortOrder(query.order);
@@ -1102,16 +1105,13 @@ export class JobPostService {
       await this.prismaService.jobPost.findMany({
         where,
         include: {
-          jobBasicInfo: {
+          jobBasicInfo: true,
+          venue: {
             include: {
-              venue: {
+              logo: true,
+              venueBasicDetails: {
                 include: {
-                  logo: true,
-                  venueBasicDetails: {
-                    include: {
-                      files: true,
-                    },
-                  },
+                  files: true,
                 },
               },
             },

@@ -23,7 +23,15 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { CreateApplicantDto } from './dto/applicant.profile';
-import { ActivityType, Auth, BusinessType, Prisma, Role } from '@prisma/client';
+import {
+  ActivityType,
+  Auth,
+  BusinessType,
+  HighestEducation,
+  Prisma,
+  Role,
+  VerificationStatus,
+} from '@prisma/client';
 import { CreateChangePasswordDto } from './dto/change-password';
 import { UpdateAccountStatusDto } from './dto/status-auth';
 import { CreateAuthFileDto } from './dto/file-dto';
@@ -241,7 +249,6 @@ export class AuthService {
       user.basicDetails?.gender
     ) {
       score += 10;
-      console.log('line 244 ', score);
     }
 
     // Contact Details
@@ -252,14 +259,11 @@ export class AuthService {
       user.contactDetails?.state
     ) {
       score += 10;
-      console.log('line 255 ', score);
     }
 
     // Profile Image
-    console.log('line 244 ', score);
     if (user.profileImage?.url) {
       score += 10;
-      console.log('line 262 ', score);
     }
 
     // Job Preference
@@ -269,53 +273,42 @@ export class AuthService {
       user.jobPreference?.locations?.length
     ) {
       score += 10;
-      console.log('line 272 ', score);
     }
 
     // Experience
     if (user.experiences?.length) {
       score += 10;
-      console.log('line 278 ', score);
     }
 
     // Past Work
     if (user.PastWork?.videoLink?.length || user.PastWork?.files?.length) {
       score += 10;
-      console.log('line 284 ', score);
     }
 
     // Education
     if (user.educations?.length) {
       score += 10;
-      console.log('line 290 ', score);
     }
 
     // Certificates
     if (user.certificates?.some((cert) => cert.file)) {
       score += 10;
-      console.log('line 296 ', score);
     }
 
     // Course Details
     if (user.courseDetails?.length) {
       score += 15;
-
-      console.log('line 303 ', score);
     }
 
     // Languages
     if (user.languages?.some((lang) => lang.language)) {
       score += 10;
-      console.log('line 308 ', score);
     }
 
     // Verification
-    console.log('user ', user.isEmailVerified, user.isPhoneVerified);
     if (user.isEmailVerified || user.isPhoneVerified) {
       score += 10;
-      console.log('line 314 ', score);
     }
-    console.log('final score ', score);
     return score;
   }
 
@@ -356,6 +349,8 @@ export class AuthService {
         profileImage: true,
         agencyJobBasicInfo: true,
         agencyDetails: true,
+        basicDetails: true,
+        contactDetails: true,
       },
     });
     if (!existingUser) {
@@ -520,12 +515,22 @@ export class AuthService {
       },
       data: {
         verificationFileId: body.verificationFileId,
+        verificationStatus: VerificationStatus.PENDING,
       },
     });
     return new ApiSuccessResponse(true, 'Account activated', updatedUser);
   }
 
   async getAllUsersForAdmin(query: QueryAuthDto) {
+    const experienceOrder = [
+      'FRESHER',
+      'ONE_YEAR',
+      'TWO_YEAR',
+      'THREE_YEAR',
+      'FOUR_YEAR',
+      'FIVE_PLUS_YEAR',
+    ] as const;
+
     const where: Prisma.AuthWhereInput = {};
     if (query.role) {
       where.role = query.role;
@@ -537,9 +542,15 @@ export class AuthService {
       where.countryId = query.countryId;
     }
     if (query.education) {
+      const educationArray = query.education
+        .split('_')
+        .filter((e): e is HighestEducation =>
+          Object.values(HighestEducation).includes(e as HighestEducation),
+        );
+
       where.educations = {
         some: {
-          education: query.education,
+          education: { in: educationArray },
         },
       };
     }
@@ -611,6 +622,14 @@ export class AuthService {
       };
     }
 
+    if (query.skillIds) {
+      where.jobPreference = {
+        skillsIds: {
+          hasSome: query?.skillIds?.split('_'),
+        },
+      };
+    }
+
     if (query.businessType) {
       where.partnerVenues = {
         some: {
@@ -622,6 +641,17 @@ export class AuthService {
         },
       };
     }
+
+    // if (query.experience) {
+    //   const experienceIndex = experienceOrder.indexOf(query.experience);
+    //   if (experienceIndex !== -1) {
+    //     where. = {
+    //       minExperience: {
+    //         in: experienceOrder.slice(0, experienceIndex + 1),
+    //       },
+    //     };
+    //   }
+    // }
 
     const orderBy = getSortOrder(query.order);
     const sortBy = getSortBy(query.sort);
@@ -654,7 +684,11 @@ export class AuthService {
           educations: true,
           pastExperiences: true,
           PastWork: true,
-          jobPreference: true,
+          jobPreference: {
+            include: {
+              skills: true,
+            },
+          },
           certificates: true,
           languages: true,
         },

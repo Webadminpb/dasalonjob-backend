@@ -8,7 +8,13 @@ import { CreateJobApplicationDto } from './dto/create-job-application.dto';
 import { UpdateJobApplicationDto } from './dto/update-job-application.dto';
 import { QueryJobApplicationDto } from './dto/query-job-application.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { Auth, JobApplicationStatus, Prisma } from '@prisma/client';
+import {
+  Auth,
+  JobApplicationStatus,
+  Language,
+  Prisma,
+  Skills,
+} from '@prisma/client';
 import {
   getPaginationSkip,
   getPaginationTake,
@@ -193,7 +199,27 @@ export class JobApplicationService {
             include: {
               jobPreference: true,
               profileImage: true,
-              languages: true,
+              PastWork: {
+                include: {
+                  files: true,
+                },
+              },
+              pastExperiences: true,
+              experiences: true,
+              certificates: {
+                include: {
+                  file: true,
+                },
+              },
+              languages: {
+                include: {
+                  language: {
+                    include: {
+                      file: true,
+                    },
+                  },
+                },
+              },
               educations: true,
               basicDetails: true,
               contactDetails: true,
@@ -202,7 +228,18 @@ export class JobApplicationService {
           },
           jobPost: {
             include: {
-              user: true,
+              user: {
+                include: {
+                  experiences: true,
+                  pastExperiences: true,
+                  certificates: {
+                    include: {
+                      file: true,
+                    },
+                  },
+                },
+              },
+              jobQualification: true,
               jobBasicInfo: true,
             },
           },
@@ -246,8 +283,43 @@ export class JobApplicationService {
       }),
     ]);
 
+    const applicationsWithMatches = jobApplications.map((application) => {
+      const jobRequiredSkillIds =
+        application.jobPost?.jobQualification?.skillIds?.map((skill: any) => {
+          console.log('skillID', skill);
+          return skill;
+        }) || [];
+      const jobRequiredLanguages =
+        application.jobPost?.jobQualification?.languageIds?.map(
+          (lang: any) => lang,
+        ) || [];
+      const jobRequiredEducation =
+        application.jobPost?.jobQualification?.education;
+
+      const userSkills = application.user?.jobPreference?.skillsIds || [];
+      const userLanguages =
+        application.user?.languages?.map((lang) => lang.languageId) || [];
+      const userEducations =
+        application.user?.educations?.map((edu) => edu.education) || [];
+
+      const matchingSkills = jobRequiredSkillIds.filter((id) =>
+        userSkills.includes(id),
+      );
+      const matchingLanguages = jobRequiredLanguages.filter((id) =>
+        userLanguages.includes(id),
+      );
+      const matchingEducation = userEducations.includes(jobRequiredEducation);
+
+      return {
+        ...application,
+        matchingSkills,
+        matchingLanguages,
+        matchingEducation,
+      };
+    });
+
     return new ApiSuccessResponse(true, 'Job applications found', {
-      jobApplications,
+      jobApplications: applicationsWithMatches,
       appliedTotal,
       acceptedTotal,
       shortlistedTotal,

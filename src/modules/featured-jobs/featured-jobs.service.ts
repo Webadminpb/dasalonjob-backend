@@ -54,16 +54,24 @@ export class FeaturedJobService {
                   },
                 },
               },
-              saveJobPosts: {
-                where: {
-                  userId: user?.id,
-                },
-              },
-              jobApplications: {
-                where: {
-                  userId: user?.id,
-                },
-              },
+              ...(user?.id
+                ? {
+                    saveJobPosts: {
+                      where: {
+                        userId: user?.id,
+                      },
+                    },
+                  }
+                : {}),
+              ...(user?.id
+                ? {
+                    jobApplications: {
+                      where: {
+                        userId: user?.id,
+                      },
+                    },
+                  }
+                : {}),
             },
           },
         },
