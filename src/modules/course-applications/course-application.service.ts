@@ -205,14 +205,6 @@ export class CourseApplicationService {
     const sortOrder = query.order === 'asc' ? 'asc' : 'desc';
     const sortBy = query.sort || 'createdAt';
 
-    // const existingCourse = await this.prismaService.partnerCourse.findUnique({
-    //   where: { id: query?.courseId ?? undefined },
-    // });
-
-    // if (!existingCourse) {
-    //   throw new NotFoundException('Course Not Found');
-    // }
-
     const [courseApplications, total, totalCourses] = await Promise.all([
       this.prismaService.courseApplication.findMany({
         where,
@@ -229,15 +221,53 @@ export class CourseApplicationService {
           },
           user: {
             include: {
-              profileImage: true,
-              basicDetails: true,
-              contactDetails: true,
-              languages: {
+              // profileImage: true,
+              // basicDetails: true,
+              // contactDetails: true,
+              // languages: {
+              //   include: {
+              //     language: true,
+              //   },
+              // },
+              // include: {
+              jobPreference: {
                 include: {
-                  language: true,
+                  skills: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                 },
               },
+              profileImage: true,
+              PastWork: {
+                include: {
+                  files: true,
+                },
+              },
+              pastExperiences: true,
+              experiences: true,
+              certificates: {
+                include: {
+                  file: true,
+                },
+              },
+              languages: {
+                include: {
+                  language: {
+                    include: {
+                      file: true,
+                    },
+                  },
+                },
+              },
+              educations: true,
+              basicDetails: true,
+              contactDetails: true,
+              jobApplicationApplicantMessage: true,
             },
+            // },
           },
         },
       }),

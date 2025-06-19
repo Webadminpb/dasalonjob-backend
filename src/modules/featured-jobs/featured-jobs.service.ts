@@ -63,7 +63,7 @@ export class FeaturedJobService {
                     },
                   }
                 : {}),
-              ...(user?.id
+              ...(user?.id && user?.role == 'AGENCY'
                 ? {
                     jobApplications: {
                       where: {

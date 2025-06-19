@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ExceptionsFilter } from './common/filters/exception-filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cors from 'cors';
-
+import * as compression from 'compression';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -30,6 +30,13 @@ async function bootstrap() {
       ],
     }),
   );
+
+  app.use(
+    compression({
+      threshold: 2048,
+    }),
+  );
+
   // app.enableCors({
   //   origin: ['*', 'http://localhost:3000'],
   //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

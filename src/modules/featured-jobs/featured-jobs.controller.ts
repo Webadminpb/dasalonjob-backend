@@ -9,6 +9,7 @@ import {
   HttpStatus,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { CreateFeaturedJobDto } from './dto/create-featured-job.dto';
 import { UpdateFeaturedJobDto } from './dto/update-featured-job.dto';
@@ -37,6 +38,13 @@ export class FeaturedJobController {
   @HttpCode(HttpStatus.OK)
   findAll(@Query() query: QueryFeaturedJobDto) {
     return this.featuredJobService.findAll(query);
+  }
+
+  @Get('/agency')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated('AGENCY')
+  findAllForAgency(@Query() query: QueryFeaturedJobDto, @GetUser() user: Auth) {
+    return this.featuredJobService.findAll(query, user);
   }
 
   @Get('guest')

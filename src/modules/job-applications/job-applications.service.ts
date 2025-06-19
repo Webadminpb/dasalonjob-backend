@@ -34,6 +34,7 @@ export class JobApplicationService {
         where: {
           jobPostId: body.jobPostId,
           userId: user.id,
+          message: body.message,
         },
       });
     if (existedJobApplication) {
@@ -43,6 +44,7 @@ export class JobApplicationService {
       data: {
         userId: user.id,
         jobPostId: body.jobPostId,
+        message: body.message,
       },
     });
     await this.prismaService.activity.create({
@@ -191,13 +193,23 @@ export class JobApplicationService {
       shortlistedTotal,
       rejectedTotal,
       total,
+      totalJobs,
     ] = await Promise.all([
       this.prismaService.jobApplication.findMany({
         where,
         include: {
           user: {
             include: {
-              jobPreference: true,
+              jobPreference: {
+                include: {
+                  skills: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
               profileImage: true,
               PastWork: {
                 include: {
@@ -228,17 +240,17 @@ export class JobApplicationService {
           },
           jobPost: {
             include: {
-              user: {
-                include: {
-                  experiences: true,
-                  pastExperiences: true,
-                  certificates: {
-                    include: {
-                      file: true,
-                    },
-                  },
-                },
-              },
+              // user: {
+              //   include: {
+              //     experiences: true,
+              //     pastExperiences: true,
+              //     certificates: {
+              //       include: {
+              //         file: true,
+              //       },
+              //     },
+              //   },
+              // },
               jobQualification: true,
               jobBasicInfo: true,
             },
@@ -281,12 +293,16 @@ export class JobApplicationService {
           },
         },
       }),
+      this.prismaService.jobPost.count({
+        where: {
+          userId: user?.id,
+        },
+      }),
     ]);
 
     const applicationsWithMatches = jobApplications.map((application) => {
       const jobRequiredSkillIds =
         application.jobPost?.jobQualification?.skillIds?.map((skill: any) => {
-          console.log('skillID', skill);
           return skill;
         }) || [];
       const jobRequiredLanguages =
@@ -325,6 +341,7 @@ export class JobApplicationService {
       shortlistedTotal,
       rejectedTotal,
       total,
+      totalJobs,
     });
   }
 
