@@ -15,7 +15,6 @@ export class NotificationGateway
 
   handleConnection(client: any, ...args: any[]) {
     const userId = client.handshake.query.userId;
-    console.log('client query ', client.handshake.query.userId);
     if (userId) this.clients[userId] = client.id;
   }
 

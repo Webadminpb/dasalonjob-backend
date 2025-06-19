@@ -11,7 +11,7 @@ model Auth {
   id                          String   @id @default(auto()) @map("_id") @db.ObjectId
   email                       String   @unique
   name                        String?
-  password                    String
+  password                    String?
   role                        Role     @default(USER)
   phoneCode                   String?
   phone                       String?

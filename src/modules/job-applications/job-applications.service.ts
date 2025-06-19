@@ -23,10 +23,15 @@ import {
 } from 'src/common/utils/common';
 import { StatusJobApplicationDto } from './dto/status-job.dto';
 import { permission } from 'process';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { NOTIFICATION_EVENT } from '../notifications/notification.event';
 
 @Injectable()
 export class JobApplicationService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async create(body: CreateJobApplicationDto, user: Auth) {
     const existedJobApplication =
@@ -704,6 +709,12 @@ export class JobApplicationService {
           ...body,
         },
       });
+
+    this.eventEmitter.emit(NOTIFICATION_EVENT, {
+      // isBroadCast: true,
+      title: `Job Application Status Changed To ${body?.status}`,
+      body: `Job Application Status Changed To ${body?.status}`,
+    });
     return new ApiSuccessResponse(
       true,
       'Job application updated',

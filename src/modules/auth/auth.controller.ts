@@ -204,6 +204,12 @@ export class AuthController {
     return this.authService.createAgencyTeamMember(body);
   }
 
+  @Patch('/verify')
+  @HttpCode(HttpStatus.OK)
+  verifyAuthToken(@Body() body: { token: string }) {
+    return this.authService.authTokenVerify(body);
+  }
+
   // Update User Status
   @Patch('admin/status')
   @HttpCode(HttpStatus.OK)

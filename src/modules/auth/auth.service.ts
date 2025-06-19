@@ -4,45 +4,45 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import {
-  generateAccessToken,
-  generateJwtToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from 'src/common/utils/jwt';
-import {
-  generateRandomPassword,
-  generateSixDigitOTP,
-  getPaginationSkip,
-  getPaginationTake,
-  getSortBy,
-  getSortOrder,
-} from 'src/common/utils/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { LoginAuthDto } from './dto/login-auth.dto';
-import { CreateApplicantDto } from './dto/applicant.profile';
 import {
   ActivityType,
   Auth,
   BusinessType,
   HighestEducation,
   Prisma,
-  Role,
   VerificationStatus,
 } from '@prisma/client';
-import { CreateChangePasswordDto } from './dto/change-password';
-import { UpdateAccountStatusDto } from './dto/status-auth';
-import { CreateAuthFileDto } from './dto/file-dto';
-import { QueryAuthDto } from './dto/query-auth.dto';
+import { ApiSuccessResponse } from 'src/common/api-response/api-success';
+import {
+  generateRandomPassword,
+  getPaginationSkip,
+  getPaginationTake,
+  getSortBy,
+  getSortOrder,
+} from 'src/common/utils/common';
+import {
+  decodeAuthToken,
+  generateAccessToken,
+  generateAuthToken,
+  generateRefreshToken,
+  verifyAuthToken,
+  verifyRefreshToken,
+} from 'src/common/utils/jwt';
+import { parseWithSchema } from 'src/common/utils/zod-parser';
+import { PrismaService } from '../prisma/prisma.service';
 import {
   CreateAdminAuthDto,
   CreateAgencyTeamMemberDto,
 } from './dto/admin-user.dto';
-import { AuthBaseSchema, PublicUserSchema } from './dto/auth.dto';
-import { parseWithSchema } from 'src/common/utils/zod-parser';
+import { CreateApplicantDto } from './dto/applicant.profile';
+import { PublicUserSchema } from './dto/auth.dto';
+import { CreateChangePasswordDto } from './dto/change-password';
+import { CreateAuthDto } from './dto/create-auth.dto';
 import { CreateDeletionReasonDto } from './dto/deletion-reason.dto';
+import { CreateAuthFileDto } from './dto/file-dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { QueryAuthDto } from './dto/query-auth.dto';
+import { UpdateAccountStatusDto } from './dto/status-auth';
 
 @Injectable()
 export class AuthService {
@@ -95,7 +95,6 @@ export class AuthService {
   }
 
   async login(body: LoginAuthDto) {
-    console.log('body email ', body.email);
     const user = await this.prismaService.auth.findUnique({
       where: { email: body.email },
       include: {
@@ -122,12 +121,7 @@ export class AuthService {
         userId: user.id,
       },
     });
-    console.log('response data ', {
-      user: parseWithSchema(PublicUserSchema, user),
-      accessToken: token,
-      refreshToken,
-      expiry: expiry,
-    });
+
     return new ApiSuccessResponse(true, 'User logged in successfully', {
       user: parseWithSchema(PublicUserSchema, user),
       accessToken: token,
@@ -856,7 +850,7 @@ export class AuthService {
     if (existingTeamMember) {
       throw new BadRequestException('User Already Existed');
     }
-    const password = generateRandomPassword();
+    // const password = generateRandomPassword();
     const newUser = await this.prismaService.auth.create({
       data: {
         email: body.email,
@@ -864,16 +858,46 @@ export class AuthService {
         lastName: body.lastName,
         role: body.role,
         phone: body.phone,
-        password: password,
+        // password: password,
         phoneCode: body.phoneCode,
         profileImageId: body.profileImageId,
       },
     });
+    const token = await generateAuthToken(existingTeamMember);
+
+    // sent to mail code
+
     return new ApiSuccessResponse(
       true,
       'Team Member Added Successfully',
       newUser,
     );
+  }
+
+  async authTokenVerify(body: { token: string }) {
+    const isValid = verifyAuthToken(body.token);
+    if (!isValid) {
+      throw new BadRequestException('Invalid Or Token Expired');
+    }
+    const decodedData = (await decodeAuthToken(body.token)) as Auth;
+    if (decodedData.id) {
+      const user = await this.prismaService.auth.findUnique({
+        where: { id: decodedData?.id },
+      });
+      if (!user) throw new NotFoundException('User Not Found');
+      await this.prismaService.auth.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          isVerified: true,
+        },
+      });
+
+      return new ApiSuccessResponse(true, 'Account Verify', null);
+    } else {
+      return new ApiSuccessResponse(false, 'Account Veification failed', null);
+    }
   }
 
   async deleteAccount(body: CreateDeletionReasonDto, user: Auth) {

@@ -10,7 +10,6 @@ export class NotificationService {
   ) {}
 
   async handleNotification(payload: any) {
-    console.log('payload line 13 ', payload);
     if (payload?.isBroadCast) {
       // if (setting?.isSystemApp) {
       //   return;
@@ -55,9 +54,6 @@ export class NotificationService {
         }),
       );
       return;
-      console.log('line 18 notifications');
-      await this.wsDispatcher.dispatch(payload);
-      console.log('after dispatch');
 
       // if (setting?.isEmail) {
       //   return;
