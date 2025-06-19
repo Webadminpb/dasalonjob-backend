@@ -43,6 +43,7 @@ import { CreateAuthFileDto } from './dto/file-dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { QueryAuthDto } from './dto/query-auth.dto';
 import { UpdateAccountStatusDto } from './dto/status-auth';
+import passport from 'passport';
 
 @Injectable()
 export class AuthService {
@@ -343,14 +344,20 @@ export class AuthService {
         profileImage: true,
         agencyJobBasicInfo: true,
         agencyDetails: true,
-        basicDetails: true,
+        // basicDetails: true,
         contactDetails: true,
+        partnerPersonalData: true,
       },
     });
     if (!existingUser) {
       throw new NotFoundException('User not found');
     }
-    return new ApiSuccessResponse(true, 'User data', existingUser);
+    const data = {
+      basicDetails: existingUser.partnerPersonalData,
+
+      ...existingUser,
+    };
+    return new ApiSuccessResponse(true, 'User data', { existingUser: data });
   }
   async getMyApplicantProfile(user: Auth) {
     const existingUser = await this.prismaService.auth.findUnique({
@@ -623,6 +630,11 @@ export class AuthService {
         },
       };
     }
+    // if (query.agencyId) {
+    //   where.savedApplicants = {
+    //     agencyID,
+    //   };
+    // }
 
     if (query.businessType) {
       where.partnerVenues = {
@@ -636,23 +648,9 @@ export class AuthService {
       };
     }
 
-    // if (query.experience) {
-    //   const experienceIndex = experienceOrder.indexOf(query.experience);
-    //   if (experienceIndex !== -1) {
-    //     where. = {
-    //       minExperience: {
-    //         in: experienceOrder.slice(0, experienceIndex + 1),
-    //       },
-    //     };
-    //   }
-    // }
-
     const orderBy = getSortOrder(query.order);
     const sortBy = getSortBy(query.sort);
-    // const orderBy = query.order
-    //   ? { [query.order]: query.sort || 'desc' }
-    //   : { createdAt: 'desc' };
-
+    console.log('query ', query.agencyId);
     const [users, total, active, inActive] = await Promise.all([
       this.prismaService.auth.findMany({
         where,
@@ -676,15 +674,32 @@ export class AuthService {
           },
           contactDetails: true,
           educations: true,
-          pastExperiences: true,
-          PastWork: true,
+          experiences: true,
+          PastWork: {
+            include: {
+              files: true,
+            },
+          },
           jobPreference: {
             include: {
               skills: true,
             },
           },
-          certificates: true,
-          languages: true,
+          certificates: {
+            include: {
+              file: true,
+            },
+          },
+          languages: {
+            include: {
+              language: {
+                include: {
+                  file: true,
+                },
+              },
+            },
+          },
+          savedApplicants: true,
         },
         orderBy: {
           [sortBy]: orderBy,
@@ -707,6 +722,7 @@ export class AuthService {
     if (!users) {
       throw new BadRequestException('No users found');
     }
+
     return new ApiSuccessResponse(true, 'Users found', {
       users,
       total,
@@ -864,7 +880,7 @@ export class AuthService {
       },
     });
     const token = await generateAuthToken(existingTeamMember);
-
+    // http://dasalon.com/verify=token
     // sent to mail code
 
     return new ApiSuccessResponse(
@@ -874,7 +890,7 @@ export class AuthService {
     );
   }
 
-  async authTokenVerify(body: { token: string }) {
+  async authTokenVerify(body: { token: string; password: string }) {
     const isValid = verifyAuthToken(body.token);
     if (!isValid) {
       throw new BadRequestException('Invalid Or Token Expired');
@@ -891,6 +907,7 @@ export class AuthService {
         },
         data: {
           isVerified: true,
+          password: body.password,
         },
       });
 

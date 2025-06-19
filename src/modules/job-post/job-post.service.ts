@@ -1137,7 +1137,7 @@ export class JobPostService {
           [orderBy]: sortOrder,
         },
       }),
-      this.prismaService.jobPost.count({ where, skip, take }),
+      this.prismaService.jobPost.count({ where }),
     ]);
 
     if (!jobPost) {

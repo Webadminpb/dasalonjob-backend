@@ -40,16 +40,13 @@ export class FeaturedJobService {
         include: {
           jobPost: {
             include: {
-              jobBasicInfo: {
+              jobBasicInfo: true,
+              venue: {
                 include: {
-                  venue: {
+                  logo: true,
+                  venueBasicDetails: {
                     include: {
-                      logo: true,
-                      venueBasicDetails: {
-                        include: {
-                          files: true,
-                        },
-                      },
+                      files: true,
                     },
                   },
                 },

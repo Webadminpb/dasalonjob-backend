@@ -113,6 +113,29 @@ export class SavedApplicantService {
                   skills: true,
                 },
               },
+              experiences: true,
+              PastWork: {
+                include: {
+                  files: true,
+                },
+              },
+              certificates: {
+                include: {
+                  file: true,
+                },
+              },
+              educations: true,
+              languages: {
+                include: {
+                  language: {
+                    include: {
+                      file: true,
+                    },
+                  },
+                },
+              },
+              basicDetails: true,
+              contactDetails: true,
             },
           },
         },

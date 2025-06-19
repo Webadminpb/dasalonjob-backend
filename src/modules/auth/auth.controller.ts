@@ -206,7 +206,7 @@ export class AuthController {
 
   @Patch('/verify')
   @HttpCode(HttpStatus.OK)
-  verifyAuthToken(@Body() body: { token: string }) {
+  verifyAuthToken(@Body() body: { token: string; password: string }) {
     return this.authService.authTokenVerify(body);
   }
 

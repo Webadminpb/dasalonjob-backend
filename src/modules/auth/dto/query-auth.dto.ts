@@ -21,6 +21,7 @@ export const QueryAuthSchema = z.object({
   locations: z.string().optional(),
   role: z.nativeEnum(Role).optional(),
   countryId: z.string().optional(),
+  agencyId: z.string().optional(),
   date: zDateOptional.optional(),
   year: zYearOptional.optional(),
   experience: z.nativeEnum(UserExperience).optional(),
