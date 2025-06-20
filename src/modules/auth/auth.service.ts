@@ -237,6 +237,7 @@ export class AuthService {
     let score = 0;
 
     // Basic Info
+    console.log('score ', score);
     if (
       user.basicDetails?.firstName &&
       user.basicDetails?.lastName &&
@@ -244,6 +245,7 @@ export class AuthService {
       user.basicDetails?.gender
     ) {
       score += 10;
+      console.log('basic details score ', score);
     }
 
     // Contact Details
@@ -254,11 +256,13 @@ export class AuthService {
       user.contactDetails?.state
     ) {
       score += 10;
+      console.log('contact details score ', score);
     }
 
     // Profile Image
     if (user.profileImage?.url) {
       score += 10;
+      console.log('profile image details score ', score);
     }
 
     // Job Preference
@@ -268,41 +272,43 @@ export class AuthService {
       user.jobPreference?.locations?.length
     ) {
       score += 10;
+      console.log('job prefernce details score ', score);
     }
 
     // Experience
     if (user.experiences?.length) {
       score += 10;
+      console.log('experience score ', score);
     }
 
     // Past Work
     if (user.PastWork?.videoLink?.length || user.PastWork?.files?.length) {
       score += 10;
+      console.log('pastworkd details score ', score);
     }
 
     // Education
     if (user.educations?.length) {
       score += 10;
+      console.log('education score ', score);
     }
 
     // Certificates
     if (user.certificates?.some((cert) => cert.file)) {
       score += 10;
-    }
-
-    // Course Details
-    if (user.courseDetails?.length) {
-      score += 15;
+      console.log('jcertificates score ', score);
     }
 
     // Languages
     if (user.languages?.some((lang) => lang.language)) {
       score += 10;
+      console.log('languages score ', score);
     }
 
     // Verification
     if (user.isEmailVerified || user.isPhoneVerified) {
       score += 10;
+      console.log('isEmailVerified score ', score);
     }
     return score;
   }
@@ -630,11 +636,6 @@ export class AuthService {
         },
       };
     }
-    // if (query.agencyId) {
-    //   where.savedApplicants = {
-    //     agencyID,
-    //   };
-    // }
 
     if (query.businessType) {
       where.partnerVenues = {
@@ -650,12 +651,15 @@ export class AuthService {
 
     const orderBy = getSortOrder(query.order);
     const sortBy = getSortBy(query.sort);
-    console.log('query ', query.agencyId);
     const [users, total, active, inActive] = await Promise.all([
       this.prismaService.auth.findMany({
         where,
         include: {
-          profileImage: true,
+          profileImage: {
+            select: {
+              url: true,
+            },
+          },
           _count: {
             select: {
               jobPost: true,

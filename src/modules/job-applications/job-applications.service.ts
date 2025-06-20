@@ -56,6 +56,7 @@ export class JobApplicationService {
       data: {
         userId: user.id,
         type: 'APPLIED_JOB',
+        jobApplicationId: jobApplication.id,
       },
     });
     return new ApiSuccessResponse(

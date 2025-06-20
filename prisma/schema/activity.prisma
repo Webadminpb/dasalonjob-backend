@@ -6,6 +6,18 @@ model Activity {
 
   type ActivityType
 
+  courseId String? @db.ObjectId
+  course PartnerCourse? @relation(fields: [courseId], references: [id])
+
+  jobId String? @db.ObjectId
+  job JobPost? @relation(fields: [courseId], references: [id])
+
+  jobApplicationId String? @db.ObjectId
+  jobApplication JobApplication? @relation(fields: [jobApplicationId], references: [id])
+
+  courseApplicationId String? @db.ObjectId
+  courseApplication CourseApplication? @relation(fields: [courseApplicationId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -13,4 +13,6 @@ model CourseApplication {
   creditSpendings CreditSpending[]
 
   @@unique([userId, courseId])
+
+  activities Activity[]
 }

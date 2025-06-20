@@ -29,4 +29,5 @@ model PartnerCourse {
   courseApplications CourseApplication[]
 
   featuredCourse FeaturedCourse[]
+  activities Activity[]
 }

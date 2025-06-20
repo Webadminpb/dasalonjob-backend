@@ -65,6 +65,7 @@ export class JobPostService {
       data: {
         userId: user.id,
         type: 'POSTED_JOB',
+        jobId: jobPost.id,
       },
     });
     return new ApiSuccessResponse(true, 'Job post added', jobPost);
@@ -854,6 +855,7 @@ export class JobPostService {
         data: {
           userId: user.id,
           type: 'APPROVE_JOB',
+          jobId: updateJobPost.id,
         },
       });
     } else if (body.status == 'Rejected') {
@@ -861,6 +863,7 @@ export class JobPostService {
         data: {
           userId: user.id,
           type: 'REJECT_JOB',
+          jobId: updateJobPost.id,
         },
       });
     }
@@ -900,21 +903,6 @@ export class JobPostService {
           in: query.job_type,
         };
       }
-
-      //   if (query.minSalary !== undefined || query.maxSalary !== undefined) {
-      //     const salaryFilter: any = {};
-
-      //     if (query.minSalary) {
-      //       // salaryFilter.start = { gte: parseInt(query.minSalary) };
-      //       salaryFilter.start = parseInt(query.minSalary);
-      //     }
-
-      //     if (query.maxSalary) {
-      //       salaryFilter.end  = parseInt(query.maxSalary);
-      //     }
-
-      //     where.jobBasicInfo = salaryFilter;
-      //   }
     }
 
     if (query.status) {
@@ -963,6 +951,16 @@ export class JobPostService {
         include: {
           jobBasicInfo: {
             include: {
+              // profile: {
+              // select: {
+              // name: true,
+              // file: {
+              //   select: {
+              //     url: true,
+              //   },
+              // },
+              // },
+              // },
               venue: {
                 include: {
                   logo: true,
@@ -996,7 +994,7 @@ export class JobPostService {
           [orderBy]: sortOrder,
         },
       }),
-      this.prismaService.jobPost.count({ where, skip, take }),
+      this.prismaService.jobPost.count({ where }),
     ]);
 
     if (!jobPost) {

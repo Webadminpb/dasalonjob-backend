@@ -9,38 +9,112 @@ import { QueryActivityDto } from './dto/query-activity.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
-import { createDateBeforeFilter } from 'src/common/utils/validation';
 import {
   getPaginationSkip,
   getPaginationTake,
   getSortBy,
   getSortOrder,
 } from 'src/common/utils/common';
-import { startOfDay, subDays } from 'date-fns';
-import { format } from 'date-fns';
-
+import { startOfDay, subDays, format } from 'date-fns';
 @Injectable()
 export class ActivityService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getAllActivities(query: QueryActivityDto) {
-    const { where, skip, take, orderBy, sortBy } =
-      await this.queryBuilder(query);
+    if (!query.userId) {
+      throw new BadRequestException('User Id is required');
+    }
+
+    const sevenDaysAgo = startOfDay(subDays(new Date(), 6));
+
+    const skip = getPaginationSkip(query.page, query.limit);
+    const take = getPaginationTake(query.limit);
 
     const activities = await this.prismaService.activity.findMany({
-      where,
+      where: {
+        userId: query.userId,
+        createdAt: {
+          gte: sevenDaysAgo.toISOString(),
+        },
+      },
+      include: {
+        course: {
+          select: {
+            courseDetails: {
+              select: {
+                courseName: true,
+              },
+            },
+          },
+        },
+        courseApplication: {
+          select: {
+            course: {
+              select: {
+                courseDetails: {
+                  select: {
+                    courseName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        job: {
+          select: {
+            jobBasicInfo: {
+              select: {
+                title: true,
+              },
+            },
+          },
+        },
+        jobApplication: {
+          select: {
+            jobPost: {
+              select: {
+                jobBasicInfo: {
+                  select: {
+                    title: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       skip,
       take,
       orderBy: {
-        [orderBy]: [sortBy],
+        createdAt: 'desc',
       },
     });
 
-    return new ApiSuccessResponse(
-      true,
-      'Applicant activity fetched successfully',
-      { activities },
+    const groupedByDateMap: Map<string, typeof activities> = new Map();
+
+    for (const activity of activities) {
+      const isoDate = startOfDay(new Date(activity.createdAt)).toISOString();
+
+      if (!groupedByDateMap.has(isoDate)) {
+        groupedByDateMap.set(isoDate, []);
+      }
+
+      groupedByDateMap.get(isoDate)!.push(activity);
+    }
+
+    const groupedByDateArray = Array.from(groupedByDateMap.entries()).map(
+      ([date, acts]) => ({
+        date,
+        activities: acts,
+      }),
     );
+
+    return {
+      success: true,
+      message: 'Grouped activities by date',
+      data: groupedByDateArray, // ✅ direct array
+      total: groupedByDateArray?.length ?? 0,
+    };
   }
 
   async getWeeklyActivity() {

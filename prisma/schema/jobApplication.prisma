@@ -20,4 +20,6 @@ model JobApplication {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, jobPostId]) 
+
+  activities Activity[]
 }

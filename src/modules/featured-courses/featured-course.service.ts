@@ -181,24 +181,16 @@ export class FeaturedCourseService {
                 },
               },
               courseTypeAndLocation: true,
-              ...(user?.id
-                ? {
-                    courseApplications: {
-                      where: {
-                        userId: user?.id,
-                      },
-                    },
-                  }
-                : {}),
-              ...(user?.id
-                ? {
-                    saveCourses: {
-                      where: {
-                        userId: user?.id,
-                      },
-                    },
-                  }
-                : {}),
+              courseApplications: {
+                where: {
+                  userId: user?.id,
+                },
+              },
+              saveCourses: {
+                where: {
+                  userId: user?.id,
+                },
+              },
             },
           },
         },

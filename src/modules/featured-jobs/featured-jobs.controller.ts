@@ -36,8 +36,10 @@ export class FeaturedJobController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(@Query() query: QueryFeaturedJobDto) {
-    return this.featuredJobService.findAll(query);
+  @AllowAuthenticated()
+  findAll(@Query() query: QueryFeaturedJobDto, @GetUser() user: Auth) {
+    console.log('user ', user.id);
+    return this.featuredJobService.findAll(query, user);
   }
 
   @Get('/agency')

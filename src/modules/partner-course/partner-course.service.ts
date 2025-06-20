@@ -51,6 +51,7 @@ export class PartnerCourseService {
       data: {
         userId: user.id,
         type: 'POSTED_COURSE',
+        courseId: partnerCourse.id,
       },
     });
     return new ApiSuccessResponse(
@@ -448,6 +449,7 @@ export class PartnerCourseService {
         data: {
           userId: user.id,
           type: 'APPROVE_COURSE',
+          courseId: updateCourse.id,
         },
       });
     } else if (body.status == 'Rejected') {
@@ -455,6 +457,7 @@ export class PartnerCourseService {
         data: {
           userId: user.id,
           type: 'REJECT_COURSE',
+          courseId: updateCourse.id,
         },
       });
     }

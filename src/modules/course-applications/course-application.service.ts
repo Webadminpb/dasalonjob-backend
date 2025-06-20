@@ -28,11 +28,11 @@ export class CourseApplicationService {
         },
       },
     );
-
     await this.prismaService.activity.create({
       data: {
         userId: user.id,
         type: 'APPLIED_COURSE',
+        courseApplicationId: courseApplication.id,
       },
     });
     return new ApiSuccessResponse(
@@ -391,14 +391,35 @@ export class CourseApplicationService {
           course: true,
           user: {
             include: {
+              profileImage: {
+                select: {
+                  url: true,
+                },
+              },
+
               basicDetails: true,
               contactDetails: true,
-              languages: true,
+              experiences: true,
+              languages: {
+                select: {
+                  language: {
+                    select: {
+                      id: true,
+                      name: true,
+                      file: {
+                        select: {
+                          url: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
       }),
-      this.prismaService.courseApplication.count(),
+      this.prismaService.courseApplication.count({ where }),
     ]);
     if (!courseApplications) {
       throw new NotFoundException('Course Applications Not Found');

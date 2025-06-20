@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Auth, BusinessType, Prisma } from '@prisma/client';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import {
@@ -18,10 +22,13 @@ export class PartnerVenueService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(body: CreatePartnerVenueDto, user: Auth) {
-    const userData = await this.prismaService.auth.findUnique({where:{id:user?.id}, select:{
-      profileImageId:true
-    }})
-    if(!userData) throw new NotFoundException("Partner Account Not Found");
+    const userData = await this.prismaService.auth.findUnique({
+      where: { id: user?.id },
+      select: {
+        profileImageId: true,
+      },
+    });
+    if (!userData) throw new NotFoundException('Partner Account Not Found');
     const partnerVenue = await this.prismaService.partnerVenue.create({
       data: {
         venueBasicDetailsId: body.venueBasicDetailsId,
@@ -30,7 +37,7 @@ export class PartnerVenueService {
         venueMainBusinessDaysId: body.venueMainBusinessDaysId,
         venueWorkStationIds: body.venueWorkStationIds,
         userId: user.id,
-        logoId:userData.profileImageId ? userData.profileImageId : null
+        logoId: userData.profileImageId ? userData.profileImageId : null,
       },
     });
     return new ApiSuccessResponse(
@@ -40,7 +47,7 @@ export class PartnerVenueService {
     );
   }
 
-  async findAll(user: Auth, query: QueryPartnerVenueDto) {
+  async findAll(query: QueryPartnerVenueDto, user?: Auth) {
     const where: Prisma.PartnerVenueWhereInput = {};
     if (query.userId) {
       where.userId = query.userId;
@@ -80,7 +87,71 @@ export class PartnerVenueService {
             files: true,
           },
         },
-        logo:true,
+        logo: {
+          select: {
+            url: true,
+          },
+        },
+        salonBasicDetails: true,
+        venueAmenities: true,
+        venueWorkStations: true,
+        user: true,
+        venueMainBusinessDays: true,
+      },
+      skip: getPaginationSkip(query.page, query.limit),
+      take: getPaginationTake(query.limit),
+    });
+    console.log('partner veneues ', partnerVenues);
+
+    if (!partnerVenues) {
+      throw new BadRequestException('No Partner Venues found');
+    }
+    return new ApiSuccessResponse(true, 'Partner Venues found', {
+      partnerVenues,
+    });
+  }
+
+  async findAllVenues(query: QueryPartnerVenueDto) {
+    const where: Prisma.PartnerVenueWhereInput = {};
+    if (query.userId) {
+      where.userId = query.userId;
+    }
+    if (query.search) {
+      where.venueBasicDetails = {
+        OR: [
+          {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      };
+    }
+
+    if (query.date) {
+      const year = query.date;
+      where.createdAt = {
+        gte: new Date(`${year}-01-01T00:00:00.000Z`).toISOString(),
+        lte: new Date(`${year}-12-61T23:59:59.999Z`).toISOString(),
+      };
+    }
+
+    if (query.gender) {
+      where.venueBasicDetails = {
+        gender: query.gender,
+      };
+    }
+
+    const partnerVenues = await this.prismaService.partnerVenue.findMany({
+      where,
+      include: {
+        venueBasicDetails: {
+          include: {
+            files: true,
+          },
+        },
+        logo: true,
         salonBasicDetails: true,
         venueAmenities: true,
         venueWorkStations: true,
@@ -152,14 +223,28 @@ export class PartnerVenueService {
       include: {
         venueBasicDetails: {
           include: {
-            files: true,
+            files: {
+              select: {
+                url: true,
+              },
+            },
           },
         },
-        salonBasicDetails: true,
-        venueAmenities: true,
-        venueWorkStations: true,
-        user: true,
-        venueMainBusinessDays: true,
+        logo: {
+          select: {
+            url: true,
+          },
+        },
+        user: {
+          select: {
+            basicDetails: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         [sortBy]: orderBy,
