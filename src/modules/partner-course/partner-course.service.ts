@@ -122,7 +122,12 @@ export class PartnerCourseService {
                 },
               },
             },
-
+            featuredCourse: {
+              select: {
+                id: true,
+                isActive: true,
+              },
+            },
             courseTypeAndLocation: true,
             _count: {
               select: {
@@ -187,6 +192,15 @@ export class PartnerCourseService {
               file: true,
             },
           },
+          featuredCourse: {
+            where: {
+              courseId: id,
+            },
+            select: {
+              id: true,
+              isActive: true,
+            },
+          },
           courseAcademy: {
             include: {
               provider: {
@@ -235,6 +249,15 @@ export class PartnerCourseService {
         courseDetails: {
           include: {
             file: true,
+          },
+        },
+        featuredCourse: {
+          where: {
+            courseId: id,
+          },
+          select: {
+            id: true,
+            isActive: true,
           },
         },
         saveCourses: {
@@ -313,7 +336,15 @@ export class PartnerCourseService {
                 provider: {
                   include: {
                     logo: true,
-                    venueBasicDetails: true,
+                    venueBasicDetails: {
+                      select: {
+                        files: {
+                          select: {
+                            url: true,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
               },
@@ -321,7 +352,7 @@ export class PartnerCourseService {
             courseTypeAndLocation: true,
           },
         }),
-        this.prismaService.partnerCourse.update({
+        this.prismaService.partnerCourse.updateMany({
           data: { views: { increment: 1 } },
           where: {
             id: id,
@@ -814,6 +845,12 @@ export class PartnerCourseService {
                     venueBasicDetails: true,
                   },
                 },
+              },
+            },
+            featuredCourse: {
+              select: {
+                id: true,
+                isActive: true,
               },
             },
             courseTypeAndLocation: true,

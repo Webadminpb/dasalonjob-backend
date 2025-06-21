@@ -84,7 +84,11 @@ export class PartnerVenueService {
       include: {
         venueBasicDetails: {
           include: {
-            files: true,
+            files: {
+              select: {
+                url: true,
+              },
+            },
           },
         },
         logo: {
@@ -276,7 +280,11 @@ export class PartnerVenueService {
         salonBasicDetails: true,
         venueAmenities: true,
         venueWorkStations: true,
-        user: true,
+        user: {
+          include: {
+            partnerSocialLinks: true,
+          },
+        },
       },
     });
     if (!partnerVenue) {

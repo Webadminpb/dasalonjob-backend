@@ -5,13 +5,14 @@ import { zDateOptional } from 'src/common/utils/validation';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export const createExperienceSchema = z.object({
-  profile: z.nativeEnum(JobProfile),
-  location: z.string(),
-  longitude: z.string(),
-  latitude: z.string(),
+  profileId: z.string().optional(),
+  location: z.string().optional(),
+  longitude: z.string().optional(),
+  latitude: z.string().optional(),
   startDate: zDateOptional,
   endDate: zDateOptional,
   description: z.string().optional(),
+  isFresher: z.boolean().optional(),
 });
 
 export class CreateExperienceDto extends createZodDto(createExperienceSchema) {

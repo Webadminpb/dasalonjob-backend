@@ -13,12 +13,17 @@ export class EducationService {
       data: {
         education: body.education,
         school: body.school,
-        attended: new Date(body.attended).toISOString(),
-        graduated: new Date(body.graduated).toISOString(),
+        attended: body.attended
+          ? new Date(body?.attended)?.toISOString()
+          : null,
+        graduated: body.attended
+          ? new Date(body?.graduated)?.toISOString()
+          : null,
         userId: user.id,
         fileId: body.fileId,
         isCrmTrained: body.isCrmTrained,
         isProfessionalTrained: body.isProfessionalTrained,
+        isEducation: body.isEducation,
       },
     });
     return new ApiSuccessResponse(true, 'education added', education);
@@ -71,10 +76,13 @@ export class EducationService {
       data: {
         education: body.education,
         school: body.school,
-        attended: new Date(body.attended).toISOString(),
-        graduated: new Date(body.graduated).toISOString(),
+        attended: body.attended ? new Date(body.attended).toISOString() : null,
+        graduated: body.graduated
+          ? new Date(body.graduated).toISOString()
+          : null,
         isProfessionalTrained: body.isProfessionalTrained,
         isCrmTrained: body.isCrmTrained,
+        isEducation: body.isEducation,
       },
     });
     return new ApiSuccessResponse(true, 'eduction updated ', updatedEducation);

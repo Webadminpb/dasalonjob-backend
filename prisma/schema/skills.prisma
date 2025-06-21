@@ -21,6 +21,6 @@ model Skills {
   CourseDetails CourseDetails[] @relation(fields: [courseDetailIds], references: [id])
 
   jobBasicInfo JobBasicInfo[]
-
+  experiences Experience[]
 
 }

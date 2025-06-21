@@ -14,13 +14,16 @@ export class ExperienceService {
     const experience = await this.prismaService.experience.create({
       data: {
         userId: user.id,
-        profile: body.profile,
+        profileId: body.profileId,
         location: body.location,
         longitude: body.longitude,
         latitude: body.latitude,
-        startDate: new Date(body.startDate).toISOString(),
-        endDate: new Date(body.endDate).toISOString(),
+        startDate: body.startDate
+          ? new Date(body?.startDate)?.toISOString()
+          : null,
+        endDate: body.endDate ? new Date(body?.endDate)?.toISOString() : null,
         description: body.description,
+        isFresher: body.isFresher,
       },
     });
 
@@ -81,13 +84,14 @@ export class ExperienceService {
         id: existingExperience.id,
       },
       data: {
-        profile: body.profile,
+        profileId: body.profileId,
         location: body.location,
         description: body.description,
         longitude: body.longitude,
         latitude: body.latitude,
         startDate: new Date(body.startDate).toISOString(),
         endDate: new Date(body.endDate).toISOString(),
+        isFresher: body.isFresher,
       },
     });
     return new ApiSuccessResponse(

@@ -2,10 +2,10 @@
 model Education {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  education HighestEducation
-  school String
-  attended DateTime
-  graduated DateTime
+  education HighestEducation?
+  school String?
+  attended DateTime?
+  graduated DateTime?
 
   userId      String @db.ObjectId
   user       Auth   @relation(fields: [userId], references: [id])
@@ -15,6 +15,8 @@ model Education {
 
   isProfessionalTrained Boolean @default(false)
   isCrmTrained Boolean @default(false)
+
+  isEducation Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

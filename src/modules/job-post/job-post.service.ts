@@ -98,7 +98,15 @@ export class JobPostService {
               },
             },
           },
-          jobBasicInfo: true,
+          jobBasicInfo: {
+            include: {
+              profile: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
           jobBenefits: true,
           jobDescription: true,
           jobQualification: {

@@ -2,13 +2,16 @@
 model Experience {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  profile JobProfile
-  location String
+  profileId String? @db.ObjectId
+  profile Skills? @relation(fields: [profileId], references: [id])
+  location String?
   longitude String?
   latitude String?
-  startDate DateTime
-  endDate DateTime
+  startDate DateTime?
+  endDate DateTime?
   description String?
+
+  isFresher Boolean @default(false)
 
   userId      String  @db.ObjectId
   user        Auth   @relation(fields: [userId], references: [id])

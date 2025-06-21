@@ -5,13 +5,14 @@ import { HighestEducation } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export const createEducationSchema = z.object({
-  school: z.string(),
+  school: z.string().optional(),
   attended: zDateOptional,
   graduated: zDateOptional,
-  education: z.nativeEnum(HighestEducation),
+  education: z.nativeEnum(HighestEducation).optional(),
   fileId: z.string().optional(),
   isProfessionalTrained: z.boolean().optional(),
   isCrmTrained: z.boolean().optional(),
+  isEducation: z.boolean().optional(),
 });
 
 export class CreateEducationDto extends createZodDto(createEducationSchema) {

@@ -52,7 +52,7 @@ export class PartnerAgencyPermissionController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY')
+  @AllowAuthenticated('ADMIN', 'SUPER_ADMIN', 'AGENCY', 'PARTNER')
   update(
     @Param('id') id: string,
     @Body() body: UpdatePartnerAgencyPermissionDto,

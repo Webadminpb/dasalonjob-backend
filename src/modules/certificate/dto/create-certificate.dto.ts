@@ -2,11 +2,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 export const CertificateSchema = z.object({
-  certificateName: z.string(),
-  fileId: z.string(),
-  certificateId: z.string(),
-  instituationName: z.string(),
+  certificateName: z.string().optional(),
+  fileId: z.string().optional(),
+  certificateId: z.string().optional(),
+  instituationName: z.string().optional(),
   description: z.string().optional(),
+  isCertificate: z.boolean().optional(),
 });
 
 export class CreateCertificateDto extends createZodDto(CertificateSchema) {

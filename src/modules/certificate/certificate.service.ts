@@ -20,6 +20,7 @@ export class CertificateService {
         certificateName: body.certificateName,
         certificateId: body.certificateId,
         instituationName: body.instituationName,
+        isCertificate: body.isCertificate,
       },
     });
     return new ApiSuccessResponse(true, 'certificate added ', certificate);
