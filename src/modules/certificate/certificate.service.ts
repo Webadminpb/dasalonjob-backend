@@ -13,6 +13,20 @@ export class CertificateService {
 
   // Create a new certificate
   async create(body: CreateCertificateDto, user: Auth) {
+    const isExits = await this.prismaService.certificate.findFirst({
+      where: {
+        userId: user?.id,
+        isNotCertificate: true,
+      },
+    });
+    if (isExits) {
+      await this.prismaService.certificate.deleteMany({
+        where: {
+          userId: user?.id,
+          isNotCertificate: true,
+        },
+      });
+    }
     const certificate = await this.prismaService.certificate.create({
       data: {
         fileId: body.fileId,
@@ -20,7 +34,7 @@ export class CertificateService {
         certificateName: body.certificateName,
         certificateId: body.certificateId,
         instituationName: body.instituationName,
-        isCertificate: body.isCertificate,
+        isNotCertificate: body.isNotCertificate,
       },
     });
     return new ApiSuccessResponse(true, 'certificate added ', certificate);

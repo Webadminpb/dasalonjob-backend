@@ -12,7 +12,7 @@ export const createEducationSchema = z.object({
   fileId: z.string().optional(),
   isProfessionalTrained: z.boolean().optional(),
   isCrmTrained: z.boolean().optional(),
-  isEducation: z.boolean().optional(),
+  isNotEducation: z.boolean().optional(),
 });
 
 export class CreateEducationDto extends createZodDto(createEducationSchema) {

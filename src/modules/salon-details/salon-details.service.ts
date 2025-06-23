@@ -21,7 +21,7 @@ export class SalondetailsService {
         fileIds: body.fileIds,
         firstName: body.firstName,
         lastName: body.lastName,
-        dob: new Date(body.dob).toISOString(),
+        ...(body?.dob && { dob: new Date(body?.dob)?.toISOString() }),
         gender: body.gender,
       },
     });

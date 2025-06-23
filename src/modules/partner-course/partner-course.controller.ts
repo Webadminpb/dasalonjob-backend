@@ -132,7 +132,7 @@ export class PartnerCourseController {
 
   @Get('applicant-courses')
   @HttpCode(HttpStatus.OK)
-  // @AllowAuthenticated()
+  @AllowAuthenticated()
   getAllCoursesForApplicant(
     @Query() query: QueryPartnerCourseDto,
     @GetUser() user: Auth,

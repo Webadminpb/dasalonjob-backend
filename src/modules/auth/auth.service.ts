@@ -8,6 +8,7 @@ import {
   ActivityType,
   Auth,
   BusinessType,
+  Certificate,
   HighestEducation,
   Prisma,
   VerificationStatus,
@@ -204,7 +205,11 @@ export class AuthService {
           },
         },
         courseDetails: true,
-        experiences: true,
+        experiences: {
+          include: {
+            profile: true,
+          },
+        },
         pastExperiences: true,
         PastWork: {
           include: {
@@ -255,7 +260,7 @@ export class AuthService {
       user.contactDetails?.city &&
       user.contactDetails?.state
     ) {
-      score += 10;
+      score += 15;
       console.log('contact details score ', score);
     }
 
@@ -282,10 +287,10 @@ export class AuthService {
     }
 
     // Past Work
-    if (user.PastWork?.videoLink?.length || user.PastWork?.files?.length) {
-      score += 10;
-      console.log('pastworkd details score ', score);
-    }
+    // if (user.PastWork?.videoLink?.length || user.PastWork?.files?.length) {
+    //   score += 10;
+    //   console.log('pastworkd details score ', score);
+    // }
 
     // Education
     if (user.educations?.length) {
@@ -294,22 +299,30 @@ export class AuthService {
     }
 
     // Certificates
-    if (user.certificates?.some((cert) => cert.file)) {
+    if (
+      user.certificates?.some((cert: any) => cert.file) ||
+      user.certificates?.some((cert: Certificate) => cert.isNotCertificate)
+    ) {
       score += 10;
       console.log('jcertificates score ', score);
     }
 
     // Languages
-    if (user.languages?.some((lang) => lang.language)) {
+    if (user.languages?.some((lang: any) => lang.language)) {
       score += 10;
       console.log('languages score ', score);
     }
 
     // Verification
     if (user.isEmailVerified || user.isPhoneVerified) {
-      score += 10;
+      score += 15;
       console.log('isEmailVerified score ', score);
     }
+
+    // if (user.isPhoneVerified) {
+    //   score += 15;
+    //   console.log('isEmailVerified score ', score);
+    // }
     return score;
   }
 

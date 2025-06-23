@@ -9,6 +9,20 @@ import { UpdateEducationDto } from './dto/update-education.dto';
 export class EducationService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(body: CreateEducationDto, user: Auth) {
+    const isExists = await this.prismaService.education.findFirst({
+      where: {
+        userId: user?.id,
+        isNotEducation: true,
+      },
+    });
+    if (isExists) {
+      await this.prismaService.education.deleteMany({
+        where: {
+          userId: user?.id,
+          isNotEducation: true,
+        },
+      });
+    }
     const education = await this.prismaService.education.create({
       data: {
         education: body.education,
@@ -23,7 +37,7 @@ export class EducationService {
         fileId: body.fileId,
         isCrmTrained: body.isCrmTrained,
         isProfessionalTrained: body.isProfessionalTrained,
-        isEducation: body.isEducation,
+        isNotEducation: body.isNotEducation,
       },
     });
     return new ApiSuccessResponse(true, 'education added', education);
@@ -82,7 +96,7 @@ export class EducationService {
           : null,
         isProfessionalTrained: body.isProfessionalTrained,
         isCrmTrained: body.isCrmTrained,
-        isEducation: body.isEducation,
+        isNotEducation: body.isNotEducation,
       },
     });
     return new ApiSuccessResponse(true, 'eduction updated ', updatedEducation);

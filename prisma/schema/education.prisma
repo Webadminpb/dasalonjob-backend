@@ -16,7 +16,7 @@ model Education {
   isProfessionalTrained Boolean @default(false)
   isCrmTrained Boolean @default(false)
 
-  isEducation Boolean @default(false)
+  isNotEducation Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -6,11 +6,26 @@ import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { QueryExperienceDto } from './dto/query-experience.dto';
 import { getPaginationSkip, getPaginationTake } from 'src/common/utils/common';
+import { use } from 'passport';
 
 @Injectable()
 export class ExperienceService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(body: CreateExperienceDto, user: Auth) {
+    const isExists = await this.prismaService.experience.findFirst({
+      where: {
+        userId: user?.id,
+        isFresher: true,
+      },
+    });
+    if (isExists) {
+      await this.prismaService.experience.deleteMany({
+        where: {
+          userId: user?.id,
+          isFresher: true,
+        },
+      });
+    }
     const experience = await this.prismaService.experience.create({
       data: {
         userId: user.id,
@@ -46,6 +61,9 @@ export class ExperienceService {
     const experience = await this.prismaService.experience.findUnique({
       where: {
         id,
+      },
+      include: {
+        profile: true,
       },
     });
     if (!experience) {

@@ -7,7 +7,7 @@ model Certificate {
   instituationName String?
   description String?
 
-  isCertificate Boolean @default(false)
+  isNotCertificate Boolean @default(false)
 
   fileId String? @db.ObjectId
   file File? @relation(fields: [fileId], references: [id])

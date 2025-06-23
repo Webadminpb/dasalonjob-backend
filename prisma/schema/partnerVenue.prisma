@@ -30,7 +30,8 @@ model PartnerVenue {
   jobPosts JobPost[]
 
   status VenueStatus @default(ACTIVE)
-  
+  createdStatus JobPostStatus @default(Pending)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

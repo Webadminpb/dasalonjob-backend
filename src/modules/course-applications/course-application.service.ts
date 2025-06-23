@@ -271,7 +271,13 @@ export class CourseApplicationService {
           },
         },
       }),
-      this.prismaService.courseApplication.count(),
+      this.prismaService.courseApplication.count({
+        where: {
+          course: {
+            userId: user.id,
+          },
+        },
+      }),
       this.prismaService.partnerCourse.count({
         where: {
           userId: user?.id,

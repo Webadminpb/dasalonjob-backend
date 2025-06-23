@@ -79,39 +79,67 @@ export class PartnerVenueService {
       };
     }
 
-    const partnerVenues = await this.prismaService.partnerVenue.findMany({
-      where,
-      include: {
-        venueBasicDetails: {
-          include: {
-            files: {
-              select: {
-                url: true,
+    const [partnerVenues, total] = await Promise.all([
+      this.prismaService.partnerVenue.findMany({
+        where,
+        include: {
+          _count: {
+            select: {
+              jobPosts: true,
+              courseAcademy: {
+                where: {
+                  partnerCourses: {
+                    some: {},
+                  },
+                },
               },
             },
           },
-        },
-        logo: {
-          select: {
-            url: true,
+          venueBasicDetails: {
+            include: {
+              files: {
+                select: {
+                  url: true,
+                },
+              },
+            },
           },
+          logo: {
+            select: {
+              url: true,
+            },
+          },
+          salonBasicDetails: true,
+          venueAmenities: true,
+          venueWorkStations: true,
+          user: {
+            select: {
+              partnerPersonalData: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+          venueMainBusinessDays: true,
         },
-        salonBasicDetails: true,
-        venueAmenities: true,
-        venueWorkStations: true,
-        user: true,
-        venueMainBusinessDays: true,
-      },
-      skip: getPaginationSkip(query.page, query.limit),
-      take: getPaginationTake(query.limit),
-    });
-    console.log('partner veneues ', partnerVenues);
+        skip: getPaginationSkip(query.page, query.limit),
+        take: getPaginationTake(query.limit),
+      }),
+      this.prismaService.partnerVenue.count({
+        where: {
+          userId: query?.userId,
+        },
+      }),
+    ]);
 
     if (!partnerVenues) {
       throw new BadRequestException('No Partner Venues found');
     }
     return new ApiSuccessResponse(true, 'Partner Venues found', {
       partnerVenues,
+      total,
     });
   }
 
@@ -150,6 +178,11 @@ export class PartnerVenueService {
     const partnerVenues = await this.prismaService.partnerVenue.findMany({
       where,
       include: {
+        _count: {
+          select: {
+            jobPosts: true,
+          },
+        },
         venueBasicDetails: {
           include: {
             files: true,
@@ -271,6 +304,11 @@ export class PartnerVenueService {
         id: id,
       },
       include: {
+        logo: {
+          select: {
+            url: true,
+          },
+        },
         venueBasicDetails: {
           include: {
             files: true,

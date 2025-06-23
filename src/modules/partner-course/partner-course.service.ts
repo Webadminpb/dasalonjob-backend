@@ -865,7 +865,7 @@ export class PartnerCourseService {
           take,
         }),
 
-        this.prismaService.partnerCourse.count({ where }), // total without filtering
+        this.prismaService.partnerCourse.count({ where }),
         this.prismaService.partnerCourse.count({ where: { isOpen: true } }),
         this.prismaService.partnerCourse.count({ where: { isOpen: false } }),
       ]);
