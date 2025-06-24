@@ -40,6 +40,7 @@ export class ActivityService {
       include: {
         course: {
           select: {
+            id: true,
             courseDetails: {
               select: {
                 courseName: true,
@@ -51,6 +52,7 @@ export class ActivityService {
           select: {
             course: {
               select: {
+                id: true,
                 courseDetails: {
                   select: {
                     courseName: true,
@@ -62,6 +64,7 @@ export class ActivityService {
         },
         job: {
           select: {
+            id: true,
             jobBasicInfo: {
               select: {
                 title: true,
@@ -71,6 +74,7 @@ export class ActivityService {
         },
         jobApplication: {
           select: {
+            id: true,
             jobPost: {
               select: {
                 jobBasicInfo: {

@@ -79,7 +79,7 @@ export class PartnerVenueService {
       };
     }
 
-    const [partnerVenues, total] = await Promise.all([
+    const [partnerVenues, total, actives, inActives] = await Promise.all([
       this.prismaService.partnerVenue.findMany({
         where,
         include: {
@@ -114,6 +114,7 @@ export class PartnerVenueService {
           venueWorkStations: true,
           user: {
             select: {
+              id: true,
               partnerPersonalData: {
                 select: {
                   firstName: true,
@@ -132,6 +133,18 @@ export class PartnerVenueService {
           userId: query?.userId,
         },
       }),
+      this.prismaService.partnerVenue.count({
+        where: {
+          userId: query?.userId,
+          status: 'ACTIVE',
+        },
+      }),
+      this.prismaService.partnerVenue.count({
+        where: {
+          userId: query?.userId,
+          status: 'INACTIVE',
+        },
+      }),
     ]);
 
     if (!partnerVenues) {
@@ -140,6 +153,8 @@ export class PartnerVenueService {
     return new ApiSuccessResponse(true, 'Partner Venues found', {
       partnerVenues,
       total,
+      actives,
+      inActives,
     });
   }
 

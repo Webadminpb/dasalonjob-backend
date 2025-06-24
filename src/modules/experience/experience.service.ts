@@ -12,19 +12,24 @@ import { use } from 'passport';
 export class ExperienceService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(body: CreateExperienceDto, user: Auth) {
+    console.log('body ', body);
+    console.log('userId ', user.id);
     const isExists = await this.prismaService.experience.findFirst({
       where: {
         userId: user?.id,
         isFresher: true,
       },
     });
+    console.log('isExists ', isExists);
     if (isExists) {
-      await this.prismaService.experience.deleteMany({
+      console.log('console.log(is exists) runnning');
+      const data = await this.prismaService.experience.deleteMany({
         where: {
           userId: user?.id,
           isFresher: true,
         },
       });
+      console.log('d ', data);
     }
     const experience = await this.prismaService.experience.create({
       data: {
@@ -41,6 +46,7 @@ export class ExperienceService {
         isFresher: body.isFresher,
       },
     });
+    console.log('Experience ', experience);
 
     return new ApiSuccessResponse(true, 'experience added', experience);
   }
