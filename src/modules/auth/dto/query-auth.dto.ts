@@ -25,7 +25,7 @@ export const QueryAuthSchema = z.object({
   date: zDateOptional.optional(),
   year: zYearOptional.optional(),
   experience: z.nativeEnum(UserExperience).optional(),
-  businessType: z.nativeEnum(BusinessType).optional(),
+  businessTypeId: z.string().optional(),
 
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z
@@ -79,11 +79,11 @@ export class QueryAuthDto extends createZodDto(QueryAuthSchema) {
   @ApiPropertyOptional({ example: 2023, description: 'Year filter (YYYY)' })
   year?: number;
 
-  @ApiPropertyOptional({
-    enum: BusinessType,
-    example: BusinessType.AesthethicAndMedicalClinic,
-  })
-  businessType?: BusinessType;
+  // @ApiPropertyOptional({
+  //   enum: BusinessType,
+  //   example: BusinessType.AesthethicAndMedicalClinic,
+  // })
+  // businessType?: BusinessType;
 
   @ApiPropertyOptional({ enum: ['asc', 'desc'], example: 'desc' })
   order?: 'asc' | 'desc';

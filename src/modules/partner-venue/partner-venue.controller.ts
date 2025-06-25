@@ -38,7 +38,7 @@ export class PartnerVenueController {
   @HttpCode(HttpStatus.OK)
   @AllowAuthenticated()
   findAll(@GetUser() user: Auth, @Query() query: QueryPartnerVenueDto) {
-    return this.partnerVenueService.findAll(query);
+    return this.partnerVenueService.findAll(query, user);
   }
 
   @Get('/admin')

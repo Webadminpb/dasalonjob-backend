@@ -1,5 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { BusinessType, Gender, VenueStatus } from '@prisma/client';
+import {
+  BusinessType,
+  CollaborationInitiator,
+  Gender,
+  VenueStatus,
+} from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { zDateOptional } from 'src/common/utils/validation';
 import { z } from 'zod';
@@ -12,7 +17,9 @@ export const QueryPartnerVenueSchema = z.object({
   gender: z.nativeEnum(Gender).optional(),
   locations: z.string().optional(),
   status: z.nativeEnum(VenueStatus).optional(),
-  businessType: z.nativeEnum(BusinessType).optional(),
+  request: z.enum(['SENT', 'INCOMING', 'APPROVED']).optional(),
+  // role: z.nativeEnum(CollaborationInitiator).optional(),
+  businessTypeId: z.string().optional(),
   order: z.enum(['asc', 'desc']).default('desc'),
   sort: z.enum(['createdAt', 'updatedAt', 'status']).default('createdAt'),
   date: zDateOptional,

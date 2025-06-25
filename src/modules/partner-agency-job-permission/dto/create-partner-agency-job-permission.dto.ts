@@ -5,7 +5,11 @@ import { z } from 'zod';
 export const PartnerAgencyPermissionSchema = z.object({
   partnerId: z.string(),
   agencyId: z.string(),
-  hasAccess: z.boolean().optional().default(false),
+  requestedBy: z.enum(['PARTNER', 'AGENCY']),
+  approvedBy: z.enum(['PARTNER', 'AGENCY']).optional(),
+  approvedAt: z.string().datetime().optional(),
+  partnerHasAccess: z.boolean().optional().default(false),
+  agencyHasAccess: z.boolean().optional().default(false),
 });
 
 export class CreatePartnerAgencyPermissionDto extends createZodDto(

@@ -1,3 +1,8 @@
+enum CollaborationInitiator {
+  PARTNER
+  AGENCY
+}
+
 model PartnerAgencyJobPermission {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -7,7 +12,12 @@ model PartnerAgencyJobPermission {
   agencyId String @db.ObjectId
   agency Auth @relation("AgencyCollaborations",fields: [agencyId], references: [id])
 
-  hasAccess Boolean @default(false)
+  requestedBy CollaborationInitiator
+  approvedBy CollaborationInitiator?
+  approvedAt DateTime?
+
+  partnerHasAccess Boolean @default(false)
+  agencyHasAccess Boolean @default(false)
 
 
   createdAt DateTime @default(now())

@@ -47,7 +47,7 @@ export class VenueMainBusinessTypeController {
     description: 'Unauthorized.',
   })
   create(@Body() body: CreateVenueMainBusinessTypeDto, @GetUser() user: Auth) {
-    return this.venueMainBusinessTypeService.create(body, user);
+    // return this.venueMainBusinessTypeService.create(body, user);
   }
 
   @Get('all')

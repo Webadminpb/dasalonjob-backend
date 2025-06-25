@@ -64,6 +64,7 @@ import { AgencyContactDetailsModule } from './modules/agency-contact-details/age
 import { FeaturedCourseModule } from './modules/featured-courses/featured-course.module';
 import { UserNotificationSettingModule } from './modules/user-notification-setting/user-notification-setting.module';
 import { NotificationModule } from './modules/notifications/notification.module';
+import { BusinessTypeModule } from './modules/business-type/business-type.module';
 
 @Module({
   imports: [
@@ -130,6 +131,7 @@ import { NotificationModule } from './modules/notifications/notification.module'
     SponsoredJobModule,
     AgencyContactDetailsModule,
     NotificationModule,
+    BusinessTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,7 +5,8 @@ import { z } from 'zod';
 export const QueryPartnerAgencyPermissionSchema = z.object({
   partnerId: z.string().optional(),
   agencyId: z.string().optional(),
-  hasAccess: z.boolean().optional(),
+  partnerHasAccess: z.boolean().optional(),
+  agencyHasAccess: z.boolean().optional(),
   page: z.string().optional().transform(Number),
   limit: z.string().optional().transform(Number),
   order: z.enum(['asc', 'desc']).default('desc'),

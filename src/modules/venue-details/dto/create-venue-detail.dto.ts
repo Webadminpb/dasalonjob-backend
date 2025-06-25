@@ -12,7 +12,7 @@ export const VenueDetailsSchema = z.object({
   franchise: z.string().optional(),
   city: z.string(),
   streetAddress: z.string(),
-  businessType: z.array(z.nativeEnum(BusinessType)),
+  businessTypeIds: z.array(z.string()).optional(),
   gender: z.nativeEnum(Gender),
   fileIds: z.array(z.string()).optional(),
   state: z.string().optional(),

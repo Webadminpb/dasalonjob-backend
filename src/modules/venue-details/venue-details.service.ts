@@ -27,7 +27,7 @@ export class VenueDetailsService {
         fileIds: body.fileIds,
         userId: user.id,
         franchise: body.franchise,
-        businessType: body.businessType,
+        businessTypeIds: body.businessTypeIds,
         latitude: body.latitide,
         longitude: body.longitude,
       },

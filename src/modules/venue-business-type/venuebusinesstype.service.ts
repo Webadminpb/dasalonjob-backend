@@ -9,20 +9,20 @@ import { UpdateVenuebusinesstypeDto } from './dto/update-venuebusinesstype.dto';
 export class VenueMainBusinessTypeService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreateVenueMainBusinessTypeDto, user: Auth) {
-    const venueMainBusinessType =
-      await this.prismaService.venueMainBusinessType.create({
-        data: {
-          businessType: body.businessType,
-          userId: user.id,
-        },
-      });
-    return new ApiSuccessResponse(
-      true,
-      'Venue main business type added',
-      venueMainBusinessType,
-    );
-  }
+  // async create(body: CreateVenueMainBusinessTypeDto, user: Auth) {
+  //   const venueMainBusinessType =
+  //     await this.prismaService.venueMainBusinessType.create({
+  //       data: {
+  //         businessTypeId: body.businessType,
+  //         userId: user.id,
+  //       },
+  //     });
+  //   return new ApiSuccessResponse(
+  //     true,
+  //     'Venue main business type added',
+  //     venueMainBusinessType,
+  //   );
+  // }
 
   async findMyVenueMainBusinessType(user: Auth) {
     const venueMainBusinessType =
@@ -64,7 +64,7 @@ export class VenueMainBusinessTypeService {
       await this.prismaService.venueMainBusinessType.update({
         where: { id: existingVenueMainBusinessType.id },
         data: {
-          ...body,
+          // ...body,
         },
       });
     return new ApiSuccessResponse(

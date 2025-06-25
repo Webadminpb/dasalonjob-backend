@@ -44,6 +44,20 @@ export class PartnerAgencyPermissionController {
     return this.permissionService.findAll(query);
   }
 
+  @Get('pending')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  getPending(@Query('role') role: 'PARTNER' | 'AGENCY', @GetUser() user: Auth) {
+    return this.permissionService.getPendingRequests(role, user.id);
+  }
+
+  @Post(':id/approve')
+  @HttpCode(HttpStatus.OK)
+  @AllowAuthenticated()
+  approve(@Param('id') id: string, @GetUser() user: Auth) {
+    return this.permissionService.approvePermission(id, user);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {

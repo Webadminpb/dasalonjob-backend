@@ -650,17 +650,17 @@ export class AuthService {
       };
     }
 
-    if (query.businessType) {
-      where.partnerVenues = {
-        some: {
-          venueBasicDetails: {
-            businessType: {
-              hasSome: [query.businessType as BusinessType],
-            },
-          },
-        },
-      };
-    }
+    // if (query.businessTypeId) {
+    //   where.partnerVenues = {
+    //     some: {
+    //       venueBasicDetails: {
+    //         businessType: {
+    //           hasSome: [query.businessTypeId as BusinessType],
+    //         },
+    //       },
+    //     },
+    //   };
+    // }
 
     const orderBy = getSortOrder(query.order);
     const sortBy = getSortBy(query.sort);

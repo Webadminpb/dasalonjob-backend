@@ -247,7 +247,15 @@ export class CourseApplicationService {
                 },
               },
               pastExperiences: true,
-              experiences: true,
+              experiences: {
+                include: {
+                  profile: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
               certificates: {
                 include: {
                   file: true,

@@ -1,7 +1,7 @@
 model VenueMainBusinessType {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  businessType BusinessType
+  // businessType BusinessType
 
   userId String @db.ObjectId
   user Auth @relation(fields: [userId], references: [id])

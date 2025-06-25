@@ -26,7 +26,8 @@ model VenueDetails {
   
   country String?
 
-  businessType BusinessType[]
+  businessTypeIds String[] @db.ObjectId
+  businessType BusinessType[] @relation(fields: [businessTypeIds], references: [id])
 
   partnerVenues PartnerVenue[]
 

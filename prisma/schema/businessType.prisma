@@ -1,0 +1,16 @@
+model BusinessType {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    name String
+
+    status Boolean @default(false)
+
+    fileId String @db.ObjectId
+    file File @relation(fields: [fileId], references: [id])
+
+    venueDetailIds String[] @db.ObjectId
+    venueDetails VenueDetails[] @relation(fields: [venueDetailIds], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

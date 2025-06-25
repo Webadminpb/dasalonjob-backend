@@ -64,6 +64,53 @@ export class PartnerVenueService {
         ],
       };
     }
+    if (query?.request === 'SENT') {
+      console.log('query request', query.request);
+      where.user = {
+        agencyCollaborations: {
+          some: {
+            agencyId: user?.id,
+            requestedBy: 'AGENCY',
+          },
+        },
+      };
+    }
+
+    if (query?.request === 'INCOMING') {
+      where.user = {
+        agencyCollaborations: {
+          some: {
+            agencyId: user?.id,
+            requestedBy: 'PARTNER',
+          },
+        },
+      };
+    }
+
+    if (query?.request === 'APPROVED') {
+      where.user = {
+        OR: [
+          {
+            agencyCollaborations: {
+              some: {
+                agencyId: user?.id,
+                agencyHasAccess: true,
+                partnerHasAccess: true,
+              },
+            },
+          },
+          {
+            partnerCollaborations: {
+              some: {
+                partnerId: user?.id,
+                agencyHasAccess: true,
+                partnerHasAccess: true,
+              },
+            },
+          },
+        ],
+      };
+    }
 
     if (query.date) {
       const year = query.date;
@@ -79,7 +126,15 @@ export class PartnerVenueService {
       };
     }
 
-    const [partnerVenues, total, actives, inActives] = await Promise.all([
+    const [
+      partnerVenues,
+      total,
+      actives,
+      inActives,
+      sentCount,
+      incomingCount,
+      approvedCount,
+    ] = await Promise.all([
       this.prismaService.partnerVenue.findMany({
         where,
         include: {
@@ -121,6 +176,8 @@ export class PartnerVenueService {
                   lastName: true,
                 },
               },
+              partnerCollaborations: true,
+              agencyCollaborations: true,
             },
           },
           venueMainBusinessDays: true,
@@ -145,6 +202,35 @@ export class PartnerVenueService {
           status: 'INACTIVE',
         },
       }),
+      // 🔸 Sent (AGENCY)
+      this.prismaService.partnerAgencyJobPermission.count({
+        where: {
+          agencyId: user?.id,
+        },
+      }),
+
+      // 🔸 Incoming (PARTNER)
+      this.prismaService.partnerAgencyJobPermission.count({
+        where: {
+          partnerId: user?.id,
+        },
+      }),
+
+      // 🔸 Approved (both approved)
+      this.prismaService.partnerAgencyJobPermission.count({
+        where: {
+          OR: [
+            {
+              agencyId: user?.id,
+            },
+            {
+              partnerId: user?.id,
+            },
+          ],
+          agencyHasAccess: true,
+          partnerHasAccess: true,
+        },
+      }),
     ]);
 
     if (!partnerVenues) {
@@ -155,6 +241,9 @@ export class PartnerVenueService {
       total,
       actives,
       inActives,
+      sentCount,
+      incomingCount,
+      approvedCount,
     });
   }
 
@@ -213,7 +302,6 @@ export class PartnerVenueService {
       skip: getPaginationSkip(query.page, query.limit),
       take: getPaginationTake(query.limit),
     });
-    console.log('partner veneues ', partnerVenues);
 
     if (!partnerVenues) {
       throw new BadRequestException('No Partner Venues found');
@@ -255,12 +343,8 @@ export class PartnerVenueService {
       };
     }
 
-    if (query.businessType) {
-      where.venueBasicDetails = {
-        businessType: {
-          has: query.businessType,
-        },
-      };
+    if (query.businessTypeId) {
+      where.venueBasicDetails = {};
     }
 
     if (query.status) {
@@ -275,6 +359,12 @@ export class PartnerVenueService {
       include: {
         venueBasicDetails: {
           include: {
+            businessType: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             files: {
               select: {
                 url: true,

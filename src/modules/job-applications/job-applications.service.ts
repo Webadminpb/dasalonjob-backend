@@ -241,7 +241,7 @@ export class JobApplicationService {
               educations: true,
               basicDetails: true,
               contactDetails: true,
-              jobApplicationApplicantMessage: true,
+              // jobApplicationApplicantMessage: true,
             },
           },
           jobPost: {
@@ -766,7 +766,8 @@ export class JobApplicationService {
       await this.prismaService.partnerAgencyJobPermission.findMany({
         where: {
           agencyId: user.id,
-          hasAccess: true,
+          partnerHasAccess: true,
+          agencyHasAccess: true,
         },
         select: {
           partnerId: true,

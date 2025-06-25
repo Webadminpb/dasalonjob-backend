@@ -31,6 +31,7 @@ model File {
   languages Language[]
   partnerVenues PartnerVenue[]
   educations Education[]
+  businessTypes BusinessType[]
 
   profileImageAuth Auth[] @relation("ProfileImage")
 

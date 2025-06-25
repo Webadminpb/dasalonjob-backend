@@ -6,11 +6,11 @@ import { BusinessType } from '@prisma/client';
 export class UpdateVenuebusinesstypeDto extends createZodDto(
   VenueMainBusinessTypeSchema.partial(),
 ) {
-  @ApiProperty({
-    description: 'The type of business',
-    enum: BusinessType,
-    example: BusinessType.HairSalon,
-    required: false,
-  })
+  // @ApiProperty({
+  //   description: 'The type of business',
+  //   enum: BusinessType,
+  //   example: BusinessType.HairSalon,
+  //   required: false,
+  // })
   businessType?: BusinessType;
 }

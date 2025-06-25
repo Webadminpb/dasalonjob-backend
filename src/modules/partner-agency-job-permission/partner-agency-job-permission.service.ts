@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Auth, Prisma } from '@prisma/client';
+import { Auth, CollaborationInitiator, Prisma, Role } from '@prisma/client';
 import { CreatePartnerAgencyPermissionDto } from './dto/create-partner-agency-job-permission.dto';
 import { ApiSuccessResponse } from 'src/common/api-response/api-success';
 import { QueryPartnerAgencyPermissionDto } from './dto/query-partner-agency-job-permission.dto';
@@ -40,7 +40,9 @@ export class PartnerAgencyPermissionService {
         data: {
           partnerId: body.partnerId,
           agencyId: body.agencyId,
-          hasAccess: body.hasAccess,
+          requestedBy: body.requestedBy,
+          partnerHasAccess: body.partnerHasAccess,
+          agencyHasAccess: body.agencyHasAccess,
         },
       });
 
@@ -58,8 +60,12 @@ export class PartnerAgencyPermissionService {
       where.agencyId = query.agencyId;
     }
 
-    if (query.hasAccess !== undefined) {
-      where.hasAccess = query.hasAccess;
+    if (query.partnerHasAccess !== undefined) {
+      where.partnerHasAccess = query.partnerHasAccess;
+    }
+
+    if (query.agencyHasAccess !== undefined) {
+      where.agencyHasAccess = query.agencyHasAccess;
     }
 
     const skip = getPaginationSkip(query.page, query.limit);
@@ -120,7 +126,8 @@ export class PartnerAgencyPermissionService {
       await this.prismaService.partnerAgencyJobPermission.update({
         where: { id },
         data: {
-          hasAccess: body.hasAccess,
+          partnerHasAccess: body.partnerHasAccess,
+          agencyHasAccess: body.agencyHasAccess,
         },
       });
 
@@ -159,6 +166,58 @@ export class PartnerAgencyPermissionService {
         },
       });
 
-    return permission?.hasAccess || false;
+    return (
+      permission?.partnerHasAccess === true &&
+      permission?.agencyHasAccess === true
+    );
+  }
+
+  async approvePermission(id: string, approver: Auth) {
+    const existing =
+      await this.prismaService.partnerAgencyJobPermission.findUnique({
+        where: { id },
+      });
+    if (!existing) throw new NotFoundException('Permission not found');
+
+    const isPartner = approver.role === 'PARTNER';
+
+    const updated = await this.prismaService.partnerAgencyJobPermission.update({
+      where: { id },
+      data: {
+        approvedBy: isPartner ? Role.PARTNER : Role.AGENCY,
+        approvedAt: new Date()?.toDateString(),
+        partnerHasAccess: isPartner ? true : existing.partnerHasAccess,
+        agencyHasAccess: isPartner ? existing.agencyHasAccess : true,
+      },
+    });
+
+    return new ApiSuccessResponse(true, 'Permission approved', updated);
+  }
+
+  async getPendingRequests(role: CollaborationInitiator, userId: string) {
+    const where: Prisma.PartnerAgencyJobPermissionWhereInput = {};
+    if (role === Role.PARTNER) {
+      (where.partnerId = userId), (where.agencyHasAccess = false);
+    } else {
+      (where.agencyId = userId), (where.partnerHasAccess = false);
+    }
+
+    const [results, total] = await Promise.all([
+      this.prismaService.partnerAgencyJobPermission.findMany({
+        where,
+        include: {
+          partner: true,
+          agency: true,
+        },
+      }),
+      this.prismaService.partnerAgencyJobPermission.count({
+        where,
+      }),
+    ]);
+
+    return new ApiSuccessResponse(true, 'Pending requests fetched', {
+      results,
+      total,
+    });
   }
 }
