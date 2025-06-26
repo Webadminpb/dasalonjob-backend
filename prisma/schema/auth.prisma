@@ -127,8 +127,8 @@ model Auth {
   savedApplicants SavedApplicant[] @relation("SavedApplicantsByAgency")
   savedByAgencues SavedApplicant[] @relation("SavedAsApplicantByAgency")
 
-  agencyCollaborations PartnerAgencyJobPermission[] @relation("AgencyCollaborations") 
-  partnerCollaborations PartnerAgencyJobPermission[] @relation("PartnerCollaborations") 
+  agencyCollaborations PartnerAgencyJobPermission[]
+  // partnerCollaborations PartnerAgencyJobPermission[] @relation("PartnerCollaborations") 
 
   jobOffersAsAgency JobOfferToSavedApplicant[] @relation("JobOffersByAgency")
   jobOffersAsApplicant JobOfferToSavedApplicant[] @relation("JobOffersToApplicant")

@@ -10,6 +10,7 @@ export class NotificationService {
   ) {}
 
   async handleNotification(payload: any) {
+    console.log('payload ', payload);
     if (payload?.isBroadCast) {
       // if (setting?.isSystemApp) {
       //   return;
@@ -69,15 +70,16 @@ export class NotificationService {
     } else {
       const setting =
         await this.prismaService.userNotificationSetting.findUnique({
-          where: { userId: payload.userId },
+          where: { userId: payload?.userId },
         });
-
-      await this.prismaService.notification.create({
-        data: {
-          ...payload,
-          userId: payload.userId,
-        },
-      });
+      if (payload.userId) {
+        await this.prismaService.notification.create({
+          data: {
+            meta: payload,
+            userId: payload?.userId,
+          },
+        });
+      }
 
       if (setting?.isSystemApp) {
         return;

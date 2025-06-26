@@ -6,11 +6,11 @@ enum CollaborationInitiator {
 model PartnerAgencyJobPermission {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  partnerId String @db.ObjectId
-  partner Auth @relation("PartnerCollaborations",fields: [partnerId], references: [id])
+  venueId String @db.ObjectId
+  venue PartnerVenue @relation(fields: [venueId], references: [id])
 
   agencyId String @db.ObjectId
-  agency Auth @relation("AgencyCollaborations",fields: [agencyId], references: [id])
+  agency Auth @relation(fields: [agencyId], references: [id])
 
   requestedBy CollaborationInitiator
   approvedBy CollaborationInitiator?
@@ -23,7 +23,7 @@ model PartnerAgencyJobPermission {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([partnerId])
+  @@index([venueId])
   @@index([agencyId])
-  @@unique([agencyId, partnerId])
+  @@unique([agencyId, venueId])
 }

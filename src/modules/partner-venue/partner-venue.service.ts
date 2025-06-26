@@ -16,6 +16,7 @@ import { CreatePartnerVenueDto } from './dto/create-partner-venue.dto';
 import { QueryPartnerVenueDto } from './dto/query-partner-venue.dto';
 import { UpdatePartnerVenueDto } from './dto/update-partner-venue.dto';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
+import { ExtendedPartnerVenue } from 'src/common/utils/types';
 
 @Injectable()
 export class PartnerVenueService {
@@ -48,6 +49,7 @@ export class PartnerVenueService {
   }
 
   async findAll(query: QueryPartnerVenueDto, user?: Auth) {
+    console.log('userId ', user.id);
     const where: Prisma.PartnerVenueWhereInput = {};
     if (query.userId) {
       where.userId = query.userId;
@@ -99,15 +101,15 @@ export class PartnerVenueService {
               },
             },
           },
-          {
-            partnerCollaborations: {
-              some: {
-                partnerId: user?.id,
-                agencyHasAccess: true,
-                partnerHasAccess: true,
-              },
-            },
-          },
+          // {
+          //   partnerCollaborations: {
+          //     some: {
+          //       partnerId: user?.id,
+          //       agencyHasAccess: true,
+          //       partnerHasAccess: true,
+          //     },
+          //   },
+          // },
         ],
       };
     }
@@ -123,6 +125,14 @@ export class PartnerVenueService {
     if (query.gender) {
       where.venueBasicDetails = {
         gender: query.gender,
+      };
+    }
+    if (query.locations) {
+      where.venueBasicDetails = {
+        city: {
+          contains: query.locations,
+          mode: 'insensitive',
+        },
       };
     }
 
@@ -176,11 +186,12 @@ export class PartnerVenueService {
                   lastName: true,
                 },
               },
-              partnerCollaborations: true,
+              // partnerCollaborations: true,
               agencyCollaborations: true,
             },
           },
           venueMainBusinessDays: true,
+          partnerAgencyJobPermissions: true,
         },
         skip: getPaginationSkip(query.page, query.limit),
         take: getPaginationTake(query.limit),
@@ -206,13 +217,15 @@ export class PartnerVenueService {
       this.prismaService.partnerAgencyJobPermission.count({
         where: {
           agencyId: user?.id,
+          requestedBy: user?.role == 'AGENCY' ? 'AGENCY' : 'PARTNER',
         },
       }),
 
       // 🔸 Incoming (PARTNER)
       this.prismaService.partnerAgencyJobPermission.count({
         where: {
-          partnerId: user?.id,
+          agencyId: user?.id,
+          requestedBy: user?.role == 'PARTNER' ? 'PARTNER' : 'AGENCY',
         },
       }),
 
@@ -224,7 +237,9 @@ export class PartnerVenueService {
               agencyId: user?.id,
             },
             {
-              partnerId: user?.id,
+              venue: {
+                userId: user?.id,
+              },
             },
           ],
           agencyHasAccess: true,
@@ -236,8 +251,81 @@ export class PartnerVenueService {
     if (!partnerVenues) {
       throw new BadRequestException('No Partner Venues found');
     }
+    const extendedVenues: ExtendedPartnerVenue[] = partnerVenues.map(
+      (venue) => {
+        const userCollab = venue;
+        // console.log('userCollab ', userCollab);
+        let collaboration = null;
+        // console.log('collaboration ', collaboration);
+
+        if (!userCollab) {
+          // console.log('userCollab line 258 ', userCollab);
+          return { ...venue, collaborationStatus: 'Pending' };
+        }
+        // console.log('line 261');
+        // collaboration =
+        //   userCollab.partnerCollaborations.find(
+        //     (c) => c.agencyId === user?.id,
+        //   ) ||
+        //   userCollab.agencyCollaborations.find((c) => c.agencyId === user?.id);
+        collaboration = userCollab?.partnerAgencyJobPermissions.find(
+          (c) => c?.agencyId === user?.id,
+        );
+        // console.log('line 271 ', collaboration);
+
+        if (!collaboration) {
+          // console.log('line 273');
+          return { ...venue, collaborationStatus: 'Pending' };
+        }
+
+        const { partnerHasAccess, agencyHasAccess } = collaboration;
+        // console.log('partnerHasAccess', partnerHasAccess);
+        // console.log('agencyHasAccess', agencyHasAccess);
+
+        let status: ExtendedPartnerVenue['collaborationStatus'] = 'Pending';
+        // console.log('status ', status);
+
+        if (partnerHasAccess === true && agencyHasAccess === false) {
+          // console.log(
+          //   'partnerHasAccess && agencyHasAccess ',
+          //   partnerHasAccess && agencyHasAccess,
+          // );
+          status = 'Approved';
+          // console.log('final status ', status);
+        } else if (partnerHasAccess === true && agencyHasAccess === false) {
+          status = 'Partner Requested';
+          // console.log(
+          //   'partnerHasAccess && !!agencyHasAccess ',
+          //   partnerHasAccess === true && agencyHasAccess === false,
+          // );
+          // console.log('final status ', status);
+        } else if (partnerHasAccess === false && agencyHasAccess === true) {
+          status = 'Agency Requested';
+          // console.log(
+          //   '!!partnerHasAccess && agencyHasAccess ',
+          //   partnerHasAccess === false && agencyHasAccess === true,
+          // );
+          // console.log('final status ', status);
+        }
+        // console.log('line 3010');
+        return {
+          ...venue,
+          collaborationStatus: status,
+        };
+      },
+    );
+    let filteredVenues = extendedVenues;
+    if (query.status) {
+      console.log('query status ', query.status);
+      console.log('filtered venues ', filteredVenues);
+      filteredVenues = extendedVenues.filter(
+        (venue) =>
+          venue.collaborationStatus.toLocaleLowerCase() ===
+          query.status.toLocaleLowerCase(),
+      );
+    }
     return new ApiSuccessResponse(true, 'Partner Venues found', {
-      partnerVenues,
+      partnerVenues: filteredVenues,
       total,
       actives,
       inActives,

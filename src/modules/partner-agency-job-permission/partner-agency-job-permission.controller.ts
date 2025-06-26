@@ -81,12 +81,12 @@ export class PartnerAgencyPermissionController {
     return this.permissionService.remove(id);
   }
 
-  @Get('check-permission/:partnerId/:agencyId')
+  @Get('check-permission/:venueID/:agencyId')
   @HttpCode(HttpStatus.OK)
   checkPermission(
-    @Param('partnerId') partnerId: string,
+    @Param('venueId') venueId: string,
     @Param('agencyId') agencyId: string,
   ) {
-    return this.permissionService.checkPermission(partnerId, agencyId);
+    return this.permissionService.checkPermission(venueId, agencyId);
   }
 }

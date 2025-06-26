@@ -223,7 +223,15 @@ export class JobApplicationService {
                 },
               },
               pastExperiences: true,
-              experiences: true,
+              experiences: {
+                include: {
+                  profile: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
               certificates: {
                 include: {
                   file: true,
@@ -233,7 +241,9 @@ export class JobApplicationService {
                 include: {
                   language: {
                     include: {
-                      file: true,
+                      file: {
+                        select: { url: true },
+                      },
                     },
                   },
                 },
@@ -713,6 +723,7 @@ export class JobApplicationService {
 
     this.eventEmitter.emit(NOTIFICATION_EVENT, {
       // isBroadCast: true,
+      userId: existingJobApplication?.userId,
       title: `Job Application Status Changed To ${body?.status}`,
       body: `Job Application Status Changed To ${body?.status}`,
     });
@@ -770,10 +781,14 @@ export class JobApplicationService {
           agencyHasAccess: true,
         },
         select: {
-          partnerId: true,
+          venue: {
+            select: {
+              userId: true,
+            },
+          },
         },
       });
-    const partnerIds = permissions.map((p) => p.partnerId);
+    const partnerIds = permissions.map((p) => p.venue.userId);
     if (partnerIds.length === 0) return [];
 
     const jobPosts = await this.prismaService.jobPost.findMany({

@@ -3,7 +3,7 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const PartnerAgencyPermissionSchema = z.object({
-  partnerId: z.string(),
+  venueId: z.string(),
   agencyId: z.string(),
   requestedBy: z.enum(['PARTNER', 'AGENCY']),
   approvedBy: z.enum(['PARTNER', 'AGENCY']).optional(),

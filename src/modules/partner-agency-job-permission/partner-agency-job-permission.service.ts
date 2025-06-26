@@ -24,9 +24,9 @@ export class PartnerAgencyPermissionService {
     const existingPermission =
       await this.prismaService.partnerAgencyJobPermission.findUnique({
         where: {
-          agencyId_partnerId: {
+          agencyId_venueId: {
             agencyId: body.agencyId,
-            partnerId: body.partnerId,
+            venueId: body.venueId,
           },
         },
       });
@@ -38,7 +38,7 @@ export class PartnerAgencyPermissionService {
     const permission =
       await this.prismaService.partnerAgencyJobPermission.create({
         data: {
-          partnerId: body.partnerId,
+          venueId: body.venueId,
           agencyId: body.agencyId,
           requestedBy: body.requestedBy,
           partnerHasAccess: body.partnerHasAccess,
@@ -53,7 +53,9 @@ export class PartnerAgencyPermissionService {
     const where: Prisma.PartnerAgencyJobPermissionWhereInput = {};
 
     if (query.partnerId) {
-      where.partnerId = query.partnerId;
+      where.venue = {
+        userId: query.partnerId,
+      };
     }
 
     if (query.agencyId) {
@@ -77,7 +79,7 @@ export class PartnerAgencyPermissionService {
       this.prismaService.partnerAgencyJobPermission.findMany({
         where,
         include: {
-          partner: true,
+          venue: true,
           agency: true,
         },
         skip,
@@ -100,7 +102,7 @@ export class PartnerAgencyPermissionService {
       await this.prismaService.partnerAgencyJobPermission.findUnique({
         where: { id },
         include: {
-          partner: true,
+          venue: true,
           agency: true,
         },
       });
@@ -155,13 +157,13 @@ export class PartnerAgencyPermissionService {
     return new ApiSuccessResponse(true, 'Permission deleted', null);
   }
 
-  async checkPermission(partnerId: string, agencyId: string) {
+  async checkPermission(venueId: string, agencyId: string) {
     const permission =
       await this.prismaService.partnerAgencyJobPermission.findUnique({
         where: {
-          agencyId_partnerId: {
+          agencyId_venueId: {
             agencyId,
-            partnerId,
+            venueId,
           },
         },
       });
@@ -197,7 +199,7 @@ export class PartnerAgencyPermissionService {
   async getPendingRequests(role: CollaborationInitiator, userId: string) {
     const where: Prisma.PartnerAgencyJobPermissionWhereInput = {};
     if (role === Role.PARTNER) {
-      (where.partnerId = userId), (where.agencyHasAccess = false);
+      (where.venue.userId = userId), (where.agencyHasAccess = false);
     } else {
       (where.agencyId = userId), (where.partnerHasAccess = false);
     }
@@ -206,7 +208,7 @@ export class PartnerAgencyPermissionService {
       this.prismaService.partnerAgencyJobPermission.findMany({
         where,
         include: {
-          partner: true,
+          venue: true,
           agency: true,
         },
       }),
