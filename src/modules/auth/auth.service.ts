@@ -167,6 +167,7 @@ export class AuthService {
     });
     return new ApiSuccessResponse(true, 'user updated', updatedUser);
   }
+
   async updateAdminProfile(
     body: { phone?: string; name?: string; phoneCode?: string },
     user: Auth,
@@ -184,7 +185,29 @@ export class AuthService {
         id: existingUser.id,
       },
       data: {
-        ...body,
+        basicDetails: {
+          upsert: {
+            create: {
+              firstName: body.name ?? '',
+              lastName: '',
+              dob: new Date('2000-01-01').toISOString(),
+              gender: 'Male',
+            },
+            update: {
+              firstName: body.name,
+            },
+          },
+        },
+        contactDetails: {
+          upsert: {
+            create: {
+              phoneNumber: body.phone,
+            },
+            update: {
+              phoneNumber: body.phone,
+            },
+          },
+        },
       },
     });
     return new ApiSuccessResponse(true, 'user updated', updatedUser);
